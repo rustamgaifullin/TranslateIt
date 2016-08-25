@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'org.greenrobot.greendao'
 
 android {
   compileSdkVersion 24
@@ -24,31 +23,48 @@ android {
   }
 }
 
+def dbflow_version = "3.1.1"
+
 dependencies {
   compile fileTree(dir: 'libs', include: ['*.jar'])
   androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
     exclude group: 'com.android.support', module: 'support-annotations'
   })
-  compile 'com.android.support:appcompat-v7:24.2.0'
   testCompile 'junit:junit:4.12'
   compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+  compile 'com.android.support:appcompat-v7:24.2.0'
+  compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha4'
+
   compile 'com.squareup.retrofit2:retrofit:2.1.0'
+  compile 'com.google.code.gson:gson:2.7'
+
   compile 'io.reactivex:rxjava:1.1.9'
   compile 'io.reactivex:rxkotlin:0.60.0'
   compile 'io.reactivex:rxandroid:1.2.1'
+
   compile 'com.trello:rxlifecycle:0.6.1'
   compile 'com.trello:rxlifecycle-kotlin:0.6.1'
+
   compile 'com.jakewharton.rxbinding:rxbinding:0.4.0'
   compile 'com.jakewharton.rxbinding:rxbinding-support-v4:0.4.0'
   compile 'com.jakewharton.rxbinding:rxbinding-appcompat-v7:0.4.0'
   compile 'com.jakewharton.rxbinding:rxbinding-design:0.4.0'
-  compile 'com.google.code.gson:gson:2.7'
-  compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha4'
+
   compile 'com.jakewharton:kotterknife:0.1.0-SNAPSHOT'
+
+  kapt "com.github.Raizlabs.DBFlow:dbflow-processor:${dbflow_version}"
+  compile "com.github.Raizlabs.DBFlow:dbflow-core:${dbflow_version}"
+  compile "com.github.Raizlabs.DBFlow:dbflow:${dbflow_version}"
+  compile "com.github.Raizlabs.DBFlow:dbflow-kotlinextensions:${dbflow_version}"
 }
+
+kapt {
+  generateStubs = true
+}
+
 repositories {
   mavenCentral()
-  maven {
-    url "https://oss.sonatype.org/content/repositories/snapshots"
-  }
+  maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+  maven { url "https://www.jitpack.io" }
 }
