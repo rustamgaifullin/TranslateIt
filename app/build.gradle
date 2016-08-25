@@ -44,7 +44,6 @@ dependencies {
   compile 'com.jakewharton.rxbinding:rxbinding-design:0.4.0'
   compile 'com.google.code.gson:gson:2.7'
   compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha4'
-  compile 'org.greenrobot:greendao:3.1.0'
   compile 'com.jakewharton:kotterknife:0.1.0-SNAPSHOT'
 }
 repositories {
@@ -52,9 +51,4 @@ repositories {
   maven {
     url "https://oss.sonatype.org/content/repositories/snapshots"
   }
-}
-
-greendao {
-  schemaVersion 1
-  daoPackage "com.rm.translateit.db.model"
 }

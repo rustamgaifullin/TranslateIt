@@ -1,9 +1,7 @@
 package com.rm.translateit.db.impl
 
-import com.rm.translateit.db.model.LanguageModel
+import com.rm.translateit.db.DatabaseService
 
-class DatabaseServiceImpl {
-//    override fun languages(): List<LanguageModel> {
-//        return emptyList()
-//    }
+class DatabaseServiceImpl: DatabaseService {
+
 }
