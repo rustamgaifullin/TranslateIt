@@ -2,25 +2,24 @@ package com.rm.translateit.ui.activities
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
+import butterknife.bindView
 import com.rm.translateit.R
 import com.rm.translateit.api.Translater
 import com.rm.translateit.api.TranslaterContext
 import com.rm.translateit.api.models.Language
 import com.rm.translateit.ui.adapters.LanguageSpinnerAdapter
-import kotterknife
 
 class MainActivity : AppCompatActivity() {
 
     val fromSpinner: Spinner by bindView(R.id.from_spinner)
-    var toSpinner: Spinner by bindView(R.id.to_spinner)
-    var translateButton: Button by bindView(R.id.translate_button)
-    var resultTextView: TextView by bindView(R.id.result_textView)
-    var wordEditText: EditText by bindView(R.id.word_editText)
+    val toSpinner: Spinner by bindView(R.id.to_spinner)
+    val translateButton: Button by bindView(R.id.translate_button)
+    val resultTextView: TextView by bindView(R.id.result_textView)
+    val wordEditText: EditText by bindView(R.id.word_editText)
 
     var context: Translater = TranslaterContext.getContext()
 

@@ -107,9 +107,9 @@ class LanguageDao : AbstractDao<Language, Long> {
         val TABLENAME = "LANGUAGE"
 
         /** Creates the underlying database table.  */
-        fun createTable(db: Database, ifNotExists: Boolean) {
+        fun createTable(db: Database?, ifNotExists: Boolean) {
             val constraint = if (ifNotExists) "IF NOT EXISTS " else ""
-            db.execSQL("CREATE TABLE " + constraint + "\"LANGUAGE\" (" + //
+            db!!.execSQL("CREATE TABLE " + constraint + "\"LANGUAGE\" (" + //
 
                     "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
 
@@ -119,9 +119,9 @@ class LanguageDao : AbstractDao<Language, Long> {
         }
 
         /** Drops the underlying database table.  */
-        fun dropTable(db: Database, ifExists: Boolean) {
+        fun dropTable(db: Database?, ifExists: Boolean) {
             val sql = "DROP TABLE " + (if (ifExists) "IF EXISTS " else "") + "\"LANGUAGE\""
-            db.execSQL(sql)
+            db!!.execSQL(sql)
         }
     }
 
