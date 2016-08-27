@@ -14,7 +14,7 @@ import rx.schedulers.Schedulers
 class WikiTranslater : Translater {
     override fun translate(word: String, from: String, to: String): Observable<String> {
         val gson = GsonBuilder()
-                .registerTypeAdapter(LanguageLinksResult::class.java, LangLinksDeserializer())
+                .registerTypeAdapter(LanguageLinksResult::class.java, WikiDeserializer())
                 .create()
 
         val retrofit = Retrofit.Builder()
