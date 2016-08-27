@@ -40,7 +40,10 @@ class MainActivity : AppCompatActivity() {
             val word = wordEditText.text.toString()
             val from = (fromSpinner.selectedItem as Language).code
             val to = (toSpinner.selectedItem as Language).code
-            resultTextView.text = context.translate(word, from, to)
+            context.translate(word, from, to).subscribe({
+                resultQuery ->
+                    resultTextView.text = resultQuery
+            })
         }
     }
 }

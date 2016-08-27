@@ -1,8 +1,9 @@
 package com.rm.translateit.api
 
 import com.rm.translateit.api.models.Language
+import rx.Observable
 
 interface Translater {
-    fun translate(word: String, from: String, to: String): String
+    fun translate(word: String, from: String, to: String): Observable<String>
     fun languages(): List<Language>
 }

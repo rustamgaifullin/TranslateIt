@@ -2,9 +2,10 @@ package com.rm.translateit.api.mock
 
 import com.rm.translateit.api.Translater
 import com.rm.translateit.api.models.Language
+import rx.Observable
 
 class FakeTranslater: Translater {
-    override fun translate(word: String, from: String, to: String): String {
+    override fun translate(word: String, from: String, to: String): Observable<String> {
         val result: String
         when (to) {
             "EN" -> result = "FUCK"
@@ -13,7 +14,7 @@ class FakeTranslater: Translater {
             else -> result = ""
         }
 
-        return result
+        return Observable.just(result)
     }
 
     override fun languages(): List<Language> {
