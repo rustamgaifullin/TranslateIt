@@ -34,7 +34,7 @@ class LanguageSpinnerAdapter(private val context: Context) : BaseAdapter() {
         val textView: TextView?
 
         if (convertView == null) {
-            view = LayoutInflater.from(context).inflate(android.R.layout.simple_spinner_item, parent, false)
+            view = LayoutInflater.from(context).inflate(android.R.layout.simple_spinner_dropdown_item, parent, false)
 
         } else {
             view = convertView
