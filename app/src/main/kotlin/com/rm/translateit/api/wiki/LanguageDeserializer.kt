@@ -9,7 +9,7 @@ import com.rm.translateit.extension.getFirst
 import com.rm.translateit.extension.getOrEmpty
 import java.lang.reflect.Type
 
-class WikiDeserializer : JsonDeserializer<LanguageLinksResult> {
+class LanguageDeserializer : JsonDeserializer<LanguageLinksResult> {
     override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): LanguageLinksResult {
         var langlinks = LanguageLinksResult()
 

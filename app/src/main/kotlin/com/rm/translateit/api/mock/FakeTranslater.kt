@@ -25,4 +25,8 @@ class FakeTranslater: Translater {
         )
     }
 
+    override fun suggestions(title: String, from: String, offset: Int): Observable<List<String>> {
+        return Observable.just(listOf())
+    }
+
 }

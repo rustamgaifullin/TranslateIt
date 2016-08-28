@@ -56,7 +56,4 @@ class MainActivity : AppCompatActivity() {
             resultTextView.text = resultQuery
         })
     }
-
-
-
 }
