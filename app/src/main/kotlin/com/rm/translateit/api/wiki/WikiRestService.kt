@@ -10,6 +10,7 @@ interface WikiRestService {
     //TODO: change user-agent to something specific, like MyCoolTool/1.1 (https://example.org/MyCoolTool/; MyCoolTool@example.org) BasedOnSuperLib/1.4 
     //TODO: also thinkg about client login https://www.mediawiki.org/wiki/API:Login
 
+    //TODO: add regirects &redirects and test
     @GET("w/api.php?action=query&prop=langlinks&format=json&lllimit=500")
     fun query(@Query("titles") title: String, @Query("lllang") to: String): Observable<LanguageLinksResult>
 
