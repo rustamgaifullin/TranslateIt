@@ -7,6 +7,8 @@ import retrofit2.http.Query
 import rx.Observable
 
 interface WikiRestService {
+    //TODO: change user-agent to something specific, like MyCoolTool/1.1 (https://example.org/MyCoolTool/; MyCoolTool@example.org) BasedOnSuperLib/1.4 
+
     @GET("w/api.php?action=query&prop=langlinks&format=json&lllimit=500")
     fun query(@Query("titles") title: String): Observable<LanguageLinksResult>
 
