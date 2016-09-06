@@ -20,7 +20,7 @@ class WikiTranslater : Translater {
                 .create()
         val service = wikiService(from, gson)
 
-        return service.query(word)
+        return service.query(word, to)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .map { result -> result.list
