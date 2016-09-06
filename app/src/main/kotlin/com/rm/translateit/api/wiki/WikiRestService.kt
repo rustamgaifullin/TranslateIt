@@ -11,7 +11,7 @@ interface WikiRestService {
     //TODO: also thinkg about client login https://www.mediawiki.org/wiki/API:Login
 
     @GET("w/api.php?action=query&prop=langlinks&format=json&lllimit=500")
-    fun query(@Query("titles") title: String): Observable<LanguageLinksResult>
+    fun query(@Query("titles") title: String, @Query("lllang") to: String): Observable<LanguageLinksResult>
 
     @GET("/w/api.php?action=query&format=json&prop=&list=search&titles=&srinfo=suggestion&srprop=redirecttitle")
     fun suggestions(@Query("srsearch") title: String, @Query("sroffset") offset: Int): Observable<SuggestionResult>
