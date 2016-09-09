@@ -20,7 +20,6 @@ class MainActivity : AppCompatActivity() {
 
     val fromSpinner: Spinner by bindView(R.id.from_spinner)
     val toSpinner: Spinner by bindView(R.id.to_spinner)
-    val translateButton: Button by bindView(R.id.translate_button)
     val resultTextView: TextView by bindView(R.id.result_textView)
     val wordEditText: EditText by bindView(R.id.word_editText)
 
@@ -38,9 +37,6 @@ class MainActivity : AppCompatActivity() {
 
         fromAdapter.updateLanguages(context.languages())
         toAdapter.updateLanguages(context.languages())
-
-        RxView.clicks(translateButton)
-                .subscribe( { search() } )
 
         RxTextView.textChanges(wordEditText)
                 .throttleWithTimeout(500, TimeUnit.MILLISECONDS)
