@@ -10,34 +10,33 @@
     android:background="@android:color/darker_gray"
     >
 
-  <View
-      android:id="@+id/view"
-      android:layout_height="0dp"
-      android:layout_width="0dp"
-      android:background="@android:color/white"
-      app:layout_constraintLeft_toLeftOf="parent"
-      app:layout_constraintTop_toTopOf="parent"
-      app:layout_constraintRight_toRightOf="parent"
-      app:layout_constraintBottom_toBottomOf="@+id/word_editText"
-      />
-
   <EditText
       android:id="@+id/word_editText"
       android:layout_width="0dp"
-      android:layout_height="40dp"
+      android:layout_height="wrap_content"
       android:ems="10"
       android:inputType="text"
       android:layout_below="@+id/to_spinner"
       android:layout_alignParentLeft="true"
       android:layout_alignParentStart="true"
-      android:layout_marginTop="16dp"
-      android:layout_marginStart="16dp"
-      android:layout_marginLeft="16dp"
-      android:layout_marginEnd="16dp"
-      android:layout_marginRight="16dp"
+      android:layout_marginTop="@dimen/margin_medium"
+      android:layout_marginStart="@dimen/margin_medium"
+      android:layout_marginLeft="@dimen/margin_medium"
+      android:layout_marginEnd="@dimen/margin_medium"
+      android:layout_marginRight="@dimen/margin_medium"
       app:layout_constraintRight_toRightOf="@+id/view"
       app:layout_constraintLeft_toLeftOf="@+id/view"
       app:layout_constraintTop_toBottomOf="@+id/from_spinner"
+      />
+
+  <View
+      android:id="@+id/view"
+      android:layout_height="118dp"
+      android:layout_width="0dp"
+      android:background="@android:color/white"
+      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintRight_toRightOf="parent"
       />
 
   <Spinner
@@ -45,15 +44,14 @@
       android:layout_width="0dp"
       android:layout_height="24dp"
       android:layout_alignParentTop="true"
-      android:layout_marginEnd="8dp"
-      android:layout_marginRight="8dp"
-      android:layout_marginStart="16dp"
-      android:layout_marginLeft="16dp"
-      android:layout_marginTop="16dp"
+      android:layout_marginStart="@dimen/margin_medium"
+      android:layout_marginLeft="@dimen/margin_medium"
+      android:layout_marginTop="@dimen/margin_medium"
+      android:layout_marginEnd="@dimen/margin_small"
+      android:layout_marginRight="@dimen/margin_small"
       app:layout_constraintTop_toTopOf="@+id/view"
       app:layout_constraintLeft_toLeftOf="@+id/view"
-      app:layout_constraintRight_toLeftOf="@+id/guideline7"
-      app:layout_constraintHorizontal_bias="0.0"
+      app:layout_constraintRight_toLeftOf="@+id/center_guideline"
       />
 
   <Spinner
@@ -63,23 +61,14 @@
       android:layout_alignParentTop="true"
       android:layout_alignParentLeft="true"
       android:layout_alignParentStart="true"
-      android:layout_marginTop="16dp"
-      android:layout_marginEnd="16dp"
-      android:layout_marginRight="16dp"
-      android:layout_marginStart="8dp"
-      android:layout_marginLeft="8dp"
+      android:layout_marginLeft="@dimen/margin_small"
+      android:layout_marginStart="@dimen/margin_small"
+      android:layout_marginTop="@dimen/margin_medium"
+      android:layout_marginEnd="@dimen/margin_medium"
+      android:layout_marginRight="@dimen/margin_medium"
       app:layout_constraintRight_toRightOf="@+id/view"
-      app:layout_constraintLeft_toLeftOf="@+id/guideline7"
       app:layout_constraintTop_toTopOf="@+id/view"
-      app:layout_constraintHorizontal_bias="1.0"
-      />
-
-  <android.support.constraint.Guideline
-      android:id="@+id/guideline7"
-      android:layout_width="wrap_content"
-      android:layout_height="match_parent"
-      android:orientation="vertical"
-      app:layout_constraintGuide_Percent="50"
+      app:layout_constraintLeft_toLeftOf="@+id/center_guideline"
       />
 
   <View
@@ -87,12 +76,12 @@
       android:background="@android:color/white"
       android:layout_height="0dp"
       android:layout_width="0dp"
-      android:layout_marginEnd="8dp"
-      android:layout_marginLeft="8dp"
-      android:layout_marginRight="8dp"
-      android:layout_marginStart="8dp"
-      android:layout_marginTop="8dp"
-      android:layout_marginBottom="8dp"
+      android:layout_marginEnd="@dimen/margin_small"
+      android:layout_marginLeft="@dimen/margin_small"
+      android:layout_marginRight="@dimen/margin_small"
+      android:layout_marginStart="@dimen/margin_small"
+      android:layout_marginTop="@dimen/margin_small"
+      android:layout_marginBottom="@dimen/margin_small"
       app:layout_constraintTop_toBottomOf="@+id/view"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintLeft_toLeftOf="parent"
@@ -104,16 +93,27 @@
       android:layout_width="0dp"
       android:layout_height="0dp"
       android:textColor="@android:color/black"
-      android:layout_marginLeft="8dp"
-      android:layout_marginRight="8dp"
-      android:layout_marginTop="8dp"
-      android:layout_marginBottom="8dp"
-      android:layout_marginStart="8dp"
-      android:layout_marginEnd="8dp"
+      android:layout_marginLeft="@dimen/margin_small"
+      android:layout_marginRight="@dimen/margin_small"
+      android:layout_marginTop="@dimen/margin_small"
+      android:layout_marginBottom="@dimen/margin_small"
+      android:layout_marginStart="@dimen/margin_small"
+      android:layout_marginEnd="@dimen/margin_small"
       android:textSize="16sp"
       app:layout_constraintLeft_toLeftOf="@+id/result_view"
       app:layout_constraintRight_toRightOf="@+id/result_view"
       app:layout_constraintTop_toTopOf="@+id/result_view"
       app:layout_constraintBottom_toBottomOf="@+id/result_view"
       />
+
+  <android.support.constraint.Guideline
+      android:id="@+id/center_guideline"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      app:layout_constraintGuide_percent="0.5"
+      tools:layout_editor_absoluteY="0dp"
+      tools:layout_editor_absoluteX="180dp"
+      />
+
 </android.support.constraint.ConstraintLayout>
