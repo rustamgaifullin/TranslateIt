@@ -7,7 +7,6 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/darker_gray"
     >
 
   <EditText
@@ -24,19 +23,9 @@
       android:layout_marginLeft="@dimen/margin_medium"
       android:layout_marginEnd="@dimen/margin_medium"
       android:layout_marginRight="@dimen/margin_medium"
-      app:layout_constraintRight_toRightOf="@+id/view"
-      app:layout_constraintLeft_toLeftOf="@+id/view"
-      app:layout_constraintTop_toBottomOf="@+id/from_spinner"
-      />
-
-  <View
-      android:id="@+id/view"
-      android:layout_height="118dp"
-      android:layout_width="0dp"
-      android:background="@android:color/white"
-      app:layout_constraintLeft_toLeftOf="parent"
-      app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/from_spinner"
       />
 
   <Spinner
@@ -49,8 +38,8 @@
       android:layout_marginTop="@dimen/margin_medium"
       android:layout_marginEnd="@dimen/margin_small"
       android:layout_marginRight="@dimen/margin_small"
-      app:layout_constraintTop_toTopOf="@+id/view"
-      app:layout_constraintLeft_toLeftOf="@+id/view"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintLeft_toLeftOf="parent"
       app:layout_constraintRight_toLeftOf="@+id/center_guideline"
       />
 
@@ -66,44 +55,27 @@
       android:layout_marginTop="@dimen/margin_medium"
       android:layout_marginEnd="@dimen/margin_medium"
       android:layout_marginRight="@dimen/margin_medium"
-      app:layout_constraintRight_toRightOf="@+id/view"
-      app:layout_constraintTop_toTopOf="@+id/view"
+      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintLeft_toLeftOf="@+id/center_guideline"
       />
 
-  <View
-      android:id="@+id/result_view"
-      android:background="@android:color/white"
-      android:layout_height="0dp"
+  <android.support.v7.widget.RecyclerView
+      android:id="@+id/result_recyclerView"
       android:layout_width="0dp"
-      android:layout_marginEnd="@dimen/margin_small"
-      android:layout_marginLeft="@dimen/margin_small"
-      android:layout_marginRight="@dimen/margin_small"
-      android:layout_marginStart="@dimen/margin_small"
-      android:layout_marginTop="@dimen/margin_small"
-      android:layout_marginBottom="@dimen/margin_small"
-      app:layout_constraintTop_toBottomOf="@+id/view"
+      android:layout_height="0dp"
+      android:background="@android:color/darker_gray"
+      android:layout_marginTop="@dimen/margin_medium"
+      android:paddingTop="@dimen/margin_medium"
+      android:paddingStart="@dimen/margin_medium"
+      android:paddingLeft="@dimen/margin_medium"
+      android:paddingEnd="@dimen/margin_medium"
+      android:paddingRight="@dimen/margin_medium"
+      android:paddingBottom="@dimen/margin_medium"
+      app:layout_constraintTop_toBottomOf="@id/word_editText"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintLeft_toLeftOf="parent"
       app:layout_constraintRight_toRightOf="parent"
-      />
-
-  <TextView
-      android:id="@+id/result_textView"
-      android:layout_width="0dp"
-      android:layout_height="0dp"
-      android:textColor="@android:color/black"
-      android:layout_marginLeft="@dimen/margin_small"
-      android:layout_marginRight="@dimen/margin_small"
-      android:layout_marginTop="@dimen/margin_small"
-      android:layout_marginBottom="@dimen/margin_small"
-      android:layout_marginStart="@dimen/margin_small"
-      android:layout_marginEnd="@dimen/margin_small"
-      android:textSize="16sp"
-      app:layout_constraintLeft_toLeftOf="@+id/result_view"
-      app:layout_constraintRight_toRightOf="@+id/result_view"
-      app:layout_constraintTop_toTopOf="@+id/result_view"
-      app:layout_constraintBottom_toBottomOf="@+id/result_view"
       />
 
   <android.support.constraint.Guideline
