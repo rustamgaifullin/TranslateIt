@@ -1,4 +1,4 @@
-package com.rm.translateit.api.wiki.response
+package com.rm.translateit.api.translation.wiki.response
 
 import com.google.gson.annotations.SerializedName
 

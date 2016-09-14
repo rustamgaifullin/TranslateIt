@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.rm.translateit.R
-import com.rm.translateit.api.models.TranslationResult
+import com.rm.translateit.api.translation.models.TranslationResult
 
 class ResultRecyclerViewAdapter(val items: MutableList<TranslationResult>) : Adapter<ResultRecyclerViewAdapter.ViewHolder>() {
 

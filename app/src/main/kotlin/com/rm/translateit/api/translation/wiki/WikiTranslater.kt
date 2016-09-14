@@ -1,11 +1,10 @@
-package com.rm.translateit.api.wiki
+package com.rm.translateit.api.translation.wiki
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.rm.translateit.api.Translater
-import com.rm.translateit.api.models.Language
-import com.rm.translateit.api.wiki.response.LanguageLinksResult
-import com.rm.translateit.api.wiki.response.SuggestionResult
+import com.rm.translateit.api.translation.Translater
+import com.rm.translateit.api.translation.wiki.response.LanguageLinksResult
+import com.rm.translateit.api.translation.wiki.response.SuggestionResult
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -27,15 +26,6 @@ class WikiTranslater : Translater {
                         .filter({ result -> result.code == to.toLowerCase() })
                         .firstOrNull()?.title
                 }
-    }
-
-    //TODO: load languages from somewhere.
-    override fun languages(): List<Language> {
-        return listOf(
-                Language("EN", "English"),
-                Language("PL", "Polish"),
-                Language("RU", "Russian")
-        )
     }
 
     override fun suggestions(title: String, from: String, offset: Int): Observable<List<String>> {
