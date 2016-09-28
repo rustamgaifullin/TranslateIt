@@ -31,7 +31,7 @@
   <Spinner
       android:id="@+id/from_spinner"
       android:layout_width="0dp"
-      android:layout_height="24dp"
+      android:layout_height="40dp"
       android:layout_alignParentTop="true"
       android:layout_marginStart="@dimen/margin_medium"
       android:layout_marginLeft="@dimen/margin_medium"
@@ -40,13 +40,27 @@
       android:layout_marginRight="@dimen/margin_small"
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintLeft_toLeftOf="parent"
-      app:layout_constraintRight_toLeftOf="@+id/center_guideline"
+      app:layout_constraintRight_toLeftOf="@+id/changeLanguage_button"
+      />
+
+  <Button
+      android:id="@+id/changeLanguage_button"
+      android:layout_width="40dp"
+      android:layout_height="40dp"
+      android:minHeight="0dp"
+      android:minWidth="0dp"
+      android:layout_alignParentTop="true"
+      android:layout_marginTop="@dimen/margin_medium"
+      android:background="@drawable/ic_action_change_language"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintLeft_toLeftOf="parent"
       />
 
   <Spinner
       android:id="@+id/to_spinner"
       android:layout_width="0dp"
-      android:layout_height="24dp"
+      android:layout_height="40dp"
       android:layout_alignParentTop="true"
       android:layout_alignParentLeft="true"
       android:layout_alignParentStart="true"
@@ -57,7 +71,7 @@
       android:layout_marginRight="@dimen/margin_medium"
       app:layout_constraintRight_toRightOf="parent"
       app:layout_constraintTop_toTopOf="parent"
-      app:layout_constraintLeft_toLeftOf="@+id/center_guideline"
+      app:layout_constraintLeft_toRightOf="@+id/changeLanguage_button"
       />
 
   <android.support.v7.widget.RecyclerView
@@ -72,7 +86,7 @@
       android:paddingEnd="@dimen/margin_medium"
       android:paddingRight="@dimen/margin_medium"
       android:paddingBottom="@dimen/margin_medium"
-      app:layout_constraintTop_toBottomOf="@id/word_editText"
+      app:layout_constraintTop_toBottomOf="@+id/word_editText"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintLeft_toLeftOf="parent"
       app:layout_constraintRight_toRightOf="parent"
