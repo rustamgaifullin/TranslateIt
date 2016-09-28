@@ -1,9 +1,6 @@
 package com.rm.translateit.ui.activities
 
-import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.LinearLayoutManager.VERTICAL
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.widget.Button
@@ -20,7 +17,7 @@ import com.rm.translateit.ui.adapters.LanguageSpinnerAdapter
 import com.rm.translateit.ui.adapters.ResultRecyclerViewAdapter
 import java.util.concurrent.TimeUnit
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
     companion object {
         private val TAG = "MainActivity"
     }
@@ -38,15 +35,14 @@ class MainActivity : AppCompatActivity() {
     var items: MutableList<TranslationResult> = arrayListOf()
     lateinit var resultAdapter: ResultRecyclerViewAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+    override fun getLayoutId(): Int {
+        return R.layout.activity_main
+    }
 
-
+    override fun prepareUI() {
         fromAdapter = LanguageSpinnerAdapter(this)
         fromSpinner.adapter = fromAdapter
-        val fromLanguages = languages
-                .mapIndexed { index, language -> Pair(index, language) }
+        val fromLanguages = languages.mapIndexed { index, language -> Pair(index, language) }
         fromAdapter.updateLanguages(fromLanguages)
 
         toAdapter = LanguageSpinnerAdapter(this)
@@ -55,8 +51,10 @@ class MainActivity : AppCompatActivity() {
 
         resultAdapter = ResultRecyclerViewAdapter(items)
         resultView.adapter = resultAdapter
-        resultView.layoutManager = LinearLayoutManager(this, VERTICAL, false)
+        resultView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+    }
 
+    override fun createBindings() {
         RxTextView.textChanges(wordEditText)
                 .throttleWithTimeout(500, TimeUnit.MILLISECONDS)
                 .filter({ s -> s.length > 0 })
@@ -110,10 +108,10 @@ class MainActivity : AppCompatActivity() {
                     val mappedIndex = languagePair.first
                     Pair(mappedIndex, realIndex) }
                 .filter { indexPair ->
-                    val realIndex = indexPair.second
-                    realIndex == toLanguageIndex }
-                .map(Pair<Int, Int>::first)
-                .first()
+                    val mappedIndex = indexPair.first
+                    mappedIndex == toLanguageIndex }
+                .map(Pair<Int, Int>::second)
+                .last()
 
         toSpinner.setSelection(languageIndex)
     }
