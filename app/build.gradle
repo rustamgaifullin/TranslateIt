@@ -69,7 +69,7 @@ dependencies {
   compile "com.github.Raizlabs.DBFlow:dbflow-core:${dbflow_version}"
   compile "com.github.Raizlabs.DBFlow:dbflow:${dbflow_version}"
   compile "com.github.Raizlabs.DBFlow:dbflow-kotlinextensions:${dbflow_version}"
-  compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha7'
+  compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha8'
 }
 
 kapt {
