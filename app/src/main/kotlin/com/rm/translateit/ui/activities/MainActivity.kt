@@ -59,8 +59,7 @@ class MainActivity : BaseActivity() {
                 .throttleWithTimeout(500, TimeUnit.MILLISECONDS)
                 .filter({ s -> s.length > 0 })
                 .subscribe({
-                    items.clear()
-                    search()
+                    clearItemsAndSearch()
                 })
 
         RxAdapterView.itemSelections(fromSpinner).subscribe { currentIndex ->
@@ -76,12 +75,22 @@ class MainActivity : BaseActivity() {
         }
 
         RxView.clicks(changeLanguageButton).subscribe {
-            val newFromIndex = toAdapter.getItem(toSpinner.selectedItemPosition).first
-            val newToIndex = fromAdapter.getItem(fromSpinner.selectedItemPosition).first
-
-            fromSpinner.setSelection(newFromIndex)
-            setToSpinnerSelection(newToIndex, newFromIndex)
+            swapLanguages()
+            clearItemsAndSearch()
         }
+    }
+
+    private fun swapLanguages() {
+        val newFromIndex = toAdapter.getItem(toSpinner.selectedItemPosition).first
+        val newToIndex = fromAdapter.getItem(fromSpinner.selectedItemPosition).first
+
+        fromSpinner.setSelection(newFromIndex)
+        setToSpinnerSelection(newToIndex, newFromIndex)
+    }
+
+    private fun clearItemsAndSearch() {
+        items.clear()
+        search()
     }
 
     private fun search() {

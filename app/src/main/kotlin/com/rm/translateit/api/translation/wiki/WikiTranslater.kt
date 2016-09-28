@@ -4,6 +4,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.rm.translateit.api.translation.Translater
 import com.rm.translateit.api.translation.wiki.response.LanguageLinksResult
+import com.rm.translateit.api.translation.wiki.response.SearchResult
 import com.rm.translateit.api.translation.wiki.response.SuggestionResult
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
@@ -22,9 +23,12 @@ class WikiTranslater : Translater {
         return service.query(word, to.toLowerCase())
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .map { result -> result.list
-                        .filter({ result -> result.code == to.toLowerCase() })
-                        .firstOrNull()?.title
+                .map { languageLinksResult ->
+                    val languageResult = languageLinksResult.list
+                        .filter({ languageResult -> languageResult.code == to.toLowerCase() })
+                        .firstOrNull()
+
+                    languageResult?.title ?: ""
                 }
     }
 
@@ -37,8 +41,8 @@ class WikiTranslater : Translater {
 
         return service.suggestions(title, offset)
                 .subscribeOn(AndroidSchedulers.mainThread())
-                .map { result -> result.searchList
-                        .map { searchResult -> searchResult.title }
+                .map { result ->
+                    result.searchList.map(SearchResult::title)
                 }
     }
 

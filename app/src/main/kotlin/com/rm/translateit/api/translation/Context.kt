@@ -23,7 +23,9 @@ class Context {
         fun translate(word: String, from: String, to: String): Observable<TranslationResult> {
             return Observable.from(services).flatMap { item ->
                 val (name, service) = item
-                service.translate(word, from, to).map { result -> TranslationResult(name, result) }
+                service.translate(word, from, to)
+                        .filter(String::isNotEmpty)
+                        .map { result -> TranslationResult(name, result) }
             }
         }
     }
