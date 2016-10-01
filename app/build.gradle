@@ -2,82 +2,99 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 buildscript {
-  ext {
-    kotlin_version = '1.0.4'
-  }
+    ext {
+        kotlin_version = '1.0.4'
+        dbflow_version = '3.1.1'
+        retrofit_version = '2.1.0'
+        rxbinding_version = '0.4.0'
+    }
 
-  repositories {
-    jcenter()
-  }
-  dependencies {
-    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-  }
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
 }
 
 android {
-  compileSdkVersion 24
-  buildToolsVersion "23.0.2"
-  defaultConfig {
-    applicationId "com.rm.translateit"
-    minSdkVersion 16
-    targetSdkVersion 24
-    versionCode 1
-    versionName "1.0"
-    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-  }
-  buildTypes {
-    release {
-      minifyEnabled false
-      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    compileSdkVersion 24
+    buildToolsVersion "23.0.2"
+    defaultConfig {
+        applicationId "com.rm.translateit"
+        minSdkVersion 16
+        targetSdkVersion 24
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
-  }
-  sourceSets {
-    main.java.srcDirs += 'src/main/kotlin'
-  }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+        test.java.srcDirs += 'src/test/kotlin'
+    }
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
-def dbflow_version = "3.1.1"
+afterEvaluate {
+    android.sourceSets.all { sourceSet ->
+        if (!sourceSet.name.startsWith("test"))
+        {
+            sourceSet.kotlin.setSrcDirs([])
+        }
+    }
+}
 
 dependencies {
-  compile fileTree(dir: 'libs', include: ['*.jar'])
-  androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-    exclude group: 'com.android.support', module: 'support-annotations'
-  })
-  testCompile 'junit:junit:4.12'
-  compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-  compile 'com.android.support:appcompat-v7:24.2.0'
+    compile 'com.android.support:appcompat-v7:24.2.1'
 
-  compile 'com.squareup.retrofit2:retrofit:2.1.0'
-  compile 'com.squareup.retrofit2:converter-gson:2.1.0'
-  compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
+    compile "com.squareup.retrofit2:retrofit:$retrofit_version"
+    compile "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    compile "com.squareup.retrofit2:adapter-rxjava:$retrofit_version"
 
-  compile 'com.google.code.gson:gson:2.7'
+    compile "com.google.code.gson:gson:2.7"
 
-  compile 'io.reactivex:rxjava:1.1.9'
-  compile 'io.reactivex:rxkotlin:0.60.0'
-  compile 'io.reactivex:rxandroid:1.2.1'
+    compile "io.reactivex:rxjava:1.1.9"
+    compile "io.reactivex:rxkotlin:0.60.0"
+    compile "io.reactivex:rxandroid:1.2.1"
 
-  compile 'com.jakewharton.rxbinding:rxbinding:0.4.0'
-  compile 'com.jakewharton.rxbinding:rxbinding-support-v4:0.4.0'
-  compile 'com.jakewharton.rxbinding:rxbinding-appcompat-v7:0.4.0'
-  compile 'com.jakewharton.rxbinding:rxbinding-design:0.4.0'
+    compile "com.jakewharton.rxbinding:rxbinding:$rxbinding_version"
+    compile "com.jakewharton.rxbinding:rxbinding-support-v4:$rxbinding_version"
+    compile "com.jakewharton.rxbinding:rxbinding-appcompat-v7:$rxbinding_version"
+    compile "com.jakewharton.rxbinding:rxbinding-design:$rxbinding_version"
 
-  compile 'com.jakewharton:kotterknife:0.1.0-SNAPSHOT'
+    compile "com.jakewharton:kotterknife:0.1.0-SNAPSHOT"
 
-  kapt "com.github.Raizlabs.DBFlow:dbflow-processor:${dbflow_version}"
-  compile "com.github.Raizlabs.DBFlow:dbflow-core:${dbflow_version}"
-  compile "com.github.Raizlabs.DBFlow:dbflow:${dbflow_version}"
-  compile "com.github.Raizlabs.DBFlow:dbflow-kotlinextensions:${dbflow_version}"
-  compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha8'
+    kapt "com.github.Raizlabs.DBFlow:dbflow-processor:$dbflow_version"
+    compile "com.github.Raizlabs.DBFlow:dbflow-core:$dbflow_version"
+    compile "com.github.Raizlabs.DBFlow:dbflow:$dbflow_version"
+    compile "com.github.Raizlabs.DBFlow:dbflow-kotlinextensions:$dbflow_version"
+    compile "com.android.support.constraint:constraint-layout:1.0.0-alpha9"
+
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    testCompile "junit:junit:4.12"
+    testCompile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
 }
 
 kapt {
-  generateStubs = true
+    generateStubs = true
 }
 
 repositories {
-  mavenCentral()
-  maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
-  maven { url "https://www.jitpack.io" }
+    mavenCentral()
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+    maven { url "https://www.jitpack.io" }
 }
