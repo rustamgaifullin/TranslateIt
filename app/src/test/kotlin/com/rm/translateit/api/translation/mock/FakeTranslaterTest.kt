@@ -1,10 +1,24 @@
 package com.rm.translateit.api.translation.mock
 
-import com.rm.translateit.BaseRxTest
+import org.junit.After
+import org.junit.Before
 import org.junit.Test
 import rx.observers.TestSubscriber
+import rx.plugins.RxJavaHooks
+import rx.schedulers.Schedulers
 
-class FakeTranslaterTest : BaseRxTest() {
+class FakeTranslaterTest {
+
+    @Before
+    fun setUp() {
+        RxJavaHooks.setOnIOScheduler { scheduler -> Schedulers.immediate() }
+    }
+
+    @After
+    fun tearDown() {
+        RxJavaHooks.reset()
+    }
+
     @Test
     fun translate() {
         //given

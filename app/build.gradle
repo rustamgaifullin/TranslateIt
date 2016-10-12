@@ -7,6 +7,7 @@ buildscript {
         dbflow_version = '3.1.1'
         retrofit_version = '2.1.0'
         rxbinding_version = '0.4.0'
+        spek_version = '1.0.89'
     }
 
     repositories {
@@ -14,12 +15,14 @@ buildscript {
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.junit.platform:junit-platform-gradle-plugin:1.0.0-M2"
+        classpath "org.junit.platform:junit-platform-runner:1.0.0-M2"
     }
 }
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "23.0.2"
+    buildToolsVersion "24.0.3"
     defaultConfig {
         applicationId "com.rm.translateit"
         minSdkVersion 16
@@ -41,6 +44,9 @@ android {
     testOptions {
         unitTests.returnDefaultValues = true
     }
+    lintOptions {
+        warning 'InvalidPackage'
+    }
 }
 
 afterEvaluate {
@@ -57,8 +63,10 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     compile 'com.android.support:appcompat-v7:24.2.1'
+    compile 'com.android.support:support-annotations:24.2.1'
 
     compile "com.squareup.retrofit2:retrofit:$retrofit_version"
+    compile "com.squareup.retrofit2:retrofit-mock:$retrofit_version"
     compile "com.squareup.retrofit2:converter-gson:$retrofit_version"
     compile "com.squareup.retrofit2:adapter-rxjava:$retrofit_version"
 
@@ -84,9 +92,20 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    androidTestCompile('com.android.support.test:runner:0.5', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    androidTestCompile('com.android.support.test:rules:0.5', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
     testCompile "junit:junit:4.12"
     testCompile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+    testCompile 'com.squareup.okhttp3:mockwebserver:3.3.0'
+
+    testCompile "org.jetbrains.spek:spek-api:$spek_version"
+    testCompile "org.jetbrains.spek:spek-junit-platform-engine:$spek_version"
+    testCompile 'org.junit.platform:junit-platform-runner:1.0.0-M2'
 }
 
 kapt {

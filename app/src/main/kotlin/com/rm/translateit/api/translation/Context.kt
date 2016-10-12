@@ -10,9 +10,10 @@ import rx.Observable
 
 class Context {
     companion object {
+        private val url: String = "https://%s.wikipedia.org/"
         private val languageService: Languages = StaticLanguages()
         private val services: List<Pair<String, Translater>> = listOf(
-                Pair<String, Translater>("wikipedia", WikiTranslater()),
+                Pair<String, Translater>("wikipedia", WikiTranslater(url)),
                 Pair<String, Translater>("fake", FakeTranslater())
         )
 

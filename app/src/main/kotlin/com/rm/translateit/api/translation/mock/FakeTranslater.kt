@@ -2,7 +2,6 @@ package com.rm.translateit.api.translation.mock
 
 import com.rm.translateit.api.translation.Translater
 import rx.Observable
-import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 
 class FakeTranslater: Translater {
@@ -16,8 +15,7 @@ class FakeTranslater: Translater {
         }
 
         return Observable.just(result)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.immediate())
     }
 
     override fun suggestions(title: String, from: String, offset: Int): Observable<List<String>> {
