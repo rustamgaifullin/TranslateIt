@@ -3,8 +3,10 @@ package com.rm.translateit.ui.activities
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.Spinner
 import butterknife.bindView
 import com.jakewharton.rxbinding.view.RxView
@@ -28,6 +30,7 @@ class MainActivity : BaseActivity() {
     private val wordEditText: EditText by bindView(R.id.word_editText)
     private val resultView: RecyclerView by bindView(R.id.result_recyclerView)
     private val changeLanguageButton: Button by bindView(R.id.changeLanguage_button)
+    private val progressBar: ProgressBar by bindView(R.id.progressBar)
     private lateinit var fromAdapter: LanguageSpinnerAdapter
     private lateinit var toAdapter: LanguageSpinnerAdapter
 
@@ -58,6 +61,7 @@ class MainActivity : BaseActivity() {
     override fun createBindings() {
         RxTextView.textChanges(wordEditText)
                 .throttleWithTimeout(500, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
                 .filter({ s -> s.length > 0 })
                 .subscribe({
                     clearItemsAndSearch()
@@ -101,10 +105,13 @@ class MainActivity : BaseActivity() {
 
         Context.translate(word, from, to)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { result ->
-            items.add(result)
-            resultAdapter.notifyDataSetChanged()
-        }
+                .doOnSubscribe { progressBar.visibility = View.VISIBLE }
+                .doOnCompleted { progressBar.visibility = View.GONE }
+                .doOnNext { result ->
+                    items.add(result)
+                    resultAdapter.notifyDataSetChanged()
+                }
+                .subscribe()
     }
 
     private fun setToSpinnerSelection(toLanguageIndex: Int, currentLanguageIndex: Int) {
@@ -118,10 +125,12 @@ class MainActivity : BaseActivity() {
         val languageIndex = toLanguages
                 .mapIndexed { realIndex, languagePair ->
                     val mappedIndex = languagePair.first
-                    Pair(mappedIndex, realIndex) }
+                    Pair(mappedIndex, realIndex)
+                }
                 .filter { indexPair ->
                     val mappedIndex = indexPair.first
-                    mappedIndex == toLanguageIndex }
+                    mappedIndex == toLanguageIndex
+                }
                 .map(Pair<Int, Int>::second)
                 .last()
 

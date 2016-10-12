@@ -27,6 +27,17 @@
       app:layout_constraintLeft_toLeftOf="parent"
       app:layout_constraintTop_toBottomOf="@+id/from_spinner"
       />
+  <ProgressBar
+      android:id="@+id/progressBar"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+      android:indeterminate="true"
+      android:visibility="gone"
+      app:layout_constraintBottom_toTopOf="@+id/result_recyclerView"
+      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintRight_toRightOf="parent"
+      />
 
   <Spinner
       android:id="@+id/from_spinner"
