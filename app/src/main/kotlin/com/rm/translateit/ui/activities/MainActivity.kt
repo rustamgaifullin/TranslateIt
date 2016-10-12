@@ -15,6 +15,7 @@ import com.rm.translateit.api.translation.Context
 import com.rm.translateit.api.translation.models.TranslationResult
 import com.rm.translateit.ui.adapters.LanguageSpinnerAdapter
 import com.rm.translateit.ui.adapters.ResultRecyclerViewAdapter
+import rx.android.schedulers.AndroidSchedulers
 import java.util.concurrent.TimeUnit
 
 class MainActivity : BaseActivity() {
@@ -98,7 +99,9 @@ class MainActivity : BaseActivity() {
         val from = fromAdapter.getItem(fromSpinner.selectedItemId).second.code
         val to = toAdapter.getItem(toSpinner.selectedItemId).second.code
 
-        Context.translate(word, from, to).subscribe { result ->
+        Context.translate(word, from, to)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { result ->
             items.add(result)
             resultAdapter.notifyDataSetChanged()
         }
