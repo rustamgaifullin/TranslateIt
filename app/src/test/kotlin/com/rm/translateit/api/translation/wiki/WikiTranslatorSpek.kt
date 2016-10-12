@@ -21,7 +21,7 @@ import java.io.File
  */
 @RunWith(JUnitPlatform::class)
 @Ignore
-class WikiTranslaterSpek: Spek ({
+class WikiTranslatorSpek : Spek ({
     given("a wiki translater") {
         val word = "WORD"
         val from = "en"
@@ -31,9 +31,9 @@ class WikiTranslaterSpek: Spek ({
         val server = MockWebServer()
         server.start()
 
-        val sut = WikiTranslater(server.url("").toString())
+        val sut = WikiTranslator(server.url("").toString())
 
-        val responsePath = WikiTranslaterSpek::class.java.classLoader.getResource("wiki_translation_response.json").path
+        val responsePath = WikiTranslatorSpek::class.java.classLoader.getResource("wiki_translation_response.json").path
         server.enqueue(MockResponse()
                 .setResponseCode(200)
                 .setBody(File(responsePath).readText()))

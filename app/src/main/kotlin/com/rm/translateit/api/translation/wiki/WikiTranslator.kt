@@ -12,7 +12,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import rx.Observable
 import rx.schedulers.Schedulers
 
-class WikiTranslater(val url: String) : Translater {
+class WikiTranslator(val url: String) : Translater {
 
     override fun translate(word: String, from: String, to: String): Observable<String> {
         val gson = GsonBuilder()

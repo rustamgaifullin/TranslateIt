@@ -11,7 +11,7 @@ import rx.plugins.RxJavaHooks
 import rx.schedulers.Schedulers
 import java.io.File
 
-class WikiTranslaterTest {
+class WikiTranslatorTest {
     private lateinit var server: MockWebServer
     private val word = "WORD"
     private val from = "en"
@@ -34,7 +34,7 @@ class WikiTranslaterTest {
     @Test
     fun should_successfully_return_response_with_translation() {
         //given
-        val sut = WikiTranslater(server.url("").toString())
+        val sut = WikiTranslator(server.url("").toString())
         server.enqueue(successfulResponseWithTranslation())
         val testSubscriber = TestSubscriber<String>()
 
@@ -50,7 +50,7 @@ class WikiTranslaterTest {
     @Test
     fun should_successfully_return_response_without_translation() {
         //given
-        val sut = WikiTranslater(server.url("").toString())
+        val sut = WikiTranslator(server.url("").toString())
         server.enqueue(successfulResponseWithoutTranslation())
         val testSubscriber = TestSubscriber<String>()
 
@@ -66,7 +66,7 @@ class WikiTranslaterTest {
     @Test
     fun should_return_error_exception() {
         //given
-        val sut = WikiTranslater(server.url("").toString())
+        val sut = WikiTranslator(server.url("").toString())
         server.enqueue(errorResponse())
         val testSubscriber = TestSubscriber<String>()
 
@@ -99,6 +99,6 @@ class WikiTranslaterTest {
                 .setBody("error")
     }
 
-    private fun getResponsePath(forFile: String) = WikiTranslaterTest::class.java.classLoader.getResource(forFile).path
+    private fun getResponsePath(forFile: String) = WikiTranslatorTest::class.java.classLoader.getResource(forFile).path
 
 }

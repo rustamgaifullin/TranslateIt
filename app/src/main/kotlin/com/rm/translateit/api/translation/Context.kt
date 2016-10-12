@@ -5,7 +5,7 @@ import com.rm.translateit.api.languages.StaticLanguages
 import com.rm.translateit.api.translation.mock.FakeTranslater
 import com.rm.translateit.api.translation.models.Language
 import com.rm.translateit.api.translation.models.TranslationResult
-import com.rm.translateit.api.translation.wiki.WikiTranslater
+import com.rm.translateit.api.translation.wiki.WikiTranslator
 import rx.Observable
 
 class Context {
@@ -13,7 +13,7 @@ class Context {
         private val url: String = "https://%s.wikipedia.org/"
         private val languageService: Languages = StaticLanguages()
         private val services: List<Pair<String, Translater>> = listOf(
-                Pair<String, Translater>("wikipedia", WikiTranslater(url)),
+                Pair<String, Translater>("wikipedia", WikiTranslator(url)),
                 Pair<String, Translater>("fake", FakeTranslater())
         )
 

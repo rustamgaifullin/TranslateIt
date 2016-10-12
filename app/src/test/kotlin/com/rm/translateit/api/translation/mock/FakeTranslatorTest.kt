@@ -7,7 +7,7 @@ import rx.observers.TestSubscriber
 import rx.plugins.RxJavaHooks
 import rx.schedulers.Schedulers
 
-class FakeTranslaterTest {
+class FakeTranslatorTest {
 
     @Before
     fun setUp() {
