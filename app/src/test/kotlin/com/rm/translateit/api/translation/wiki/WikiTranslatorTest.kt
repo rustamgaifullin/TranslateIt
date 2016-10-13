@@ -10,6 +10,7 @@ import rx.observers.TestSubscriber
 import rx.plugins.RxJavaHooks
 import rx.schedulers.Schedulers
 import java.io.File
+import java.net.ConnectException
 
 class WikiTranslatorTest {
     private lateinit var server: MockWebServer
@@ -75,6 +76,20 @@ class WikiTranslatorTest {
 
         //then
         testSubscriber.assertError(HttpException::class.java)
+    }
+
+    @Test
+    fun should_work_when_no_connection() {
+        //given
+        val sut = WikiTranslator(server.url("").toString())
+        server.shutdown()
+        val testSubscriber = TestSubscriber<String>()
+
+        //when
+        sut.translate(word, from, to).subscribe(testSubscriber)
+
+        //then
+        testSubscriber.assertError(ConnectException::class.java)
     }
 
     private fun successfulResponseWithTranslation(): MockResponse? {

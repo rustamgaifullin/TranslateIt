@@ -4,10 +4,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ProgressBar
-import android.widget.Spinner
+import android.widget.*
 import butterknife.bindView
 import com.jakewharton.rxbinding.view.RxView
 import com.jakewharton.rxbinding.widget.RxAdapterView
@@ -106,12 +103,19 @@ class MainActivity : BaseActivity() {
         Context.translate(word, from, to)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { progressBar.visibility = View.VISIBLE }
+                .doOnError { progressBar.visibility = View.GONE }
                 .doOnCompleted { progressBar.visibility = View.GONE }
-                .doOnNext { result ->
-                    items.add(result)
-                    resultAdapter.notifyDataSetChanged()
-                }
-                .subscribe()
+                .subscribe(
+                        {
+                            result ->
+                            items.add(result)
+                            resultAdapter.notifyDataSetChanged()
+                        },
+                        {
+                            error ->
+                            Toast.makeText(this, error.message, Toast.LENGTH_SHORT).show()
+                        })
+
     }
 
     private fun setToSpinnerSelection(toLanguageIndex: Int, currentLanguageIndex: Int) {
