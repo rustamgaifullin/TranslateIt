@@ -64,16 +64,18 @@ class MainActivity : BaseActivity() {
                     clearItemsAndSearch()
                 })
 
-        RxAdapterView.itemSelections(fromSpinner).subscribe { currentIndex ->
-            if (toSpinner.selectedItemPosition >= 0) {
-                var toSpinnerIndex = toAdapter.getItem(toSpinner.selectedItemPosition).first
+        RxAdapterView.itemSelections(fromSpinner)
+                .subscribe {
+                    currentIndex ->
+                    if (toSpinner.selectedItemPosition >= 0) {
+                        var toSpinnerIndex = toAdapter.getItem(toSpinner.selectedItemPosition).first
 
-                if (toSpinnerIndex == currentIndex) {
-                    toSpinnerIndex = if (currentIndex == 0) 1 else 0
-                }
+                        if (toSpinnerIndex == currentIndex) {
+                            toSpinnerIndex = if (currentIndex == 0) 1 else 0
+                        }
 
-                setToSpinnerSelection(toSpinnerIndex, currentIndex)
-            }
+                        setToSpinnerSelection(toSpinnerIndex, currentIndex)
+                    }
         }
 
         RxView.clicks(changeLanguageButton).subscribe {

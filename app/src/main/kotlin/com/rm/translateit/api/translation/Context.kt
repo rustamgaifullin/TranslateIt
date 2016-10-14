@@ -3,7 +3,7 @@ package com.rm.translateit.api.translation
 import android.util.Log
 import com.rm.translateit.api.languages.Languages
 import com.rm.translateit.api.languages.StaticLanguages
-import com.rm.translateit.api.translation.mock.FakeTranslater
+import com.rm.translateit.api.translation.dummy.DummyTranslator
 import com.rm.translateit.api.translation.models.Language
 import com.rm.translateit.api.translation.models.TranslationResult
 import com.rm.translateit.api.translation.wiki.WikiTranslator
@@ -17,7 +17,7 @@ class Context {
         private val languageService: Languages = StaticLanguages()
         private val services: List<Pair<String, Translater>> = listOf(
                 Pair<String, Translater>("wikipedia", WikiTranslator(url)),
-                Pair<String, Translater>("fake", FakeTranslater())
+                Pair<String, Translater>("dummy", DummyTranslator())
         )
 
         fun languages(): List<Language> {

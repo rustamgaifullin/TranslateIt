@@ -1,5 +1,6 @@
 package com.rm.translateit.api.translation.mock
 
+import com.rm.translateit.api.translation.dummy.DummyTranslator
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -7,7 +8,7 @@ import rx.observers.TestSubscriber
 import rx.plugins.RxJavaHooks
 import rx.schedulers.Schedulers
 
-class FakeTranslatorTest {
+class DummyTranslatorTest {
 
     @Before
     fun setUp() {
@@ -23,7 +24,7 @@ class FakeTranslatorTest {
     fun translate() {
         //given
         val testSubscriber = TestSubscriber<String>()
-        val sut = FakeTranslater()
+        val sut = DummyTranslator()
 
         //when
         sut.translate("AWESOME", "PL", "EN").subscribe(testSubscriber)
@@ -37,7 +38,7 @@ class FakeTranslatorTest {
     fun suggestions() {
         //given
         val testSubscriber = TestSubscriber<String>()
-        val sut = FakeTranslater()
+        val sut = DummyTranslator()
 
         //when
         sut.suggestions("AWESOME", "FU", 0)
@@ -46,5 +47,4 @@ class FakeTranslatorTest {
         testSubscriber.assertNoErrors()
         testSubscriber.assertReceivedOnNext(listOf())
     }
-
 }

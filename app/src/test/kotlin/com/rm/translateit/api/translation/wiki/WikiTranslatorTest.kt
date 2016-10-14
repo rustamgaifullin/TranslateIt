@@ -78,6 +78,7 @@ class WikiTranslatorTest {
         testSubscriber.assertError(HttpException::class.java)
     }
 
+    //TODO: rewrite this with UnknownHostException
     @Test
     fun should_work_when_no_connection() {
         //given
@@ -115,5 +116,4 @@ class WikiTranslatorTest {
     }
 
     private fun getResponsePath(forFile: String) = WikiTranslatorTest::class.java.classLoader.getResource(forFile).path
-
 }
