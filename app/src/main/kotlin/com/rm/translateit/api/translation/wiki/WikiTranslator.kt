@@ -2,7 +2,7 @@ package com.rm.translateit.api.translation.wiki
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.rm.translateit.api.translation.Translater
+import com.rm.translateit.api.translation.Translator
 import com.rm.translateit.api.translation.wiki.response.LanguageLinksResult
 import com.rm.translateit.api.translation.wiki.response.SearchResult
 import com.rm.translateit.api.translation.wiki.response.SuggestionResult
@@ -12,7 +12,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import rx.Observable
 import rx.schedulers.Schedulers
 
-class WikiTranslator(val url: String) : Translater {
+class WikiTranslator(val url: String) : Translator {
 
     override fun translate(word: String, from: String, to: String): Observable<String> {
         val gson = GsonBuilder()

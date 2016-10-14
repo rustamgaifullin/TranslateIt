@@ -15,9 +15,9 @@ class Context {
         private val TAG = "Context"
         private val url: String = "https://%s.wikipedia.org/"
         private val languageService: Languages = StaticLanguages()
-        private val services: List<Pair<String, Translater>> = listOf(
-                Pair<String, Translater>("wikipedia", WikiTranslator(url)),
-                Pair<String, Translater>("dummy", DummyTranslator())
+        private val services: List<Pair<String, Translator>> = listOf(
+                Pair<String, Translator>("wikipedia", WikiTranslator(url)),
+                Pair<String, Translator>("dummy", DummyTranslator())
         )
 
         fun languages(): List<Language> {

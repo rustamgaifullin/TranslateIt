@@ -1,10 +1,10 @@
 package com.rm.translateit.api.translation.dummy
 
-import com.rm.translateit.api.translation.Translater
+import com.rm.translateit.api.translation.Translator
 import rx.Observable
 import rx.schedulers.Schedulers
 
-class DummyTranslator : Translater {
+class DummyTranslator : Translator {
     override fun translate(word: String, from: String, to: String): Observable<String> {
         val result: String
         when (to) {
