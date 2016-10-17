@@ -99,8 +99,8 @@ class MainActivity : BaseActivity() {
 
     private fun search() {
         val word = wordEditText.text.toString()
-        val from = fromAdapter.getItem(fromSpinner.selectedItemId).second.code
-        val to = toAdapter.getItem(toSpinner.selectedItemId).second.code
+        val from = fromAdapter.getItem(fromSpinner.selectedItemId).second
+        val to = toAdapter.getItem(toSpinner.selectedItemId).second
 
         Context.translate(word, from, to)
                 .observeOn(AndroidSchedulers.mainThread())

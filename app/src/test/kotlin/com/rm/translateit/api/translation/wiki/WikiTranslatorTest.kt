@@ -1,5 +1,6 @@
 package com.rm.translateit.api.translation.wiki
 
+import com.rm.translateit.api.translation.models.Language
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
@@ -15,8 +16,8 @@ import java.net.ConnectException
 class WikiTranslatorTest {
     private lateinit var server: MockWebServer
     private val word = "WORD"
-    private val from = "en"
-    private val to = "pl"
+    private val from = Language("EN", "English")
+    private val to = Language("PL", "Polish")
 
     @Before
     fun setUp() {

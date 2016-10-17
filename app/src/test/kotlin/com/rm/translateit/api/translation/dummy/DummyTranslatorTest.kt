@@ -1,6 +1,6 @@
-package com.rm.translateit.api.translation.mock
+package com.rm.translateit.api.translation.dummy
 
-import com.rm.translateit.api.translation.dummy.DummyTranslator
+import com.rm.translateit.api.translation.models.Language
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -25,9 +25,12 @@ class DummyTranslatorTest {
         //given
         val testSubscriber = TestSubscriber<String>()
         val sut = DummyTranslator()
+        val word = "AWESOME"
+        val from = Language("PL", "Polish")
+        val to = Language("EN", "English")
 
         //when
-        sut.translate("AWESOME", "PL", "EN").subscribe(testSubscriber)
+        sut.translate(word, from, to).subscribe(testSubscriber)
 
         //then
         testSubscriber.assertNoErrors()

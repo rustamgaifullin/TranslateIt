@@ -1,5 +1,6 @@
 package com.rm.translateit.api.translation.wiki
 
+import com.rm.translateit.api.translation.models.Language
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.jetbrains.spek.api.Spek
@@ -24,8 +25,8 @@ import java.io.File
 class WikiTranslatorSpek : Spek ({
     given("a wiki translater") {
         val word = "WORD"
-        val from = "en"
-        val to = "pl"
+        val from = Language("EN", "English")
+        val to = Language("PL", "Polish")
 
         RxJavaHooks.setOnIOScheduler { scheduler -> Schedulers.immediate() }
         val server = MockWebServer()

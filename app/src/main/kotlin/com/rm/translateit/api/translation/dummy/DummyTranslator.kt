@@ -1,13 +1,14 @@
 package com.rm.translateit.api.translation.dummy
 
 import com.rm.translateit.api.translation.Translator
+import com.rm.translateit.api.translation.models.Language
 import rx.Observable
 import rx.schedulers.Schedulers
 
 class DummyTranslator : Translator {
-    override fun translate(word: String, from: String, to: String): Observable<String> {
+    override fun translate(word: String, from: Language, to: Language): Observable<String> {
         val result: String
-        when (to) {
+        when (to.code) {
             "EN" -> result = "Translation"
             "PL" -> result = "Tłumaczenie"
             "RU" -> result = "Перевод"

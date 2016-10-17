@@ -3,6 +3,7 @@ package com.rm.translateit.api.translation
 import android.util.Log
 import com.rm.translateit.api.languages.Languages
 import com.rm.translateit.api.languages.StaticLanguages
+import com.rm.translateit.api.translation.babla.BablaTranslator
 import com.rm.translateit.api.translation.dummy.DummyTranslator
 import com.rm.translateit.api.translation.models.Language
 import com.rm.translateit.api.translation.models.TranslationResult
@@ -13,10 +14,12 @@ import rx.lang.kotlin.onError
 class Context {
     companion object {
         private val TAG = "Context"
-        private val url: String = "https://%s.wikipedia.org/"
+        private val wikiUrl: String = "https://%s.wikipedia.org/"
+        private val bablaUrl: String = "http://en.bab.la/"
         private val languageService: Languages = StaticLanguages()
         private val services: List<Pair<String, Translator>> = listOf(
-                Pair<String, Translator>("wikipedia", WikiTranslator(url)),
+                Pair<String, Translator>("wikipedia", WikiTranslator(wikiUrl)),
+                Pair<String, Translator>("babla", BablaTranslator(bablaUrl)),
                 Pair<String, Translator>("dummy", DummyTranslator())
         )
 
@@ -24,7 +27,7 @@ class Context {
             return languageService.languages()
         }
 
-        fun translate(word: String, from: String, to: String): Observable<TranslationResult> {
+        fun translate(word: String, from: Language, to: Language): Observable<TranslationResult> {
             return Observable.from(services).flatMap { item ->
                 val (name, service) = item
                 service.translate(word, from, to)

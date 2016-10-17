@@ -83,6 +83,8 @@ dependencies {
 
     compile "com.jakewharton:kotterknife:0.1.0-SNAPSHOT"
 
+    compile "org.jsoup:jsoup:1.9.2"
+
     kapt "com.github.Raizlabs.DBFlow:dbflow-processor:$dbflow_version"
     compile "com.github.Raizlabs.DBFlow:dbflow-core:$dbflow_version"
     compile "com.github.Raizlabs.DBFlow:dbflow:$dbflow_version"

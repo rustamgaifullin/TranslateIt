@@ -3,6 +3,7 @@ package com.rm.translateit.api.translation.wiki
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.rm.translateit.api.translation.Translator
+import com.rm.translateit.api.translation.models.Language
 import com.rm.translateit.api.translation.wiki.response.LanguageLinksResult
 import com.rm.translateit.api.translation.wiki.response.SearchResult
 import com.rm.translateit.api.translation.wiki.response.SuggestionResult
@@ -14,17 +15,17 @@ import rx.schedulers.Schedulers
 
 class WikiTranslator(val url: String) : Translator {
 
-    override fun translate(word: String, from: String, to: String): Observable<String> {
+    override fun translate(word: String, from: Language, to: Language): Observable<String> {
         val gson = GsonBuilder()
                 .registerTypeAdapter(LanguageLinksResult::class.java, LanguageDeserializer())
                 .create()
-        val service = wikiService(from, gson)
+        val service = wikiService(from.code, gson)
 
-        return service.query(word, to.toLowerCase())
+        return service.query(word, to.code.toLowerCase())
                 .subscribeOn(Schedulers.io())
                 .map { languageLinksResult ->
                     val languageResult = languageLinksResult.list
-                        .filter({ languageResult -> languageResult.code == to.toLowerCase() })
+                        .filter({ languageResult -> languageResult.code == to.code.toLowerCase() })
                         .firstOrNull()
 
                     languageResult?.title ?: ""
