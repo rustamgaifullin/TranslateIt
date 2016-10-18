@@ -8,5 +8,5 @@ import rx.Observable
 interface BablaRestService {
 
     @GET("dictionary/{from_to}/{word}")
-    fun query(@Path("from_to") fromTo: String, @Path("word") word: String): Observable<ResponseBody>
+    fun translate(@Path("word") word: String, @Path("from_to") fromTo: String): Observable<ResponseBody>
 }

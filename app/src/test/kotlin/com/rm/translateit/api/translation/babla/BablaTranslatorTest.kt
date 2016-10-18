@@ -34,19 +34,19 @@ class BablaTranslatorTest {
     fun should_successfully_return_response_with_translation() {
         //given
         val sut = BablaTranslator(server.url("").toString())
-        val testSubsriber = TestSubscriber<String>()
+        val testSubscriber = TestSubscriber<String>()
         val word = "WORD"
         val from = Language("EN", "English")
         val to = Language("PL", "Polish")
 
         //when
         server.enqueue(successfulResponseWithTranslation())
-        sut.translate(word, from, to).subscribe(testSubsriber)
+        sut.translate(word, from, to).subscribe(testSubscriber)
 
         //then
-        testSubsriber.assertNoErrors()
-        testSubsriber.assertReceivedOnNext(listOf("witaj"))
-        testSubsriber.assertCompleted()
+        testSubscriber.assertNoErrors()
+        testSubscriber.assertReceivedOnNext(listOf("witaj"))
+        testSubscriber.assertCompleted()
     }
 
     private fun successfulResponseWithTranslation(): MockResponse? {

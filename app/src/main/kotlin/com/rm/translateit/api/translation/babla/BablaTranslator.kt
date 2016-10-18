@@ -12,15 +12,10 @@ import rx.schedulers.Schedulers
 class BablaTranslator(private val url: String): Translator {
 
     override fun translate(word: String, from: Language, to: Language): Observable<String> {
-        val retrofit = Retrofit.Builder()
-                .baseUrl(url)
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .build()
-        val bablaService = retrofit.create(BablaRestService::class.java)
-
+        val bablaService = createBablaService()
         val fromTo = formatLanguages(from, to)
 
-        return bablaService.query(fromTo, word)
+        return bablaService.translate(word, fromTo)
                 .subscribeOn(Schedulers.io())
                 .map { responseBody ->
                     val htmlString = responseBody.string()
@@ -33,6 +28,14 @@ class BablaTranslator(private val url: String): Translator {
                             .firstOrNull() //TODO: yeah...bad design, babla can return multiple results but I can handle only one :(
                             .orEmpty()
                 }
+    }
+
+    private fun createBablaService(): BablaRestService {
+        val retrofit = Retrofit.Builder()
+                .baseUrl(url)
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .build()
+        return retrofit.create(BablaRestService::class.java)
     }
 
     private fun formatLanguages(from: Language, to: Language): String {
