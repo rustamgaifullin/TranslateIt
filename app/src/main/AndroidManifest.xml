@@ -10,7 +10,9 @@
       android:theme="@style/AppTheme"
       android:name=".TranslateApplication"
   >
-    <activity android:name=".ui.activities.MainActivity">
+    <activity
+        android:name=".ui.activities.MainActivity"
+        >
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
 

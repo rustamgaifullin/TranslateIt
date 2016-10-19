@@ -11,9 +11,9 @@ import com.rm.translateit.api.translation.wiki.WikiTranslator
 import rx.Observable
 import rx.lang.kotlin.onError
 
-class Context {
+class Services {
     companion object {
-        private val TAG = "Context"
+        private val TAG = "Services"
         private val wikiUrl: String = "https://%s.wikipedia.org/"
         private val bablaUrl: String = "http://en.bab.la/"
         private val languageService: Languages = DBLanguages()

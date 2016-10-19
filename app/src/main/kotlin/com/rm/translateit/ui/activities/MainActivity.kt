@@ -1,9 +1,11 @@
 package com.rm.translateit.ui.activities
 
+import android.content.Context
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import butterknife.bindView
 import com.jakewharton.rxbinding.view.RxView
@@ -11,7 +13,7 @@ import com.jakewharton.rxbinding.widget.RxAdapterView
 import com.jakewharton.rxbinding.widget.RxTextView
 import com.rm.translateit.R
 import com.rm.translateit.api.models.TranslationResult
-import com.rm.translateit.api.translation.Context
+import com.rm.translateit.api.translation.Services
 import com.rm.translateit.ui.adapters.LanguageSpinnerAdapter
 import com.rm.translateit.ui.adapters.ResultRecyclerViewAdapter
 import rx.android.schedulers.AndroidSchedulers
@@ -31,7 +33,7 @@ class MainActivity : BaseActivity() {
     private lateinit var fromAdapter: LanguageSpinnerAdapter
     private lateinit var toAdapter: LanguageSpinnerAdapter
 
-    private val languages = Context.languages()
+    private val languages = Services.languages()
 
     var items: MutableList<TranslationResult> = arrayListOf()
     lateinit var resultAdapter: ResultRecyclerViewAdapter
@@ -110,14 +112,17 @@ class MainActivity : BaseActivity() {
         val from = fromAdapter.getItem(fromSpinner.selectedItemId).second
         val to = toAdapter.getItem(toSpinner.selectedItemId).second
 
-        Context.translate(word, from, to)
+        Services.translate(word, from, to)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
-                    items.clear()
+                    clearAndNotify()
                     progressBar.visibility = View.VISIBLE
                 }
                 .doOnError { progressBar.visibility = View.GONE }
-                .doOnCompleted { progressBar.visibility = View.GONE }
+                .doOnCompleted {
+                    progressBar.visibility = View.GONE
+                    hideKeyboard()
+                }
                 .subscribe(
                         {
                             result ->
@@ -128,6 +133,11 @@ class MainActivity : BaseActivity() {
                             error ->
                             Toast.makeText(this, error.message, Toast.LENGTH_SHORT).show()
                         })
+    }
+
+    private fun clearAndNotify() {
+        items.clear()
+        resultAdapter.notifyDataSetChanged()
     }
 
     private fun setToSpinnerSelection(toLanguageIndex: Int, currentLanguageIndex: Int) {
@@ -151,5 +161,12 @@ class MainActivity : BaseActivity() {
                 .last()
 
         toSpinner.setSelection(languageIndex)
+    }
+
+    private fun hideKeyboard() {
+        if (this.currentFocus != null && items.size > 0) {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(this.currentFocus.windowToken, 0)
+        }
     }
 }
