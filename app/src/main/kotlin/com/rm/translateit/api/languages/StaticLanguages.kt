@@ -1,6 +1,6 @@
 package com.rm.translateit.api.languages
 
-import com.rm.translateit.api.translation.models.Language
+import com.rm.translateit.api.models.Language
 
 class StaticLanguages: Languages {
     override fun languages(): List<Language> {

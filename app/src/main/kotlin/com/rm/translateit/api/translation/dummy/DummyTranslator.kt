@@ -1,7 +1,7 @@
 package com.rm.translateit.api.translation.dummy
 
 import com.rm.translateit.api.translation.Translator
-import com.rm.translateit.api.translation.models.Language
+import com.rm.translateit.api.models.Language
 import rx.Observable
 import rx.schedulers.Schedulers
 

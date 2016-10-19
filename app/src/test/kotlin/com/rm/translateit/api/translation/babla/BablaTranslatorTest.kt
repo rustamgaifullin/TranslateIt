@@ -1,6 +1,6 @@
 package com.rm.translateit.api.translation.babla
 
-import com.rm.translateit.api.translation.models.Language
+import com.rm.translateit.api.models.Language
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After

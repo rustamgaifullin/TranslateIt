@@ -10,8 +10,8 @@ import com.jakewharton.rxbinding.view.RxView
 import com.jakewharton.rxbinding.widget.RxAdapterView
 import com.jakewharton.rxbinding.widget.RxTextView
 import com.rm.translateit.R
+import com.rm.translateit.api.models.TranslationResult
 import com.rm.translateit.api.translation.Context
-import com.rm.translateit.api.translation.models.TranslationResult
 import com.rm.translateit.ui.adapters.LanguageSpinnerAdapter
 import com.rm.translateit.ui.adapters.ResultRecyclerViewAdapter
 import rx.android.schedulers.AndroidSchedulers
@@ -61,7 +61,7 @@ class MainActivity : BaseActivity() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .filter({ s -> s.length > 0 })
                 .subscribe({
-                    clearItemsAndSearch()
+                    search()
                 })
 
         RxAdapterView.itemSelections(fromSpinner)
@@ -71,18 +71,18 @@ class MainActivity : BaseActivity() {
                         val toSpinnerIndex = getToLanguageIndex(currentIndex)
                         setToSpinnerSelection(toSpinnerIndex, currentIndex)
 
-                        clearItemsAndSearch()
+                        search()
                     }
         }
 
         RxAdapterView.itemSelections(toSpinner)
                 .subscribe {
-                    onNext -> clearItemsAndSearch()
+                    onNext -> search()
                 }
 
         RxView.clicks(changeLanguageButton).subscribe {
             swapLanguages()
-            clearItemsAndSearch()
+            search()
         }
     }
 
@@ -103,19 +103,19 @@ class MainActivity : BaseActivity() {
         setToSpinnerSelection(newToIndex, newFromIndex)
     }
 
-    private fun clearItemsAndSearch() {
-        items.clear()
-        search()
-    }
-
     private fun search() {
+        if (wordEditText.text.isNullOrEmpty()) return
+
         val word = wordEditText.text.toString()
         val from = fromAdapter.getItem(fromSpinner.selectedItemId).second
         val to = toAdapter.getItem(toSpinner.selectedItemId).second
 
         Context.translate(word, from, to)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { progressBar.visibility = View.VISIBLE }
+                .doOnSubscribe {
+                    items.clear()
+                    progressBar.visibility = View.VISIBLE
+                }
                 .doOnError { progressBar.visibility = View.GONE }
                 .doOnCompleted { progressBar.visibility = View.GONE }
                 .subscribe(
@@ -128,7 +128,6 @@ class MainActivity : BaseActivity() {
                             error ->
                             Toast.makeText(this, error.message, Toast.LENGTH_SHORT).show()
                         })
-
     }
 
     private fun setToSpinnerSelection(toLanguageIndex: Int, currentLanguageIndex: Int) {

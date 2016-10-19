@@ -3,7 +3,7 @@ package com.rm.translateit.api.translation.wiki
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.rm.translateit.api.translation.Translator
-import com.rm.translateit.api.translation.models.Language
+import com.rm.translateit.api.models.Language
 import com.rm.translateit.api.translation.wiki.response.LanguageLinksResult
 import com.rm.translateit.api.translation.wiki.response.SearchResult
 import com.rm.translateit.api.translation.wiki.response.SuggestionResult

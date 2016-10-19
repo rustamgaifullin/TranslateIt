@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
-import com.rm.translateit.api.translation.models.Language
+import com.rm.translateit.api.models.Language
 
 class LanguageSpinnerAdapter(private val context: Context) : BaseAdapter() {
 

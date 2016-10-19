@@ -1,12 +1,12 @@
 package com.rm.translateit.api.translation
 
 import android.util.Log
+import com.rm.translateit.api.languages.DBLanguages
 import com.rm.translateit.api.languages.Languages
-import com.rm.translateit.api.languages.StaticLanguages
+import com.rm.translateit.api.models.Language
+import com.rm.translateit.api.models.TranslationResult
 import com.rm.translateit.api.translation.babla.BablaTranslator
 import com.rm.translateit.api.translation.dummy.DummyTranslator
-import com.rm.translateit.api.translation.models.Language
-import com.rm.translateit.api.translation.models.TranslationResult
 import com.rm.translateit.api.translation.wiki.WikiTranslator
 import rx.Observable
 import rx.lang.kotlin.onError
@@ -16,7 +16,7 @@ class Context {
         private val TAG = "Context"
         private val wikiUrl: String = "https://%s.wikipedia.org/"
         private val bablaUrl: String = "http://en.bab.la/"
-        private val languageService: Languages = StaticLanguages()
+        private val languageService: Languages = DBLanguages()
         private val services: List<Pair<String, Translator>> = listOf(
                 Pair<String, Translator>("wikipedia", WikiTranslator(wikiUrl)),
                 Pair<String, Translator>("babla", BablaTranslator(bablaUrl)),

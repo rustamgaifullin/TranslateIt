@@ -1,6 +1,6 @@
 package com.rm.translateit.api.translation
 
-import com.rm.translateit.api.translation.models.Language
+import com.rm.translateit.api.models.Language
 import rx.Observable
 
 interface Translator {

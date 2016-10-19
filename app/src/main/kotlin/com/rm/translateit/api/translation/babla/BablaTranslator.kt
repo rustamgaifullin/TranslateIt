@@ -1,7 +1,7 @@
 package com.rm.translateit.api.translation.babla
 
 import com.rm.translateit.api.translation.Translator
-import com.rm.translateit.api.translation.models.Language
+import com.rm.translateit.api.models.Language
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import retrofit2.Retrofit
