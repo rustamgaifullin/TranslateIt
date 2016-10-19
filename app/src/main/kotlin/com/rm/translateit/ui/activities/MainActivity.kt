@@ -68,20 +68,31 @@ class MainActivity : BaseActivity() {
                 .subscribe {
                     currentIndex ->
                     if (toSpinner.selectedItemPosition >= 0) {
-                        var toSpinnerIndex = toAdapter.getItem(toSpinner.selectedItemPosition).first
-
-                        if (toSpinnerIndex == currentIndex) {
-                            toSpinnerIndex = if (currentIndex == 0) 1 else 0
-                        }
-
+                        val toSpinnerIndex = getToLanguageIndex(currentIndex)
                         setToSpinnerSelection(toSpinnerIndex, currentIndex)
+
+                        clearItemsAndSearch()
                     }
         }
+
+        RxAdapterView.itemSelections(toSpinner)
+                .subscribe {
+                    onNext -> clearItemsAndSearch()
+                }
 
         RxView.clicks(changeLanguageButton).subscribe {
             swapLanguages()
             clearItemsAndSearch()
         }
+    }
+
+    private fun getToLanguageIndex(currentIndex: Int): Int {
+        var toSpinnerIndex = toAdapter.getItem(toSpinner.selectedItemPosition).first
+
+        if (toSpinnerIndex == currentIndex) {
+            toSpinnerIndex = if (currentIndex == 0) 1 else 0
+        }
+        return toSpinnerIndex
     }
 
     private fun swapLanguages() {
