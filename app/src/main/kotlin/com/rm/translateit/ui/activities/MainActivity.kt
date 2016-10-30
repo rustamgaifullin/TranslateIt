@@ -1,11 +1,9 @@
 package com.rm.translateit.ui.activities
 
-import android.content.Context
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import butterknife.bindView
 import com.jakewharton.rxbinding.view.RxView
@@ -14,6 +12,7 @@ import com.jakewharton.rxbinding.widget.RxTextView
 import com.rm.translateit.R
 import com.rm.translateit.api.models.TranslationResult
 import com.rm.translateit.api.translation.Services
+import com.rm.translateit.extension.hideKeyboard
 import com.rm.translateit.ui.adapters.LanguageSpinnerAdapter
 import com.rm.translateit.ui.adapters.ResultRecyclerViewAdapter
 import rx.android.schedulers.AndroidSchedulers
@@ -121,7 +120,7 @@ class MainActivity : BaseActivity() {
                 .doOnError { progressBar.visibility = View.GONE }
                 .doOnCompleted {
                     progressBar.visibility = View.GONE
-                    hideKeyboard()
+                    hideKeyboard { items.size > 0 }
                 }
                 .subscribe(
                         {
@@ -161,12 +160,5 @@ class MainActivity : BaseActivity() {
                 .last()
 
         toSpinner.setSelection(languageIndex)
-    }
-
-    private fun hideKeyboard() {
-        if (this.currentFocus != null && items.size > 0) {
-            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(this.currentFocus.windowToken, 0)
-        }
     }
 }
