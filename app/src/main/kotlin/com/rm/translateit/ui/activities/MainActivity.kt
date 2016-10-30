@@ -2,7 +2,6 @@ package com.rm.translateit.ui.activities
 
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.View
 import android.widget.*
 import butterknife.bindView
@@ -16,11 +15,11 @@ import com.rm.translateit.extension.hideKeyboard
 import com.rm.translateit.ui.adapters.LanguageSpinnerAdapter
 import com.rm.translateit.ui.adapters.ResultRecyclerViewAdapter
 import rx.android.schedulers.AndroidSchedulers
-import java.util.concurrent.TimeUnit
 
 class MainActivity : BaseActivity() {
     companion object {
         private val TAG = "MainActivity"
+        private val IME_ACTION_TRANSLATE = 21
     }
 
     private val fromSpinner: Spinner by bindView(R.id.from_spinner)
@@ -54,12 +53,15 @@ class MainActivity : BaseActivity() {
         resultAdapter = ResultRecyclerViewAdapter(items)
         resultView.adapter = resultAdapter
         resultView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+
+        wordEditText.setImeActionLabel(getString(R.string.ime_action_translate), IME_ACTION_TRANSLATE)
     }
 
     override fun createBindings() {
         RxTextView.editorActions(wordEditText)
+                .filter { action -> action == IME_ACTION_TRANSLATE }
                 .subscribe({
-                    translate()
+                    action -> translate()
                 })
 
         RxAdapterView.itemSelections(fromSpinner)
@@ -79,11 +81,9 @@ class MainActivity : BaseActivity() {
                 }
 
         RxView.clicks(changeLanguageButton)
-                .throttleWithTimeout(100, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     swapLanguages()
-                    translate()
                 }
     }
 
@@ -140,8 +140,6 @@ class MainActivity : BaseActivity() {
     }
 
     private fun setToSpinnerSelection(toLanguageIndex: Int, currentLanguageIndex: Int) {
-        Log.d(TAG, "set indexes, from - $currentLanguageIndex to - $toLanguageIndex")
-
         val toLanguages = languages
                 .mapIndexed { index, language -> Pair(index, language) }
                 .filterIndexed { index, language -> index != currentLanguageIndex }

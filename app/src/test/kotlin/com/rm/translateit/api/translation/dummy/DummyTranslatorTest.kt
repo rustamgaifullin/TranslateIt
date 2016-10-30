@@ -26,8 +26,8 @@ class DummyTranslatorTest {
         val testSubscriber = TestSubscriber<String>()
         val sut = DummyTranslator()
         val word = "AWESOME"
-        val from = Language("PL", "Polish")
-        val to = Language("EN", "English")
+        val from = Language("pl", "Polish")
+        val to = Language("en", "English")
 
         //when
         sut.translate(word, from, to).subscribe(testSubscriber)

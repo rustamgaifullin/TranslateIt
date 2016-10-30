@@ -28,13 +28,14 @@ class Services {
         }
 
         fun translate(word: String, from: Language, to: Language): Observable<TranslationResult> {
-            return Observable.from(services).flatMap { item ->
-                val (name, service) = item
-                service.translate(word, from, to)
-                        .onError { error -> Log.d(TAG, "error message: $error") }
-                        .filter(String::isNotEmpty)
-                        .map { result -> TranslationResult(name, result) }
-            }
+            return Observable.from(services)
+                    .flatMap { item ->
+                        val (name, service) = item
+                        service.translate(word, from, to)
+                                .onError { error -> Log.d(TAG, "error message: $error") }
+                                .filter(String::isNotEmpty)
+                                .map { result -> TranslationResult(name, result) }
+                    }
         }
     }
 }
