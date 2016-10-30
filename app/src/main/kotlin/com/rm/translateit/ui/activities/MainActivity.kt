@@ -58,12 +58,9 @@ class MainActivity : BaseActivity() {
     }
 
     override fun createBindings() {
-        RxTextView.textChanges(wordEditText)
-                .throttleWithTimeout(500, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .filter({ s -> s.length > 0 })
+        RxTextView.editorActions(wordEditText)
                 .subscribe({
-                    search()
+                    translate()
                 })
 
         RxAdapterView.itemSelections(fromSpinner)
@@ -73,19 +70,22 @@ class MainActivity : BaseActivity() {
                         val toSpinnerIndex = getToLanguageIndex(currentIndex)
                         setToSpinnerSelection(toSpinnerIndex, currentIndex)
 
-                        search()
+                        translate()
                     }
         }
 
         RxAdapterView.itemSelections(toSpinner)
                 .subscribe {
-                    onNext -> search()
+                    onNext -> translate()
                 }
 
-        RxView.clicks(changeLanguageButton).subscribe {
-            swapLanguages()
-            search()
-        }
+        RxView.clicks(changeLanguageButton)
+                .throttleWithTimeout(100, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    swapLanguages()
+                    translate()
+                }
     }
 
     private fun getToLanguageIndex(currentIndex: Int): Int {
@@ -105,7 +105,7 @@ class MainActivity : BaseActivity() {
         setToSpinnerSelection(newToIndex, newFromIndex)
     }
 
-    private fun search() {
+    private fun translate() {
         if (wordEditText.text.isNullOrEmpty()) return
 
         val word = wordEditText.text.toString()
