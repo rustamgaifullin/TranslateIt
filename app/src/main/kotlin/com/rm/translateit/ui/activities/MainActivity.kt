@@ -14,7 +14,9 @@ import com.rm.translateit.api.translation.Services
 import com.rm.translateit.extension.hideKeyboard
 import com.rm.translateit.ui.adapters.LanguageSpinnerAdapter
 import com.rm.translateit.ui.adapters.ResultRecyclerViewAdapter
+import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
+import rx.subscriptions.Subscriptions
 
 class MainActivity : BaseActivity() {
     companion object {
@@ -32,8 +34,10 @@ class MainActivity : BaseActivity() {
     private lateinit var toAdapter: LanguageSpinnerAdapter
 
     private val languages = Services.languages()
+    private var items: MutableList<TranslationResult> = arrayListOf()
 
-    var items: MutableList<TranslationResult> = arrayListOf()
+    private var translatorSubscription: Subscription = Subscriptions.unsubscribed()
+
     lateinit var resultAdapter: ResultRecyclerViewAdapter
 
     override fun getLayoutId(): Int {
@@ -61,7 +65,8 @@ class MainActivity : BaseActivity() {
         RxTextView.editorActions(wordEditText)
                 .filter { action -> action == IME_ACTION_TRANSLATE }
                 .subscribe({
-                    action -> translate()
+                    action ->
+                    translate()
                 })
 
         RxAdapterView.itemSelections(fromSpinner)
@@ -73,11 +78,12 @@ class MainActivity : BaseActivity() {
 
                         translate()
                     }
-        }
+                }
 
         RxAdapterView.itemSelections(toSpinner)
                 .subscribe {
-                    onNext -> translate()
+                    onNext ->
+                    translate()
                 }
 
         RxView.clicks(changeLanguageButton)
@@ -106,12 +112,15 @@ class MainActivity : BaseActivity() {
 
     private fun translate() {
         if (wordEditText.text.isNullOrEmpty()) return
+        if (!translatorSubscription.isUnsubscribed) {
+            translatorSubscription.unsubscribe()
+        }
 
         val word = wordEditText.text.toString()
         val from = fromAdapter.getItem(fromSpinner.selectedItemId).second
         val to = toAdapter.getItem(toSpinner.selectedItemId).second
 
-        Services.translate(word, from, to)
+        translatorSubscription = Services.translate(word, from, to)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
                     clearAndNotify()
@@ -131,7 +140,8 @@ class MainActivity : BaseActivity() {
                         {
                             error ->
                             Toast.makeText(this, error.message, Toast.LENGTH_SHORT).show()
-                        })
+                        }
+                )
     }
 
     private fun clearAndNotify() {
