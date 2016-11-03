@@ -18,6 +18,7 @@ import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.subscriptions.Subscriptions
 
+//TODO: use RxLifecycle to prevent memory leaks for subscriptions.
 class MainActivity : BaseActivity() {
     companion object {
         private val TAG = "MainActivity"
@@ -52,7 +53,7 @@ class MainActivity : BaseActivity() {
 
         destinationAdapter = LanguageSpinnerAdapter(this)
         destinationSpinner.adapter = destinationAdapter
-        setToSpinnerSelection(1, 0)
+        setDestinationSpinnerSelection(1, 0)
 
         resultAdapter = ResultRecyclerViewAdapter(items)
         resultView.adapter = resultAdapter
@@ -71,10 +72,10 @@ class MainActivity : BaseActivity() {
 
         RxAdapterView.itemSelections(originSpinner)
                 .subscribe {
-                    currentIndex ->
+                    currentOriginIndex ->
                     if (destinationSpinner.selectedItemPosition >= 0) {
-                        val toSpinnerIndex = getToLanguageIndex(currentIndex)
-                        setToSpinnerSelection(toSpinnerIndex, currentIndex)
+                        val destinationIndex = getDestinationIndex(currentOriginIndex)
+                        setDestinationSpinnerSelection(destinationIndex, currentOriginIndex)
 
                         translate()
                     }
@@ -93,21 +94,21 @@ class MainActivity : BaseActivity() {
                 }
     }
 
-    private fun getToLanguageIndex(currentIndex: Int): Int {
-        var toSpinnerIndex = destinationAdapter.getItem(destinationSpinner.selectedItemPosition).first
+    private fun getDestinationIndex(currentIndex: Int): Int {
+        var destinationIndex = destinationAdapter.getItem(destinationSpinner.selectedItemPosition).first
 
-        if (toSpinnerIndex == currentIndex) {
-            toSpinnerIndex = if (currentIndex == 0) 1 else 0
+        if (destinationIndex == currentIndex) {
+            destinationIndex = if (currentIndex == 0) 1 else 0
         }
-        return toSpinnerIndex
+        return destinationIndex
     }
 
     private fun swapLanguages() {
-        val newFromIndex = destinationAdapter.getItem(destinationSpinner.selectedItemPosition).first
-        val newToIndex = originAdapter.getItem(originSpinner.selectedItemPosition).first
+        val currentOriginIndex = destinationAdapter.getItem(destinationSpinner.selectedItemPosition).first
+        val newDestinationIndex = originAdapter.getItem(originSpinner.selectedItemPosition).first
 
-        originSpinner.setSelection(newFromIndex)
-        setToSpinnerSelection(newToIndex, newFromIndex)
+        originSpinner.setSelection(currentOriginIndex)
+        setDestinationSpinnerSelection(newDestinationIndex, currentOriginIndex)
     }
 
     private fun translate() {
@@ -118,10 +119,10 @@ class MainActivity : BaseActivity() {
         }
 
         val word = wordEditText.text.toString()
-        val from = originAdapter.getItem(originSpinner.selectedItemId).second
-        val to = destinationAdapter.getItem(destinationSpinner.selectedItemId).second
+        val fromLanguage = originAdapter.getItem(originSpinner.selectedItemId).second
+        val toLanguage = destinationAdapter.getItem(destinationSpinner.selectedItemId).second
 
-        translatorSubscription = Services.translate(word, from, to)
+        translatorSubscription = Services.translate(word, fromLanguage, toLanguage)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
                     clearAndNotify()
@@ -150,20 +151,20 @@ class MainActivity : BaseActivity() {
         resultAdapter.notifyDataSetChanged()
     }
 
-    private fun setToSpinnerSelection(toLanguageIndex: Int, currentLanguageIndex: Int) {
-        val toLanguages = languages
+    private fun setDestinationSpinnerSelection(destinationIndex: Int, currentOriginIndex: Int) {
+        val destinationLanguages = languages
                 .mapIndexed { index, language -> Pair(index, language) }
-                .filterIndexed { index, language -> index != currentLanguageIndex }
-        destinationAdapter.updateLanguages(toLanguages)
+                .filterIndexed { index, language -> index != currentOriginIndex }
+        destinationAdapter.updateLanguages(destinationLanguages)
 
-        val languageIndex = toLanguages
+        val languageIndex = destinationLanguages
                 .mapIndexed { realIndex, languagePair ->
                     val mappedIndex = languagePair.first
                     Pair(mappedIndex, realIndex)
                 }
                 .filter { indexPair ->
                     val mappedIndex = indexPair.first
-                    mappedIndex == toLanguageIndex
+                    mappedIndex == destinationIndex
                 }
                 .map(Pair<Int, Int>::second)
                 .last()
