@@ -17,7 +17,7 @@
       android:inputType="text"
       android:imeOptions="actionGo"
       android:imeActionLabel="@string/ime_action_translate"
-      android:layout_below="@+id/to_spinner"
+      android:layout_below="@+id/destination_spinner"
       android:layout_alignParentLeft="true"
       android:layout_alignParentStart="true"
       android:layout_marginTop="@dimen/margin_medium"
@@ -27,7 +27,7 @@
       android:layout_marginRight="@dimen/margin_medium"
       app:layout_constraintRight_toRightOf="parent"
       app:layout_constraintLeft_toLeftOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/from_spinner"
+      app:layout_constraintTop_toBottomOf="@+id/origin_spinner"
       />
   <ProgressBar
       android:id="@+id/progressBar"
@@ -42,7 +42,7 @@
       />
 
   <Spinner
-      android:id="@+id/from_spinner"
+      android:id="@+id/origin_spinner"
       android:layout_width="0dp"
       android:layout_height="40dp"
       android:layout_alignParentTop="true"
@@ -71,7 +71,7 @@
       />
 
   <Spinner
-      android:id="@+id/to_spinner"
+      android:id="@+id/destination_spinner"
       android:layout_width="0dp"
       android:layout_height="40dp"
       android:layout_alignParentTop="true"

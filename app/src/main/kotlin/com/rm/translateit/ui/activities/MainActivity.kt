@@ -24,14 +24,14 @@ class MainActivity : BaseActivity() {
         private val IME_ACTION_TRANSLATE = 21
     }
 
-    private val fromSpinner: Spinner by bindView(R.id.from_spinner)
-    private val toSpinner: Spinner by bindView(R.id.to_spinner)
+    private val originSpinner: Spinner by bindView(R.id.origin_spinner)
+    private val destinationSpinner: Spinner by bindView(R.id.destination_spinner)
     private val wordEditText: EditText by bindView(R.id.word_editText)
     private val resultView: RecyclerView by bindView(R.id.result_recyclerView)
     private val changeLanguageButton: Button by bindView(R.id.changeLanguage_button)
     private val progressBar: ProgressBar by bindView(R.id.progressBar)
-    private lateinit var fromAdapter: LanguageSpinnerAdapter
-    private lateinit var toAdapter: LanguageSpinnerAdapter
+    private lateinit var originAdapter: LanguageSpinnerAdapter
+    private lateinit var destinationAdapter: LanguageSpinnerAdapter
 
     private val languages = Services.languages()
     private var items: MutableList<TranslationResult> = arrayListOf()
@@ -45,13 +45,13 @@ class MainActivity : BaseActivity() {
     }
 
     override fun prepareUI() {
-        fromAdapter = LanguageSpinnerAdapter(this)
-        fromSpinner.adapter = fromAdapter
+        originAdapter = LanguageSpinnerAdapter(this)
+        originSpinner.adapter = originAdapter
         val fromLanguages = languages.mapIndexed { index, language -> Pair(index, language) }
-        fromAdapter.updateLanguages(fromLanguages)
+        originAdapter.updateLanguages(fromLanguages)
 
-        toAdapter = LanguageSpinnerAdapter(this)
-        toSpinner.adapter = toAdapter
+        destinationAdapter = LanguageSpinnerAdapter(this)
+        destinationSpinner.adapter = destinationAdapter
         setToSpinnerSelection(1, 0)
 
         resultAdapter = ResultRecyclerViewAdapter(items)
@@ -69,10 +69,10 @@ class MainActivity : BaseActivity() {
                     translate()
                 })
 
-        RxAdapterView.itemSelections(fromSpinner)
+        RxAdapterView.itemSelections(originSpinner)
                 .subscribe {
                     currentIndex ->
-                    if (toSpinner.selectedItemPosition >= 0) {
+                    if (destinationSpinner.selectedItemPosition >= 0) {
                         val toSpinnerIndex = getToLanguageIndex(currentIndex)
                         setToSpinnerSelection(toSpinnerIndex, currentIndex)
 
@@ -80,7 +80,7 @@ class MainActivity : BaseActivity() {
                     }
                 }
 
-        RxAdapterView.itemSelections(toSpinner)
+        RxAdapterView.itemSelections(destinationSpinner)
                 .subscribe {
                     onNext ->
                     translate()
@@ -94,7 +94,7 @@ class MainActivity : BaseActivity() {
     }
 
     private fun getToLanguageIndex(currentIndex: Int): Int {
-        var toSpinnerIndex = toAdapter.getItem(toSpinner.selectedItemPosition).first
+        var toSpinnerIndex = destinationAdapter.getItem(destinationSpinner.selectedItemPosition).first
 
         if (toSpinnerIndex == currentIndex) {
             toSpinnerIndex = if (currentIndex == 0) 1 else 0
@@ -103,22 +103,23 @@ class MainActivity : BaseActivity() {
     }
 
     private fun swapLanguages() {
-        val newFromIndex = toAdapter.getItem(toSpinner.selectedItemPosition).first
-        val newToIndex = fromAdapter.getItem(fromSpinner.selectedItemPosition).first
+        val newFromIndex = destinationAdapter.getItem(destinationSpinner.selectedItemPosition).first
+        val newToIndex = originAdapter.getItem(originSpinner.selectedItemPosition).first
 
-        fromSpinner.setSelection(newFromIndex)
+        originSpinner.setSelection(newFromIndex)
         setToSpinnerSelection(newToIndex, newFromIndex)
     }
 
     private fun translate() {
         if (wordEditText.text.isNullOrEmpty()) return
+
         if (!translatorSubscription.isUnsubscribed) {
             translatorSubscription.unsubscribe()
         }
 
         val word = wordEditText.text.toString()
-        val from = fromAdapter.getItem(fromSpinner.selectedItemId).second
-        val to = toAdapter.getItem(toSpinner.selectedItemId).second
+        val from = originAdapter.getItem(originSpinner.selectedItemId).second
+        val to = destinationAdapter.getItem(destinationSpinner.selectedItemId).second
 
         translatorSubscription = Services.translate(word, from, to)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -153,7 +154,7 @@ class MainActivity : BaseActivity() {
         val toLanguages = languages
                 .mapIndexed { index, language -> Pair(index, language) }
                 .filterIndexed { index, language -> index != currentLanguageIndex }
-        toAdapter.updateLanguages(toLanguages)
+        destinationAdapter.updateLanguages(toLanguages)
 
         val languageIndex = toLanguages
                 .mapIndexed { realIndex, languagePair ->
@@ -167,6 +168,6 @@ class MainActivity : BaseActivity() {
                 .map(Pair<Int, Int>::second)
                 .last()
 
-        toSpinner.setSelection(languageIndex)
+        destinationSpinner.setSelection(languageIndex)
     }
 }
