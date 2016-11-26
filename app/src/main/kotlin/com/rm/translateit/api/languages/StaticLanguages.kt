@@ -10,4 +10,16 @@ class StaticLanguages: Languages {
                 Language("RU", "Russian")
         )
     }
+
+    override fun originLanguages(): List<Language> {
+        return languages()
+    }
+
+    override fun destinationLanguages(exceptOrigin: String): List<Language> {
+        return languages().filter { language -> language.code != exceptOrigin.toUpperCase() }
+    }
+
+    override fun updateLastUsage(model: Language) {
+
+    }
 }
