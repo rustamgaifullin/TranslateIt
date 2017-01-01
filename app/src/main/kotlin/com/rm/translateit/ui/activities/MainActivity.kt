@@ -3,6 +3,7 @@ package com.rm.translateit.ui.activities
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
+import android.view.inputmethod.EditorInfo.*
 import android.widget.*
 import butterknife.bindView
 import com.jakewharton.rxbinding.view.RxView
@@ -67,7 +68,13 @@ class MainActivity : BaseActivity() {
     override fun createBindings() {
         subscriptions.add(
                 RxTextView.editorActions(wordEditText)
-                        .filter { action -> action == IME_ACTION_TRANSLATE }
+                        .filter { action ->
+                            action == IME_ACTION_TRANSLATE ||
+                                    action == IME_ACTION_DONE ||
+                                    action == IME_ACTION_GO ||
+                                    action == IME_ACTION_SEND ||
+                                    action == IME_ACTION_SEARCH
+                        }
                         .subscribe({
                             action ->
                             translate()
