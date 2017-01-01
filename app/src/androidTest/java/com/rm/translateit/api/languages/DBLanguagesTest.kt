@@ -45,4 +45,28 @@ class DBLanguagesTest {
         Assert.assertTrue("List of destination languages should not contain origin language code", result.filter { language -> language.code == "en" }.isEmpty())
         Assert.assertEquals("Size of list of destination languages should be minus one from all languages", sizeOfAllLanguages - 1, result.size)
     }
+
+    @Test
+    fun check_updating_origin_last_usage() {
+        val languages = sut.originLanguages()
+        val languageToUpdate = languages.last()
+
+        sut.updateOriginLastUsage(languageToUpdate)
+
+        val result = sut.originLanguages()
+
+        Assert.assertTrue("First language should be last updated", result.first() == languageToUpdate)
+    }
+
+    @Test
+    fun check_updating_destination_last_usage() {
+        val languages = sut.originLanguages()
+        val languageToUpdate = languages.last()
+
+        sut.updateDestinationLastUsage(languageToUpdate)
+
+        val result = sut.destinationLanguages("")
+
+        Assert.assertTrue("First language should be last updated", result.first() == languageToUpdate)
+    }
 }

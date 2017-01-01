@@ -15,7 +15,7 @@ class DBLanguages : Languages {
     override fun originLanguages(): List<Language> {
         return SQLite.select()
                 .from(Language::class)
-                .orderBy(Language_Table.originLastUsage.nameAlias, true)
+                .orderBy(Language_Table.originLastUsage.nameAlias, false)
                 .queryList()
     }
 
@@ -25,7 +25,7 @@ class DBLanguages : Languages {
         return SQLite.select()
                 .from(Language::class)
                 .where(Language_Table.code.notEq(exceptOriginToLower))
-                .orderBy(Language_Table.destinationLastUsage.nameAlias, true)
+                .orderBy(Language_Table.destinationLastUsage.nameAlias, false)
                 .queryList()
     }
 
