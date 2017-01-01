@@ -10,7 +10,9 @@ import com.rm.translateit.db.AppDatabase
 @Table(database = AppDatabase::class)
 data class Language(
         @PrimaryKey var code: String = "",
-        @Column var name: String = "") : Model {
+        @Column var name: String = "",
+        @Column var originLastUsage: Long = 0,
+        @Column var destinationLastUsage: Long = 0) : Model {
     override fun save() = modelAdapter<Language>().save(this)
     override fun delete() = modelAdapter<Language>().delete(this)
     override fun update() = modelAdapter<Language>().update(this)

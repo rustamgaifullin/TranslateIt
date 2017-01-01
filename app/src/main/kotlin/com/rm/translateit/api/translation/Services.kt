@@ -6,7 +6,6 @@ import com.rm.translateit.api.languages.Languages
 import com.rm.translateit.api.models.Language
 import com.rm.translateit.api.models.TranslationResult
 import com.rm.translateit.api.translation.babla.BablaTranslator
-import com.rm.translateit.api.translation.dummy.DummyTranslator
 import com.rm.translateit.api.translation.wiki.WikiTranslator
 import rx.Observable
 import rx.lang.kotlin.onError
@@ -19,12 +18,12 @@ class Services {
         private val languageService: Languages = DBLanguages()
         private val services: List<Pair<String, Translator>> = listOf(
                 Pair<String, Translator>("wikipedia", WikiTranslator(wikiUrl)),
-                Pair<String, Translator>("babla", BablaTranslator(bablaUrl)),
-                Pair<String, Translator>("dummy", DummyTranslator())
+                Pair<String, Translator>("babla", BablaTranslator(bablaUrl))
+//                Pair<String, Translator>("dummy", DummyTranslator())
         )
 
-        fun languages(): List<Language> {
-            return languageService.languages()
+        fun languageService(): Languages {
+            return languageService
         }
 
         fun translate(word: String, from: Language, to: Language): Observable<TranslationResult> {

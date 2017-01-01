@@ -10,23 +10,23 @@ import com.rm.translateit.api.models.Language
 
 class LanguageSpinnerAdapter(private val context: Context) : BaseAdapter() {
 
-    private var languages = emptyList<Pair<Int, Language>>()
+    private var languages = emptyList<Language>()
 
-    fun updateLanguages(languages: List<Pair<Int, Language>>) {
+    fun updateLanguages(languages: List<Language>) {
         this.languages = languages
         notifyDataSetChanged()
+    }
+
+    fun getItemIndex(languageToSearch: Language): Int {
+        return languages.indexOfFirst { it.code == languageToSearch.code}
     }
 
     override fun getCount(): Int {
         return languages.count()
     }
 
-    override fun getItem(position: Int): Pair<Int, Language> {
-        return getItem(position.toLong())
-    }
-
-    fun getItem(position: Long): Pair<Int, Language> {
-        return languages[position.toInt()]
+    override fun getItem(position: Int): Language {
+        return languages[position]
     }
 
     override fun getItemId(position: Int): Long {
@@ -44,7 +44,7 @@ class LanguageSpinnerAdapter(private val context: Context) : BaseAdapter() {
             view = convertView
         }
 
-        val language = languages[position].second
+        val language = languages[position]
         textView = view as TextView?
         textView?.text = language.name
 

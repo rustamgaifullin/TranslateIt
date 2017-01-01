@@ -4,7 +4,8 @@ import com.rm.translateit.api.models.Language
 
 interface Languages {
     fun languages(): List<Language>
-    fun updateLastUsage(model: Language)
+    fun updateOriginLastUsage(model: Language)
+    fun updateDestinationLastUsage(model: Language)
     fun originLanguages(): List<Language>
-    fun destinationLanguages(exceptOrigin: String): List<Language>
+    fun destinationLanguages(exceptOriginCode: String): List<Language>
 }
