@@ -91,7 +91,7 @@
       android:id="@+id/result_recyclerView"
       android:layout_width="0dp"
       android:layout_height="0dp"
-      android:background="@android:color/darker_gray"
+      android:background="@color/light_gray"
       android:layout_marginTop="@dimen/margin_medium"
       android:paddingTop="@dimen/margin_medium"
       android:paddingStart="@dimen/margin_medium"
