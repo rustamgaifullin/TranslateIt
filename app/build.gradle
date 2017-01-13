@@ -3,7 +3,7 @@ apply plugin: 'kotlin-android'
 
 buildscript {
     ext {
-        kotlin_version = '1.0.5-2'
+        kotlin_version = '1.0.6'
         dbflow_version = '3.1.1'
         retrofit_version = '2.1.0'
         rxbinding_version = '0.4.0'
@@ -22,7 +22,7 @@ buildscript {
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "24.0.3"
+    buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "com.rm.translateit"
         minSdkVersion 18
@@ -47,6 +47,12 @@ android {
     lintOptions {
         warning 'InvalidPackage'
     }
+
+    //Conflict with dependency 'com.google.code.findbugs:jsr305'. Resolved versions for app (3.0.1) and test app (2.0.1) differ
+    //That's why
+    configurations.all {
+        resolutionStrategy.force 'com.google.code.findbugs:jsr305:3.0.1'
+    }
 }
 
 afterEvaluate {
@@ -62,8 +68,8 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-    compile 'com.android.support:appcompat-v7:25.0.1'
-    compile 'com.android.support:support-annotations:25.0.1'
+    compile 'com.android.support:appcompat-v7:25.1.0'
+    compile 'com.android.support:support-annotations:25.1.0'
 
     compile "com.squareup.retrofit2:retrofit:$retrofit_version"
     compile "com.squareup.retrofit2:retrofit-mock:$retrofit_version"
@@ -80,6 +86,11 @@ dependencies {
     compile "com.jakewharton.rxbinding:rxbinding-support-v4:$rxbinding_version"
     compile "com.jakewharton.rxbinding:rxbinding-appcompat-v7:$rxbinding_version"
     compile "com.jakewharton.rxbinding:rxbinding-design:$rxbinding_version"
+
+    //At first I need to figure out how lifecycle works by myself and then to use this library.
+    compile 'com.trello:rxlifecycle:1.0'
+    compile 'com.trello:rxlifecycle-android:1.0'
+    compile 'com.trello:rxlifecycle-kotlin:1.0'
 
     compile "com.jakewharton:kotterknife:0.1.0-SNAPSHOT"
 

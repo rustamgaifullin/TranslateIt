@@ -2,6 +2,7 @@ package com.rm.translateit.ui.activities
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log.d
 import rx.subscriptions.CompositeSubscription
 
 abstract class BaseActivity : AppCompatActivity() {
@@ -15,13 +16,15 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     override fun onResume() {
+        d("BaseActivity", "onResume called")
         super.onResume()
         createBindings()
     }
 
     override fun onPause() {
+        d("BaseActivity", "onPause called")
         super.onPause()
-        subscriptions.unsubscribe()
+        subscriptions.clear()
     }
 
     abstract fun getLayoutId(): Int
