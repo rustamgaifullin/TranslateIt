@@ -1,6 +1,7 @@
 package com.rm.translateit.api.translation.wiki
 
 import com.rm.translateit.api.models.Language
+import com.rm.translateit.api.models.translation.TranslationItem
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
@@ -38,14 +39,14 @@ class WikiTranslatorTest {
         //given
         val sut = WikiTranslator(server.url("").toString())
         server.enqueue(successfulResponseWithTranslation())
-        val testSubscriber = TestSubscriber<String>()
+        val testSubscriber = TestSubscriber<List<TranslationItem>>()
 
         //when
         sut.translate(word, from, to).subscribe(testSubscriber)
 
         //then
         testSubscriber.assertNoErrors()
-        testSubscriber.assertReceivedOnNext(listOf("Translate"))
+        testSubscriber.assertReceivedOnNext(listOf(listOf(TranslationItem("Translate"))))
         testSubscriber.assertCompleted()
     }
 
@@ -54,14 +55,14 @@ class WikiTranslatorTest {
         //given
         val sut = WikiTranslator(server.url("").toString())
         server.enqueue(successfulResponseWithoutTranslation())
-        val testSubscriber = TestSubscriber<String>()
+        val testSubscriber = TestSubscriber<List<TranslationItem>>()
 
         //when
         sut.translate(word, from, to).subscribe(testSubscriber)
 
         //then
         testSubscriber.assertNoErrors()
-        testSubscriber.assertReceivedOnNext(listOf(""))
+        testSubscriber.assertReceivedOnNext(listOf(emptyList()))
         testSubscriber.assertCompleted()
     }
 
@@ -70,7 +71,7 @@ class WikiTranslatorTest {
         //given
         val sut = WikiTranslator(server.url("").toString())
         server.enqueue(errorResponse())
-        val testSubscriber = TestSubscriber<String>()
+        val testSubscriber = TestSubscriber<List<TranslationItem>>()
 
         //when
         sut.translate(word, from, to).subscribe(testSubscriber)
@@ -85,7 +86,7 @@ class WikiTranslatorTest {
         //given
         val sut = WikiTranslator(server.url("").toString())
         server.shutdown()
-        val testSubscriber = TestSubscriber<String>()
+        val testSubscriber = TestSubscriber<List<TranslationItem>>()
 
         //when
         sut.translate(word, from, to).subscribe(testSubscriber)

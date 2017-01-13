@@ -100,7 +100,6 @@ dependencies {
     compile "com.github.Raizlabs.DBFlow:dbflow-core:$dbflow_version"
     compile "com.github.Raizlabs.DBFlow:dbflow:$dbflow_version"
     compile "com.github.Raizlabs.DBFlow:dbflow-kotlinextensions:$dbflow_version"
-    compile "com.android.support.constraint:constraint-layout:1.0.0-alpha9"
 
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
@@ -123,6 +122,7 @@ dependencies {
     testCompile "org.jetbrains.spek:spek-api:$spek_version"
     testCompile "org.jetbrains.spek:spek-junit-platform-engine:$spek_version"
     testCompile 'org.junit.platform:junit-platform-runner:1.0.0-M2'
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
 }
 
 kapt {

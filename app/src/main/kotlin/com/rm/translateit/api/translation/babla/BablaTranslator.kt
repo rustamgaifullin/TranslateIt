@@ -2,12 +2,12 @@ package com.rm.translateit.api.translation.babla
 
 import android.util.Log
 import com.rm.translateit.api.models.Language
+import com.rm.translateit.api.models.translation.TranslationItem
 import com.rm.translateit.api.translation.Translator
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
 import org.jsoup.Jsoup
-import org.jsoup.nodes.Element
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 import rx.Observable
@@ -19,7 +19,7 @@ class BablaTranslator(private val url: String): Translator {
         private val TAG = "BablaTranslator"
     }
 
-    override fun translate(word: String, from: Language, to: Language): Observable<String> {
+    override fun translate(word: String, from: Language, to: Language): Observable<List<TranslationItem>> {
         Log.d(TAG, "$word, ${from.code} -> ${to.code}")
         val bablaService = createBablaService()
         val fromTo = formatLanguages(from, to)
@@ -34,9 +34,7 @@ class BablaTranslator(private val url: String): Translator {
                     val translationElements = resultElements.select("a.result-link")
 
                     translationElements
-                            .map(Element::text)
-                            .firstOrNull() //TODO: yeah...bad design, babla can return multiple results but I can handle only one :(
-                            .orEmpty()
+                            .map { element -> TranslationItem(element.text()) }
                 }
     }
 

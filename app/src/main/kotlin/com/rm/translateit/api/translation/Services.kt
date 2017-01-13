@@ -4,7 +4,8 @@ import android.util.Log
 import com.rm.translateit.api.languages.DBLanguages
 import com.rm.translateit.api.languages.Languages
 import com.rm.translateit.api.models.Language
-import com.rm.translateit.api.models.TranslationResult
+import com.rm.translateit.api.models.translation.TranslationResult
+import com.rm.translateit.api.models.translation.TranslationSource
 import com.rm.translateit.api.translation.babla.BablaTranslator
 import com.rm.translateit.api.translation.wiki.WikiTranslator
 import rx.Observable
@@ -16,10 +17,10 @@ class Services {
         private val wikiUrl: String = "https://%s.wikipedia.org/"
         private val bablaUrl: String = "http://en.bab.la/"
         private val languageService: Languages = DBLanguages()
-        private val services: List<Pair<String, Translator>> = listOf(
-                Pair<String, Translator>("wikipedia", WikiTranslator(wikiUrl)),
-                Pair<String, Translator>("babla", BablaTranslator(bablaUrl))
-//                Pair<String, Translator>("dummy", DummyTranslator())
+        private val services: List<Pair<TranslationSource, Translator>> = listOf(
+                Pair<TranslationSource, Translator>(TranslationSource("wikipedia"), WikiTranslator(wikiUrl)),
+                Pair<TranslationSource, Translator>(TranslationSource("babla"), BablaTranslator(bablaUrl))
+//                Pair<TranslationSource, Translator>(TranslationSource("dummy"), DummyTranslator())
         )
 
         fun languageService(): Languages {
@@ -32,8 +33,10 @@ class Services {
                         val (name, service) = item
                         service.translate(word, from, to)
                                 .onError { error -> Log.d(TAG, "error message: $error") }
-                                .filter(String::isNotEmpty)
-                                .map { result -> TranslationResult(name, result) }
+                                .filter { it.isNotEmpty() }
+                                .map { result ->
+                                    TranslationResult(name, result)
+                                }
                     }
         }
     }

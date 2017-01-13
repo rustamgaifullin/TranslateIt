@@ -7,7 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.rm.translateit.R
-import com.rm.translateit.api.models.TranslationResult
+import com.rm.translateit.api.models.translation.TranslationItem
+import com.rm.translateit.api.models.translation.TranslationResult
 
 class ResultRecyclerViewAdapter(val items: MutableList<TranslationResult>) : Adapter<ResultRecyclerViewAdapter.ViewHolder>() {
 
@@ -24,17 +25,16 @@ class ResultRecyclerViewAdapter(val items: MutableList<TranslationResult>) : Ada
     override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
         val (source, translation) = items[position]
 
-        holder?.sourceTextView?.text = source
-        holder?.translationTextView?.text = translation
+        holder?.sourceTextView?.text = source.name
+        holder?.translationTextView?.text = multilineText(translation)
     }
 
-    class ViewHolder: RecyclerView.ViewHolder {
-        lateinit var sourceTextView: TextView
-        lateinit var translationTextView: TextView
+    private fun multilineText(translation: List<TranslationItem>) = translation
+            .map(TranslationItem::word)
+            .reduce { first, second -> "$first\n$second" }
 
-        constructor(itemView: View?): super(itemView) {
-            sourceTextView = itemView?.findViewById(R.id.source_textView) as TextView
-            translationTextView = itemView?.findViewById(R.id.translation_textView) as TextView
-        }
+    class ViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
+        var sourceTextView: TextView = itemView?.findViewById(R.id.source_textView) as TextView
+        var translationTextView: TextView = itemView?.findViewById(R.id.translation_textView) as TextView
     }
 }

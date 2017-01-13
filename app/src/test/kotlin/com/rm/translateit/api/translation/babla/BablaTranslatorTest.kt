@@ -1,6 +1,7 @@
 package com.rm.translateit.api.translation.babla
 
 import com.rm.translateit.api.models.Language
+import com.rm.translateit.api.models.translation.TranslationItem
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
@@ -39,7 +40,7 @@ class BablaTranslatorTest {
     fun should_successfully_return_response_with_translation() {
         //given
         val sut = BablaTranslator(server.url("").toString())
-        val testSubscriber = TestSubscriber<String>()
+        val testSubscriber = TestSubscriber<List<TranslationItem>>()
 
         //when
         server.enqueue(successfulResponseWithTranslation())
@@ -47,15 +48,30 @@ class BablaTranslatorTest {
 
         //then
         testSubscriber.assertNoErrors()
-        testSubscriber.assertReceivedOnNext(listOf("witaj"))
+        testSubscriber.assertReceivedOnNext(listOf(expectedResult()))
         testSubscriber.assertCompleted()
     }
+
+    private fun expectedResult() = listOf(
+            TranslationItem("witaj"),
+            TranslationItem("witam"),
+            TranslationItem("halo"),
+            TranslationItem("cześć"),
+            TranslationItem("słucham"),
+            TranslationItem("witajcie"),
+            TranslationItem("czołem"),
+            TranslationItem("dzień dobry"),
+            TranslationItem("serwus"),
+            TranslationItem("siema"),
+            TranslationItem("no, no"),
+            TranslationItem("coś takiego")
+    )
 
     @Test
     fun should_successfully_return_response_without_translation() {
         //given
         val sut = BablaTranslator(server.url("").toString())
-        val testSubscriber = TestSubscriber<String>()
+        val testSubscriber = TestSubscriber<List<TranslationItem>>()
 
         //when
         server.enqueue(successfulResponseWithoutTranslation())
@@ -63,7 +79,7 @@ class BablaTranslatorTest {
 
         //then
         testSubscriber.assertNoErrors()
-        testSubscriber.assertReceivedOnNext(listOf(""))
+        testSubscriber.assertReceivedOnNext(listOf(emptyList()))
         testSubscriber.assertCompleted()
     }
 
@@ -71,7 +87,7 @@ class BablaTranslatorTest {
     fun should_successfully_handle_error() {
         //given
         val sut = BablaTranslator(server.url("").toString())
-        val testSubscriber = TestSubscriber<String>()
+        val testSubscriber = TestSubscriber<List<TranslationItem>>()
 
         //when
         server.enqueue(errorResponse())

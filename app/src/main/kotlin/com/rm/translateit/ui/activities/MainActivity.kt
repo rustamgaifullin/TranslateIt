@@ -10,7 +10,7 @@ import com.jakewharton.rxbinding.view.RxView
 import com.jakewharton.rxbinding.widget.RxAdapterView
 import com.jakewharton.rxbinding.widget.RxTextView
 import com.rm.translateit.R
-import com.rm.translateit.api.models.TranslationResult
+import com.rm.translateit.api.models.translation.TranslationResult
 import com.rm.translateit.api.translation.Services
 import com.rm.translateit.extension.hideKeyboard
 import com.rm.translateit.ui.adapters.LanguageSpinnerAdapter
