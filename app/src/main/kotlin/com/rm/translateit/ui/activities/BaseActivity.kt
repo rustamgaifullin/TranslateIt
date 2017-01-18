@@ -6,13 +6,19 @@ import android.util.Log.d
 import rx.subscriptions.CompositeSubscription
 
 abstract class BaseActivity : AppCompatActivity() {
-    protected val subscriptions = CompositeSubscription()
+    protected lateinit var subscriptions: CompositeSubscription
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(getLayoutId())
 
         prepareUI()
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        subscriptions = CompositeSubscription()
     }
 
     override fun onResume() {
@@ -25,6 +31,12 @@ abstract class BaseActivity : AppCompatActivity() {
         d("BaseActivity", "onPause called")
         super.onPause()
         subscriptions.clear()
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        subscriptions.unsubscribe()
     }
 
     abstract fun getLayoutId(): Int
