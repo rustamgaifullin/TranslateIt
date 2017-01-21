@@ -7,6 +7,7 @@ import com.rm.translateit.api.models.Language
 import com.rm.translateit.api.models.translation.TranslationResult
 import com.rm.translateit.api.models.translation.TranslationSource
 import com.rm.translateit.api.translation.babla.BablaTranslator
+import com.rm.translateit.api.translation.babla.BablaUrl
 import com.rm.translateit.api.translation.wiki.WikiTranslator
 import rx.Observable
 import rx.lang.kotlin.onError
@@ -15,11 +16,10 @@ class Services {
     companion object {
         private val TAG = "Services"
         private val wikiUrl: String = "https://%s.wikipedia.org/"
-        private val bablaUrl: String = "http://en.bab.la/"
         private val languageService: Languages = DBLanguages()
         private val services: List<Pair<TranslationSource, Translator>> = listOf(
                 Pair<TranslationSource, Translator>(TranslationSource("wikipedia"), WikiTranslator(wikiUrl)),
-                Pair<TranslationSource, Translator>(TranslationSource("babla"), BablaTranslator(bablaUrl))
+                Pair<TranslationSource, Translator>(TranslationSource("babla"), BablaTranslator(BablaUrl()))
 //                Pair<TranslationSource, Translator>(TranslationSource("dummy"), DummyTranslator())
         )
 

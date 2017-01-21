@@ -1,6 +1,18 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
+task createTestResources << {
+    def mockMakerFile = new File("$projectDir/src/test/resources/mockito-extensions/org.mockito.plugins.MockMaker")
+    if (System.env.MOCK_MAKER != null) {
+        logger.info("Using MockMaker ${System.env.MOCK_MAKER}")
+        mockMakerFile.parentFile.mkdirs()
+        mockMakerFile.createNewFile()
+        mockMakerFile.write(System.env.MOCK_MAKER)
+    } else {
+        logger.info("Using default MockMaker")
+    }
+}
+
 buildscript {
     ext {
         kotlin_version = '1.0.6'
@@ -123,7 +135,7 @@ dependencies {
     testCompile "org.jetbrains.spek:spek-junit-platform-engine:$spek_version"
     testCompile 'org.junit.platform:junit-platform-runner:1.0.0-M2'
 
-    testCompile 'org.mockito:mockito-core:2.6.2'
+    testCompile 'org.mockito:mockito-core:2.6.4'
 
     compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
 }
