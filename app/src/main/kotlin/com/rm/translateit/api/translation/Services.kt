@@ -9,16 +9,17 @@ import com.rm.translateit.api.models.translation.TranslationSource
 import com.rm.translateit.api.translation.babla.BablaTranslator
 import com.rm.translateit.api.translation.babla.BablaUrl
 import com.rm.translateit.api.translation.wiki.WikiTranslator
+import com.rm.translateit.api.translation.wiki.WikiUrl
 import rx.Observable
 import rx.lang.kotlin.onError
 
+//TODO: dependency injection have you heard??? I heard :)
 class Services {
     companion object {
         private val TAG = "Services"
-        private val wikiUrl: String = "https://%s.wikipedia.org/"
         private val languageService: Languages = DBLanguages()
         private val services: List<Pair<TranslationSource, Translator>> = listOf(
-                Pair<TranslationSource, Translator>(TranslationSource("wikipedia"), WikiTranslator(wikiUrl)),
+                Pair<TranslationSource, Translator>(TranslationSource("wikipedia"), WikiTranslator(WikiUrl())),
                 Pair<TranslationSource, Translator>(TranslationSource("babla"), BablaTranslator(BablaUrl()))
 //                Pair<TranslationSource, Translator>(TranslationSource("dummy"), DummyTranslator())
         )
