@@ -45,8 +45,6 @@ class WikiTranslator(val wikiUrl: WikiUrl) : Translator {
                 .registerTypeAdapter(SuggestionResult::class.java, SuggestionDeserializer())
                 .create()
 
-        val service = wikiService(from, gson)
-
         return service.suggestions(title, offset)
                 .subscribeOn(Schedulers.io())
                 .map { result ->
