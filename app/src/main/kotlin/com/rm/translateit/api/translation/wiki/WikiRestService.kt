@@ -3,6 +3,7 @@ package com.rm.translateit.api.translation.wiki
 import com.rm.translateit.api.translation.wiki.response.LanguageLinksResult
 import com.rm.translateit.api.translation.wiki.response.SuggestionResult
 import retrofit2.http.GET
+import retrofit2.http.Url
 import retrofit2.http.Headers
 import retrofit2.http.Query
 import rx.Observable
