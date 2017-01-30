@@ -11,6 +11,8 @@ import org.jetbrains.spek.api.dsl.on
 import org.junit.Ignore
 import org.junit.platform.runner.JUnitPlatform
 import org.junit.runner.RunWith
+import org.mockito.Mockito.`when`
+import org.mockito.Mockito.mock
 import rx.observers.TestSubscriber
 import rx.plugins.RxJavaHooks
 import rx.schedulers.Schedulers
@@ -25,6 +27,7 @@ import java.io.File
 @Ignore
 class WikiTranslatorSpek : Spek ({
     given("a wiki translater") {
+        val wikiUrl = mock(WikiUrl::class.java)
         val word = "WORD"
         val from = Language("EN", "English")
         val to = Language("PL", "Polish")
@@ -33,12 +36,14 @@ class WikiTranslatorSpek : Spek ({
         val server = MockWebServer()
         server.start()
 
-        val sut = WikiTranslator(server.url("").toString())
+        val sut = WikiTranslator(wikiUrl)
 
         val responsePath = WikiTranslatorSpek::class.java.classLoader.getResource("wiki_translation_response.json").path
         server.enqueue(MockResponse()
                 .setResponseCode(200)
                 .setBody(File(responsePath).readText()))
+        `when`(wikiUrl.construct(word, from, to))
+                .thenReturn(server.url("").toString())
 
         val testSubscriber = TestSubscriber<List<TranslationItem>>()
 
