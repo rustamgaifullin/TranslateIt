@@ -32,9 +32,10 @@ class ResultRecyclerViewAdapter(val items: MutableList<TranslationResult>) : Ada
         holder?.sourceTextView?.text = source.name
     }
 
+    //TODO: this whole method shouldn't be in adapter, externalize it
     private fun multilineText(translation: List<TranslationItem>):CharSequence = translation
             .map { item ->
-                val tags = item.tags.reduce { first, second -> "$first, $second" }
+                val tags = item.tagsToString()
                 "${item.word} <small>$tags</small> <br/>"
             }
             .reduce { first, second -> "$first\n$second" }
