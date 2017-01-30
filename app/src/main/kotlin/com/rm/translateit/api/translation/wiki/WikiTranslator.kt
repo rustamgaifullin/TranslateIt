@@ -15,15 +15,13 @@ import retrofit2.converter.gson.GsonConverterFactory
 import rx.Observable
 import rx.schedulers.Schedulers
 
-class WikiTranslator(val url: String) : Translator {
-
+class WikiTranslator(val wikiUrl: WikiUrl) : Translator {
+    private val service = wikiService()
+    
     override fun translate(word: String, from: Language, to: Language): Observable<List<TranslationItem>> {
-        val gson = GsonBuilder()
-                .registerTypeAdapter(LanguageLinksResult::class.java, LanguageDeserializer())
-                .create()
-        val service = wikiService(from.code, gson)
-
-        return service.query(word, to.code.toLowerCase())
+        val url = wikiUrl.construct(word, from, to)
+        
+        return service.query(url)
                 .subscribeOn(Schedulers.io())
                 .map { languageLinksResult ->
                     val languageResult = languageLinksResult.list
@@ -56,9 +54,13 @@ class WikiTranslator(val url: String) : Translator {
                 }
     }
 
-    private fun wikiService(from: String, gson: Gson?): WikiRestService {
+    private fun wikiService(): WikiRestService {
+        val gson = GsonBuilder()
+                .registerTypeAdapter(LanguageLinksResult::class.java, LanguageDeserializer())
+                .create()
+                
         val retrofit = Retrofit.Builder()
-                .baseUrl(url.format(from))
+                .baseUrl("http://wikipedia.org")
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build()
