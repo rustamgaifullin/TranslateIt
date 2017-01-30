@@ -11,8 +11,8 @@ interface WikiRestService {
     //TODO: also thinkg about client login https://www.mediawiki.org/wiki/API:Login
 
     @Headers("User-Agent: Android_Translate")
-    @GET("w/api.php?action=query&prop=langlinks&format=json&lllimit=500&redirects")
-    fun query(@Query("titles") title: String, @Query("lllang") to: String): Observable<LanguageLinksResult>
+    @GET
+    fun query(@Url url: String): Observable<LanguageLinksResult>
 
     @Headers("User-Agent: Android_Translate")
     @GET("/w/api.php?action=query&format=json&prop=&list=search&titles=&srinfo=suggestion&srprop=redirecttitle")
