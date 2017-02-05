@@ -14,17 +14,16 @@ import retrofit2.adapter.rxjava.HttpException
 import rx.observers.TestSubscriber
 import rx.plugins.RxJavaHooks
 import rx.schedulers.Schedulers
-import java.io.File
 
 class BablaTranslatorTest {
     private val bablaUrl = mock(BablaUrl::class.java)
+    private val bablaHtmlParser = mock(BablaHtmlParser::class.java)
 
     private lateinit var server : MockWebServer
-
     private val word = "WORD"
     private val from = Language("EN", "English")
-    private val to = Language("PL", "Polish")
 
+    private val to = Language("PL", "Polish")
 
     @Before
     fun setUp() {
@@ -44,13 +43,15 @@ class BablaTranslatorTest {
     @Test
     fun should_successfully_return_response_with_translation() {
         //given
-        val sut = BablaTranslator(bablaUrl)
+        val sut = BablaTranslator(bablaUrl, bablaHtmlParser)
         val testSubscriber = TestSubscriber<List<TranslationItem>>()
 
         //when
         server.enqueue(successfulResponseWithTranslation())
         `when`(bablaUrl.construct(word, from, to))
                 .thenReturn(server.url("").toString())
+        `when`(bablaHtmlParser.getTranslateItemsFrom(""))
+                .thenReturn(expectedResult())
         sut.translate(word, from, to).subscribe(testSubscriber)
 
         //then
@@ -60,20 +61,22 @@ class BablaTranslatorTest {
     }
 
     private fun expectedResult() = listOf(
-            TranslationItem("witaj", listOf("interjection")),
-            TranslationItem("witam", listOf("interjection"))
+            TranslationItem(listOf("witaj"), listOf("interjection")),
+            TranslationItem(listOf("witam"), listOf("interjection"))
     )
 
     @Test
     fun should_successfully_return_response_without_translation() {
         //given
-        val sut = BablaTranslator(bablaUrl)
+        val sut = BablaTranslator(bablaUrl, bablaHtmlParser)
         val testSubscriber = TestSubscriber<List<TranslationItem>>()
 
         //when
         server.enqueue(successfulResponseWithoutTranslation())
         `when`(bablaUrl.construct(word, from, to))
                 .thenReturn(server.url("").toString())
+        `when`(bablaHtmlParser.getTranslateItemsFrom(""))
+                .thenReturn(emptyList())
         sut.translate(word, from, to).subscribe(testSubscriber)
 
         //then
@@ -85,13 +88,15 @@ class BablaTranslatorTest {
     @Test
     fun should_successfully_handle_error() {
         //given
-        val sut = BablaTranslator(bablaUrl)
+        val sut = BablaTranslator(bablaUrl, bablaHtmlParser)
         val testSubscriber = TestSubscriber<List<TranslationItem>>()
 
         //when
         server.enqueue(errorResponse())
         `when`(bablaUrl.construct(word, from, to))
                 .thenReturn(server.url("").toString())
+        `when`(bablaHtmlParser.getTranslateItemsFrom(""))
+                .thenReturn(emptyList())
         sut.translate(word, from, to).subscribe(testSubscriber)
 
         //then
@@ -99,19 +104,15 @@ class BablaTranslatorTest {
     }
 
     private fun successfulResponseWithTranslation(): MockResponse? {
-        val responsePath = getResponsePath(forFile = "babla_response_with_translation.html")
-
         return MockResponse()
                 .setResponseCode(200)
-                .setBody(File(responsePath).readText())
+                .setBody("")
     }
 
     private fun successfulResponseWithoutTranslation(): MockResponse? {
-        val responsePath = getResponsePath(forFile = "babla_response_no_translation.html")
-
         return MockResponse()
                 .setResponseCode(200)
-                .setBody(File(responsePath).readText())
+                .setBody("")
     }
 
     private fun errorResponse(): MockResponse? {
@@ -121,8 +122,6 @@ class BablaTranslatorTest {
                 .setResponseCode(500)
                 .setBody(body)
     }
-
-    private fun getResponsePath(forFile: String) = BablaTranslatorTest::class.java.classLoader.getResource(forFile).path
 
     @Test
     @Ignore

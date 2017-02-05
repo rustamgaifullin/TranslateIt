@@ -8,16 +8,16 @@ import com.rm.translateit.api.models.Language
  * It will be possible if language name will be stored for every supported languages.
  */
 class BablaUrl {
-    private val fullUrl = "http://%s.bab.la/dictionary/%s/%s"
+    //TODO: when they fix redirects remove en and add %s parameter
+    private val fullUrl = "http://en.bab.la/dictionary/%s/%s"
 
     fun construct(word: String, from: Language, to: Language): String {
-        val fromTo = formatLanguages(from, to)
-        val fromCode = from.code.toLowerCase()
+        val fromTo = createFromTo(from, to)
 
-        return fullUrl.format(fromCode, fromTo, word)
+        return fullUrl.format(fromTo, word)
     }
 
-    private fun formatLanguages(from: Language, to: Language): String {
+    fun createFromTo(from: Language, to: Language): String {
         val fromName = from.name.toLowerCase()
         val toName = to.name.toLowerCase()
 

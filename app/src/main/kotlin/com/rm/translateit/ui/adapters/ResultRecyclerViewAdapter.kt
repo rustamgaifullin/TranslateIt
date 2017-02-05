@@ -36,7 +36,8 @@ class ResultRecyclerViewAdapter(val items: MutableList<TranslationResult>) : Ada
     private fun multilineText(translation: List<TranslationItem>):CharSequence = translation
             .map { item ->
                 val tags = item.tagsToString()
-                "${item.word} <small>$tags</small> <br/>"
+                val words = item.wordsToString()
+                "$words <small>$tags</small> <br/>"
             }
             .reduce { first, second -> "$first\n$second" }
 

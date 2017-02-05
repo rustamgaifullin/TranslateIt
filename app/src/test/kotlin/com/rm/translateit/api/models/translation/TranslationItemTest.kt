@@ -7,7 +7,7 @@ class TranslationItemTest {
     @Test
     fun should_return_string_from_one_item_in_tag_list() {
         //given
-        val sut = TranslationItem("", listOf("One tag"))
+        val sut = TranslationItem(listOf(""), listOf("One tag"))
         
         //when
         val result = sut.tagsToString()
@@ -19,7 +19,7 @@ class TranslationItemTest {
     @Test
     fun should_return_string_from_few_items_in_tag_list() {
         //given
-        val sut = TranslationItem("", listOf("First tag", "Second tag"))
+        val sut = TranslationItem(listOf(""), listOf("First tag", "Second tag"))
         
         //when
         val result = sut.tagsToString()
@@ -31,7 +31,7 @@ class TranslationItemTest {
     @Test
     fun should_return_empty_string_when_tag_list_is_empty() {
         //given
-        val sut = TranslationItem("") 
+        val sut = TranslationItem(listOf(""))
         
         //when
         val result = sut.tagsToString()

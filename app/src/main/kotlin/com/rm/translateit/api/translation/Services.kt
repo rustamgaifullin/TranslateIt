@@ -6,6 +6,7 @@ import com.rm.translateit.api.languages.Languages
 import com.rm.translateit.api.models.Language
 import com.rm.translateit.api.models.translation.TranslationResult
 import com.rm.translateit.api.models.translation.TranslationSource
+import com.rm.translateit.api.translation.babla.BablaHtmlParser
 import com.rm.translateit.api.translation.babla.BablaTranslator
 import com.rm.translateit.api.translation.babla.BablaUrl
 import com.rm.translateit.api.translation.wiki.WikiTranslator
@@ -20,7 +21,7 @@ class Services {
         private val languageService: Languages = DBLanguages()
         private val services: List<Pair<TranslationSource, Translator>> = listOf(
                 Pair<TranslationSource, Translator>(TranslationSource("wikipedia"), WikiTranslator(WikiUrl())),
-                Pair<TranslationSource, Translator>(TranslationSource("babla"), BablaTranslator(BablaUrl()))
+                Pair<TranslationSource, Translator>(TranslationSource("babla"), BablaTranslator(BablaUrl(), BablaHtmlParser()))
 //                Pair<TranslationSource, Translator>(TranslationSource("dummy"), DummyTranslator())
         )
 

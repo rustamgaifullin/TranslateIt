@@ -55,7 +55,7 @@ class WikiTranslatorSpek : Spek ({
             }
 
             it("with response") {
-                testSubscriber.assertReceivedOnNext(listOf(listOf(TranslationItem("Translate"))))
+                testSubscriber.assertReceivedOnNext(listOf(listOf(TranslationItem(listOf("Translate")))))
             }
         }
     }

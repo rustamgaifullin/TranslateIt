@@ -35,7 +35,7 @@ class DummyTranslatorTest {
 
         //then
         testSubscriber.assertNoErrors()
-        testSubscriber.assertReceivedOnNext(listOf(listOf(TranslationItem("Translation"))))
+        testSubscriber.assertReceivedOnNext(listOf(listOf(TranslationItem(listOf("Translation")))))
     }
 
     @Test

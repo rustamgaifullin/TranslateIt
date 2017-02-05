@@ -10,10 +10,10 @@ class DummyTranslator : Translator {
     override fun translate(word: String, from: Language, to: Language): Observable<List<TranslationItem>> {
         val translation: TranslationItem
         when (to.code) {
-            "en" -> translation = TranslationItem("Translation")
-            "pl" -> translation = TranslationItem("Tłumaczenie")
-            "ru" -> translation = TranslationItem("Перевод")
-            else -> translation = TranslationItem("")
+            "en" -> translation = TranslationItem(listOf("Translation"))
+            "pl" -> translation = TranslationItem(listOf("Tłumaczenie"))
+            "ru" -> translation = TranslationItem(listOf("Перевод"))
+            else -> translation = TranslationItem(listOf(""))
         }
 
         val resultList = listOf(translation)

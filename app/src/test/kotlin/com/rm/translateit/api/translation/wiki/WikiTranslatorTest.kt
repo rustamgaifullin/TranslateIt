@@ -51,7 +51,7 @@ class WikiTranslatorTest {
 
         //then
         testSubscriber.assertNoErrors()
-        testSubscriber.assertReceivedOnNext(listOf(listOf(TranslationItem("Translate"))))
+        testSubscriber.assertReceivedOnNext(listOf(listOf(TranslationItem(listOf("Translate")))))
         testSubscriber.assertCompleted()
     }
 

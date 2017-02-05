@@ -1,6 +1,5 @@
 package com.rm.translateit.api.translation.wiki
 
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.rm.translateit.api.models.Language
 import com.rm.translateit.api.models.translation.TranslationItem
@@ -34,7 +33,7 @@ class WikiTranslator(val wikiUrl: WikiUrl) : Translator {
 
     private fun createResultList(languageResult: LanguageResult?): List<TranslationItem> {
         return if (languageResult != null) {
-            listOf(TranslationItem(languageResult.title))
+            listOf(TranslationItem(listOf(languageResult.title)))
         } else {
             emptyList()
         }

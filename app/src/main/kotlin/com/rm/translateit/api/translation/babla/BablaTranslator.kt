@@ -6,13 +6,15 @@ import com.rm.translateit.api.translation.Translator
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
-import org.jsoup.Jsoup
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 import rx.Observable
 import rx.schedulers.Schedulers
 
-class BablaTranslator(val bablaUrl: BablaUrl): Translator {
+
+
+class BablaTranslator(val bablaUrl: BablaUrl, val bablaHtmlParser: BablaHtmlParser): Translator {
     val bablaService: BablaRestService = createBablaService()
 
     override fun translate(word: String, from: Language, to: Language): Observable<List<TranslationItem>> {
@@ -21,31 +23,25 @@ class BablaTranslator(val bablaUrl: BablaUrl): Translator {
         return bablaService.translate(url)
                 .subscribeOn(Schedulers.io())
                 .map { responseBody ->
-                    val htmlString = responseBody.string()
-                    val document = Jsoup.parse(htmlString)
-                    val resultElements = document.select("div.span6.result-right.row-fluid")
-
-                    resultElements
-                            .filter { it.children().size > 0 && it.children().hasClass("result-link") }
-                            .map { element ->
-                        val results = element.select("a.result-link").first()
-                        val tags = element.select("span abbr").map { it.attr("title") }
-
-                        TranslationItem(results.text(), tags)
-                    }
+                    bablaHtmlParser.getTranslateItemsFrom(responseBody.string())
                 }
     }
 
     //TODO: set follow redirects to false after introducing proper urls for all languages! See BablaUrl's description
+    //TODO: and until they will fix redirects
     private fun createBablaService(): BablaRestService {
+        val interceptor = HttpLoggingInterceptor()
+        interceptor.level = HttpLoggingInterceptor.Level.BODY
+
         val okHttpClient = OkHttpClient.Builder()
-                .followRedirects(true)
+                .followRedirects(false)
+                .addInterceptor(interceptor)
                 .addInterceptor(redirectErrorInterceptor())
                 .build()
 
         val retrofit = Retrofit.Builder()
                 .client(okHttpClient)
-                .baseUrl("http://babla.ru")
+                .baseUrl("http://bab.la")
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build()
         return retrofit.create(BablaRestService::class.java)
