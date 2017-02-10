@@ -1,15 +1,7 @@
 package com.rm.translateit.api.models.translation
 
-data class TranslationItem(val words: List<String>, val tags: List<String> = emptyList()) {
-	fun tagsToString(): String {
-		if (tags.isEmpty()) return ""
-		
-		return tags.reduce { first, second -> "$first, $second" }
-	}
+import com.rm.translateit.ui.decarators.TranslationResultDecorator
 
-	fun wordsToString(): String {
-		if (words.isEmpty()) return ""
-
-		return words.reduce { first, second -> "$first, $second" }
-	}
+data class TranslationItem(val words: Words, val tags: Tags = Tags.emptyTags()) {
+    fun toOneLine(decorator: TranslationResultDecorator) = decorator.toSingleLine(this)
 }

@@ -1,6 +1,8 @@
 package com.rm.translateit.api.translation.babla
 
+import com.rm.translateit.api.models.translation.Tags.Companion.tags
 import com.rm.translateit.api.models.translation.TranslationItem
+import com.rm.translateit.api.models.translation.Words.Companion.words
 import org.junit.Assert
 import org.junit.Test
 import java.io.File
@@ -33,8 +35,8 @@ class BablaHtmlParserTest {
     }
 
     private fun expectedResult() = listOf(
-            TranslationItem(listOf("pozdrowienie", "pozdrowienia"), listOf("[приве́т]", "{m}")),
-            TranslationItem(listOf("witam", "dzień dobry", "cześć"), listOf("[приве́т]", "{interj.}"))
+            TranslationItem(words("pozdrowienie", "pozdrowienia"), tags("[приве́т]", "{m}")),
+            TranslationItem(words("witam", "dzień dobry", "cześć"), tags("[приве́т]", "{interj.}"))
     )
 
     private fun successfulResponseWithTranslation(): String {

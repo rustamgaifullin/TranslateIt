@@ -1,6 +1,8 @@
 package com.rm.translateit.api.translation.babla
 
+import com.rm.translateit.api.models.translation.Tags
 import com.rm.translateit.api.models.translation.TranslationItem
+import com.rm.translateit.api.models.translation.Words
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 
@@ -13,10 +15,10 @@ class BablaHtmlParser {
         return resultElements
                 .filter { it.id().isEmpty() && it.allElements.hasClass("sense-group-results") }
                 .map { element ->
-                    val results = extractTranslatedWords(element)
-                    val tags = extractTags(element)
+                    val words = Words(extractTranslatedWords(element))
+                    val tags = Tags(extractTags(element))
 
-                    TranslationItem(results, tags)
+                    TranslationItem(words, tags)
                 }
     }
 

@@ -3,6 +3,7 @@ package com.rm.translateit.api.translation.wiki
 import com.google.gson.GsonBuilder
 import com.rm.translateit.api.models.Language
 import com.rm.translateit.api.models.translation.TranslationItem
+import com.rm.translateit.api.models.translation.Words.Companion.words
 import com.rm.translateit.api.translation.Translator
 import com.rm.translateit.api.translation.wiki.response.LanguageLinksResult
 import com.rm.translateit.api.translation.wiki.response.LanguageResult
@@ -33,7 +34,7 @@ class WikiTranslator(val wikiUrl: WikiUrl) : Translator {
 
     private fun createResultList(languageResult: LanguageResult?): List<TranslationItem> {
         return if (languageResult != null) {
-            listOf(TranslationItem(listOf(languageResult.title)))
+            listOf(TranslationItem(words(languageResult.title)))
         } else {
             emptyList()
         }

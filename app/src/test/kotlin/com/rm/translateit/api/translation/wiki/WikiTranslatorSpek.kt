@@ -2,6 +2,7 @@ package com.rm.translateit.api.translation.wiki
 
 import com.rm.translateit.api.models.Language
 import com.rm.translateit.api.models.translation.TranslationItem
+import com.rm.translateit.api.models.translation.Words.Companion.words
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.jetbrains.spek.api.Spek
@@ -55,7 +56,7 @@ class WikiTranslatorSpek : Spek ({
             }
 
             it("with response") {
-                testSubscriber.assertReceivedOnNext(listOf(listOf(TranslationItem(listOf("Translate")))))
+                testSubscriber.assertReceivedOnNext(listOf(listOf(TranslationItem(words("Translate")))))
             }
         }
     }

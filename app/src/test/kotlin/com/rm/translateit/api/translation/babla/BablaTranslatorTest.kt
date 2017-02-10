@@ -1,7 +1,9 @@
 package com.rm.translateit.api.translation.babla
 
 import com.rm.translateit.api.models.Language
+import com.rm.translateit.api.models.translation.Tags.Companion.tags
 import com.rm.translateit.api.models.translation.TranslationItem
+import com.rm.translateit.api.models.translation.Words.Companion.words
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
@@ -61,8 +63,8 @@ class BablaTranslatorTest {
     }
 
     private fun expectedResult() = listOf(
-            TranslationItem(listOf("witaj"), listOf("interjection")),
-            TranslationItem(listOf("witam"), listOf("interjection"))
+            TranslationItem(words("witaj"), tags("interjection")),
+            TranslationItem(words("witam"), tags("interjection"))
     )
 
     @Test

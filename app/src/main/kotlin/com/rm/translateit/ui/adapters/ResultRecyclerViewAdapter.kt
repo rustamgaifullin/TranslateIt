@@ -10,8 +10,12 @@ import android.widget.TextView
 import com.rm.translateit.R
 import com.rm.translateit.api.models.translation.TranslationItem
 import com.rm.translateit.api.models.translation.TranslationResult
+import com.rm.translateit.ui.decarators.SimpleTranslationResultDecorator
+import com.rm.translateit.ui.decarators.TranslationResultDecorator
 
 class ResultRecyclerViewAdapter(val items: MutableList<TranslationResult>) : Adapter<ResultRecyclerViewAdapter.ViewHolder>() {
+
+    private val decorator: TranslationResultDecorator = SimpleTranslationResultDecorator()
 
     override fun getItemCount(): Int {
         return items.count()
@@ -34,11 +38,7 @@ class ResultRecyclerViewAdapter(val items: MutableList<TranslationResult>) : Ada
 
     //TODO: this whole method shouldn't be in adapter, externalize it
     private fun multilineText(translation: List<TranslationItem>):CharSequence = translation
-            .map { item ->
-                val tags = item.tagsToString()
-                val words = item.wordsToString()
-                "$words <small>$tags</small> <br/>"
-            }
+            .map { item -> item.toOneLine(decorator) }
             .reduce { first, second -> "$first\n$second" }
 
     class ViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {

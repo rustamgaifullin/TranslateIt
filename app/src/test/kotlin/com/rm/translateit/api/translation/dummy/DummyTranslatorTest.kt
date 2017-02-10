@@ -2,6 +2,7 @@ package com.rm.translateit.api.translation.dummy
 
 import com.rm.translateit.api.models.Language
 import com.rm.translateit.api.models.translation.TranslationItem
+import com.rm.translateit.api.models.translation.Words.Companion.words
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -35,7 +36,7 @@ class DummyTranslatorTest {
 
         //then
         testSubscriber.assertNoErrors()
-        testSubscriber.assertReceivedOnNext(listOf(listOf(TranslationItem(listOf("Translation")))))
+        testSubscriber.assertReceivedOnNext(listOf(listOf(TranslationItem(words("Translation")))))
     }
 
     @Test
