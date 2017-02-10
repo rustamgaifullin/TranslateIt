@@ -1,70 +1,152 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
-android {
-  compileSdkVersion 24
-  buildToolsVersion "23.0.2"
-  defaultConfig {
-    applicationId "com.rm.translateit"
-    minSdkVersion 16
-    targetSdkVersion 24
-    versionCode 1
-    versionName "1.0"
-    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-  }
-  buildTypes {
-    release {
-      minifyEnabled false
-      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+task createTestResources << {
+    def mockMakerFile = new File("$projectDir/src/test/resources/mockito-extensions/org.mockito.plugins.MockMaker")
+    if (System.env.MOCK_MAKER != null) {
+        logger.info("Using MockMaker ${System.env.MOCK_MAKER}")
+        mockMakerFile.parentFile.mkdirs()
+        mockMakerFile.createNewFile()
+        mockMakerFile.write(System.env.MOCK_MAKER)
+    } else {
+        logger.info("Using default MockMaker")
     }
-  }
-  sourceSets {
-    main.java.srcDirs += 'src/main/kotlin'
-  }
 }
 
-def dbflow_version = "3.1.1"
+buildscript {
+    ext {
+        kotlin_version = '1.0.6'
+        dbflow_version = '3.1.1'
+        retrofit_version = '2.1.0'
+        rxbinding_version = '0.4.0'
+        spek_version = '1.0.89'
+    }
+
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.junit.platform:junit-platform-gradle-plugin:1.0.0-M2"
+        classpath "org.junit.platform:junit-platform-runner:1.0.0-M2"
+    }
+}
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+    defaultConfig {
+        applicationId "com.rm.translateit"
+        minSdkVersion 18
+        targetSdkVersion 25
+        versionCode 2
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+        test.java.srcDirs += 'src/test/kotlin'
+    }
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+    lintOptions {
+        warning 'InvalidPackage'
+    }
+
+    //Conflict with dependency 'com.google.code.findbugs:jsr305'. Resolved versions for app (3.0.1) and test app (2.0.1) differ
+    //That's why
+    configurations.all {
+        resolutionStrategy.force 'com.google.code.findbugs:jsr305:3.0.1'
+    }
+}
+
+afterEvaluate {
+    android.sourceSets.all { sourceSet ->
+        if (!sourceSet.name.startsWith("test"))
+        {
+            sourceSet.kotlin.setSrcDirs([])
+        }
+    }
+}
 
 dependencies {
-  compile fileTree(dir: 'libs', include: ['*.jar'])
-  androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-    exclude group: 'com.android.support', module: 'support-annotations'
-  })
-  testCompile 'junit:junit:4.12'
-  compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-  compile 'com.android.support:appcompat-v7:24.2.0'
-  compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha4'
+    compile 'com.android.support:appcompat-v7:25.1.0'
+    compile 'com.android.support:support-annotations:25.1.0'
 
-  compile 'com.squareup.retrofit2:retrofit:2.1.0'
-  compile 'com.squareup.retrofit2:converter-gson:2.1.0'
-  compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
+    compile "com.squareup.retrofit2:retrofit:$retrofit_version"
+    compile "com.squareup.retrofit2:retrofit-mock:$retrofit_version"
+    compile "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    compile "com.squareup.retrofit2:adapter-rxjava:$retrofit_version"
+    compile 'com.squareup.okhttp3:logging-interceptor:3.3.0'
 
-  compile 'com.google.code.gson:gson:2.7'
+    compile "com.google.code.gson:gson:2.7"
 
-  compile 'io.reactivex:rxjava:1.1.9'
-  compile 'io.reactivex:rxkotlin:0.60.0'
-  compile 'io.reactivex:rxandroid:1.2.1'
+    compile "io.reactivex:rxjava:1.1.9"
+    compile "io.reactivex:rxkotlin:0.60.0"
+    compile "io.reactivex:rxandroid:1.2.1"
 
-  compile 'com.jakewharton.rxbinding:rxbinding:0.4.0'
-  compile 'com.jakewharton.rxbinding:rxbinding-support-v4:0.4.0'
-  compile 'com.jakewharton.rxbinding:rxbinding-appcompat-v7:0.4.0'
-  compile 'com.jakewharton.rxbinding:rxbinding-design:0.4.0'
+    compile "com.jakewharton.rxbinding:rxbinding:$rxbinding_version"
+    compile "com.jakewharton.rxbinding:rxbinding-support-v4:$rxbinding_version"
+    compile "com.jakewharton.rxbinding:rxbinding-appcompat-v7:$rxbinding_version"
+    compile "com.jakewharton.rxbinding:rxbinding-design:$rxbinding_version"
 
-  compile 'com.jakewharton:kotterknife:0.1.0-SNAPSHOT'
+    //At first I need to figure out how lifecycle works by myself and then to use this library.
+    compile 'com.trello:rxlifecycle:1.0'
+    compile 'com.trello:rxlifecycle-android:1.0'
+    compile 'com.trello:rxlifecycle-kotlin:1.0'
 
-  kapt "com.github.Raizlabs.DBFlow:dbflow-processor:${dbflow_version}"
-  compile "com.github.Raizlabs.DBFlow:dbflow-core:${dbflow_version}"
-  compile "com.github.Raizlabs.DBFlow:dbflow:${dbflow_version}"
-  compile "com.github.Raizlabs.DBFlow:dbflow-kotlinextensions:${dbflow_version}"
+    compile "com.jakewharton:kotterknife:0.1.0-SNAPSHOT"
+
+    compile "org.jsoup:jsoup:1.9.2"
+
+    kapt "com.github.Raizlabs.DBFlow:dbflow-processor:$dbflow_version"
+    compile "com.github.Raizlabs.DBFlow:dbflow-core:$dbflow_version"
+    compile "com.github.Raizlabs.DBFlow:dbflow:$dbflow_version"
+    compile "com.github.Raizlabs.DBFlow:dbflow-kotlinextensions:$dbflow_version"
+
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    androidTestCompile('com.android.support.test:runner:0.5', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    androidTestCompile('com.android.support.test:rules:0.5', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+
+    testCompile "junit:junit:4.12"
+    testCompile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+    testCompile 'com.squareup.okhttp3:mockwebserver:3.3.0'
+
+    testCompile "org.jetbrains.spek:spek-api:$spek_version"
+    testCompile "org.jetbrains.spek:spek-junit-platform-engine:$spek_version"
+    testCompile 'org.junit.platform:junit-platform-runner:1.0.0-M2'
+
+    testCompile 'org.mockito:mockito-core:2.6.4'
+
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
 }
 
 kapt {
-  generateStubs = true
+    generateStubs = true
 }
 
 repositories {
-  mavenCentral()
-  maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
-  maven { url "https://www.jitpack.io" }
+    mavenCentral()
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+    maven { url "https://www.jitpack.io" }
 }

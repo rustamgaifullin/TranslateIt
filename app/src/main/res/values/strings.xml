@@ -1,4 +1,5 @@
 <resources>
   <string name="app_name">TranslateIt</string>
   <string name="translate">Translate</string>
+  <string name="ime_action_translate">Ok</string>
 </resources>

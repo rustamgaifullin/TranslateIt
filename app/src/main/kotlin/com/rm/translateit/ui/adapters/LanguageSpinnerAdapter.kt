@@ -17,11 +17,15 @@ class LanguageSpinnerAdapter(private val context: Context) : BaseAdapter() {
         notifyDataSetChanged()
     }
 
+    fun getItemIndex(languageToSearch: Language): Int {
+        return languages.indexOfFirst { it.code == languageToSearch.code}
+    }
+
     override fun getCount(): Int {
         return languages.count()
     }
 
-    override fun getItem(position: Int): Any {
+    override fun getItem(position: Int): Language {
         return languages[position]
     }
 

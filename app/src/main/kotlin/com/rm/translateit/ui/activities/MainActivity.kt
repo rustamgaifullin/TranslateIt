@@ -1,49 +1,175 @@
 package com.rm.translateit.ui.activities
 
-import android.support.v7.app.AppCompatActivity
-import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Spinner
-import android.widget.TextView
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.view.View
+import android.view.inputmethod.EditorInfo.*
+import android.widget.*
 import butterknife.bindView
+import com.jakewharton.rxbinding.view.RxView
+import com.jakewharton.rxbinding.widget.RxAdapterView
+import com.jakewharton.rxbinding.widget.RxTextView
 import com.rm.translateit.R
-import com.rm.translateit.api.Translater
-import com.rm.translateit.api.TranslaterContext
-import com.rm.translateit.api.models.Language
+import com.rm.translateit.api.models.translation.TranslationResult
+import com.rm.translateit.api.translation.Services
+import com.rm.translateit.extension.hideKeyboard
 import com.rm.translateit.ui.adapters.LanguageSpinnerAdapter
+import com.rm.translateit.ui.adapters.ResultRecyclerViewAdapter
+import rx.Subscription
+import rx.android.schedulers.AndroidSchedulers
+import rx.subscriptions.Subscriptions
 
-class MainActivity : AppCompatActivity() {
+//TODO: use RxLifecycle to prevent memory leaks for subscriptions.
+class MainActivity : BaseActivity() {
+    companion object {
+        private val TAG = "MainActivity"
+        private val IME_ACTION_TRANSLATE = 21
+    }
 
-    val fromSpinner: Spinner by bindView(R.id.from_spinner)
-    val toSpinner: Spinner by bindView(R.id.to_spinner)
-    val translateButton: Button by bindView(R.id.translate_button)
-    val resultTextView: TextView by bindView(R.id.result_textView)
-    val wordEditText: EditText by bindView(R.id.word_editText)
+    private val originSpinner: Spinner by bindView(R.id.origin_spinner)
+    private val destinationSpinner: Spinner by bindView(R.id.destination_spinner)
+    private val wordEditText: EditText by bindView(R.id.word_editText)
+    private val resultView: RecyclerView by bindView(R.id.result_recyclerView)
+    private val changeLanguageButton: Button by bindView(R.id.changeLanguage_button)
+    private val progressBar: ProgressBar by bindView(R.id.progressBar)
+    private lateinit var originAdapter: LanguageSpinnerAdapter
+    private lateinit var destinationAdapter: LanguageSpinnerAdapter
 
-    var context: Translater = TranslaterContext.getContext()
+    private val languageService = Services.languageService()
+    private var items: MutableList<TranslationResult> = arrayListOf()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+    private var translatorSubscription: Subscription = Subscriptions.unsubscribed()
+    private var originSpinnerSubscription: Subscription = Subscriptions.unsubscribed()
 
-        val fromAdapter = LanguageSpinnerAdapter(this)
-        fromSpinner.adapter = fromAdapter
+    lateinit var resultAdapter: ResultRecyclerViewAdapter
 
-        val toAdapter = LanguageSpinnerAdapter(this)
-        toSpinner.adapter = toAdapter
+    override fun getLayoutId(): Int {
+        return R.layout.activity_main
+    }
 
-        fromAdapter.updateLanguages(context.languages())
-        toAdapter.updateLanguages(context.languages())
+    override fun prepareUI() {
+        originAdapter = LanguageSpinnerAdapter(this)
+        originSpinner.adapter = originAdapter
+        val originLanguages = languageService.originLanguages()
+        originAdapter.updateLanguages(originLanguages)
 
-        translateButton.setOnClickListener {
-            val word = wordEditText.text.toString()
-            val from = (fromSpinner.selectedItem as Language).code
-            val to = (toSpinner.selectedItem as Language).code
-            context.translate(word, from, to).subscribe({
-                resultQuery ->
-                    resultTextView.text = resultQuery
-            })
+        val destinationLanguages = languageService.destinationLanguages(originLanguages.first().code)
+        destinationAdapter = LanguageSpinnerAdapter(this)
+        destinationAdapter.updateLanguages(destinationLanguages)
+        destinationSpinner.adapter = destinationAdapter
+
+        resultAdapter = ResultRecyclerViewAdapter(items)
+        resultView.adapter = resultAdapter
+        resultView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+
+        wordEditText.setImeActionLabel(getString(R.string.ime_action_translate), IME_ACTION_TRANSLATE)
+    }
+
+    override fun createBindings() {
+        subscriptions.add(
+                RxTextView.editorActions(wordEditText)
+                        .filter { action ->
+                            action == IME_ACTION_TRANSLATE ||
+                                    action == IME_ACTION_DONE ||
+                                    action == IME_ACTION_GO ||
+                                    action == IME_ACTION_SEND ||
+                                    action == IME_ACTION_SEARCH
+                        }
+                        .subscribe({
+                            action ->
+                            translate()
+                        }))
+
+        subscriptions.add(
+                RxAdapterView.itemSelections(destinationSpinner)
+                        .subscribe {
+                            onNext ->
+                            val language = destinationAdapter.getItem(destinationSpinner.selectedItemPosition)
+                            languageService.updateDestinationLastUsage(language)
+                            translate()
+                        })
+
+        subscriptions.add(
+                RxView.clicks(changeLanguageButton)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe {
+                            swapLanguages()
+                        })
+
+        subscriptionForOriginSpinner()
+    }
+
+    private fun subscriptionForOriginSpinner() {
+        originSpinnerSubscription = RxAdapterView.itemSelections(originSpinner)
+                .subscribe {
+                    currentOriginIndex ->
+                    if (originSpinner.selectedItemPosition >= 0) {
+                        val language = originAdapter.getItem(originSpinner.selectedItemPosition)
+                        languageService.updateOriginLastUsage(language)
+
+                        destinationAdapter.updateLanguages(languageService.destinationLanguages(language.code))
+
+                        translate()
+                    }
+                }
+        subscriptions.add(originSpinnerSubscription)
+    }
+
+    private fun swapLanguages() {
+        originSpinnerSubscription.unsubscribe()
+        subscriptions.remove(originSpinnerSubscription)
+
+        val originLanguage = originAdapter.getItem(originSpinner.selectedItemPosition)
+        val destinationLanguage = destinationAdapter.getItem(destinationSpinner.selectedItemPosition)
+
+        val indexForOrigin = originAdapter.getItemIndex(destinationLanguage)
+        originSpinner.setSelection(indexForOrigin)
+
+        val destinationLanguages = languageService.destinationLanguages(destinationLanguage.code)
+        destinationAdapter.updateLanguages(destinationLanguages)
+        val indexForDestionation = destinationAdapter.getItemIndex(originLanguage);
+        destinationSpinner.setSelection(indexForDestionation)
+
+        subscriptionForOriginSpinner()
+    }
+
+    private fun translate() {
+        if (wordEditText.text.isNullOrEmpty()) return
+
+        if (!translatorSubscription.isUnsubscribed) {
+            translatorSubscription.unsubscribe()
         }
+
+        val word = wordEditText.text.toString()
+        val fromLanguage = originAdapter.getItem(originSpinner.selectedItemPosition)
+        val toLanguage = destinationAdapter.getItem(destinationSpinner.selectedItemPosition)
+
+        translatorSubscription = Services.translate(word, fromLanguage, toLanguage)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe {
+                    clearAndNotify()
+                    progressBar.visibility = View.VISIBLE
+                }
+                .doOnError { progressBar.visibility = View.GONE }
+                .doOnCompleted {
+                    progressBar.visibility = View.GONE
+                    hideKeyboard { items.size > 0 }
+                }
+                .subscribe(
+                        {
+                            result ->
+                            items.add(result)
+                            resultAdapter.notifyDataSetChanged()
+                        },
+                        {
+                            error ->
+                            Toast.makeText(this, error.message, Toast.LENGTH_SHORT).show()
+                        }
+                )
+    }
+
+    private fun clearAndNotify() {
+        items.clear()
+        resultAdapter.notifyDataSetChanged()
     }
 }
