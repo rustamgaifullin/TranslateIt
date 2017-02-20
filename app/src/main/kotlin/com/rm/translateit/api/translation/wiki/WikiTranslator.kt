@@ -8,7 +8,6 @@ import com.rm.translateit.api.translation.Translator
 import com.rm.translateit.api.translation.wiki.response.LanguageLinksResult
 import com.rm.translateit.api.translation.wiki.response.LanguageResult
 import com.rm.translateit.api.translation.wiki.response.SearchResult
-import com.rm.translateit.api.translation.wiki.response.SuggestionResult
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -41,10 +40,6 @@ class WikiTranslator(val wikiUrl: WikiUrl) : Translator {
     }
 
     override fun suggestions(title: String, from: String, offset: Int): Observable<List<String>> {
-        val gson = GsonBuilder()
-                .registerTypeAdapter(SuggestionResult::class.java, SuggestionDeserializer())
-                .create()
-
         return service.suggestions(title, offset)
                 .subscribeOn(Schedulers.io())
                 .map { result ->
