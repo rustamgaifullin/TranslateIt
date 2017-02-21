@@ -1,6 +1,5 @@
 package com.rm.translateit.ui.activities
 
-import android.support.test.espresso.Espresso.onData
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.action.ViewActions.*
 import android.support.test.espresso.assertion.ViewAssertions.matches
@@ -11,10 +10,9 @@ import android.support.test.runner.AndroidJUnit4
 import android.view.View
 import android.view.ViewGroup
 import com.rm.translateit.R
-import com.rm.translateit.api.models.translation.TranslationResult
 import org.hamcrest.Description
 import org.hamcrest.Matcher
-import org.hamcrest.Matchers.*
+import org.hamcrest.Matchers.allOf
 import org.hamcrest.TypeSafeMatcher
 import org.junit.Rule
 import org.junit.Test
@@ -46,7 +44,7 @@ open class MainActivityTest {
     }
 
     @Test
-    fun mainActivityTest2() {
+    fun testRussianPolishTranslation() {
         clickOnSpinner(R.id.origin_spinner)
         selectTextInSpinner("Russian")
 
@@ -55,21 +53,9 @@ open class MainActivityTest {
 
         typeTextAndPressEnter("привет")
 
-        onData(`is`(instanceOf(TranslationResult::class.java)))
-                .inAdapterView(allOf(withId(R.id.result_recyclerView)))
+        onView(withId(R.id.result_recyclerView))
                 .check(matches(hasDescendant(withText("babla"))))
 
-
-//        val textView = onView(
-//                allOf(withId(R.id.source_textView), withText("babla"),
-//                        childAtPosition(
-//                                childAtPosition(
-//                                        withId(R.id.result_recyclerView),
-//                                        0),
-//                                0),
-//                        isDisplayed()))
-//        textView.check(matches(withText("babla")))
-//
 //        val textView2 = onView(
 //                allOf(withId(R.id.translation_textView), withText("pozdrowienie, pozdrowienia [приве́т], {m} \nwitam, witaj, serwus, czołem, witajcie, siema, witamy, dzień dobry, cześć [приве́т], {interj.} \n"),
 //                        childAtPosition(
