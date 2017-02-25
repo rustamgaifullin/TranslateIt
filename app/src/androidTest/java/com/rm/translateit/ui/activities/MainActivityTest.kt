@@ -1,19 +1,13 @@
 package com.rm.translateit.ui.activities
 
-import android.support.test.espresso.Espresso.onView
-import android.support.test.espresso.action.ViewActions.*
-import android.support.test.espresso.assertion.ViewAssertions.matches
-import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.filters.LargeTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
-import android.view.View
-import android.view.ViewGroup
 import com.rm.translateit.R
-import org.hamcrest.Description
-import org.hamcrest.Matcher
-import org.hamcrest.Matchers.allOf
-import org.hamcrest.TypeSafeMatcher
+import com.rm.translateit.utils.checkSpinnerEqualsToText
+import com.rm.translateit.utils.clickOnButton
+import com.rm.translateit.utils.clickOnSpinner
+import com.rm.translateit.utils.selectTextInSpinner
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -41,94 +35,5 @@ open class MainActivityTest {
 
         checkSpinnerEqualsToText(R.id.origin_spinner, destinationLanguage)
         checkSpinnerEqualsToText(R.id.destination_spinner, originLanguage)
-    }
-
-    @Test
-    fun testRussianPolishBablaTranslation() {
-        selectLanguages("Russian", "Polish")
-        typeTextAndPressEnter("сверло")
-
-        checkResult("babla", "świder [сверло́], {n}")
-    }
-
-    @Test
-    fun testRussianPolishWikiTranslation() {
-        selectLanguages("Russian", "Polish")
-        typeTextAndPressEnter("сверло")
-
-        checkResult("wikipedia", "Wiertło")
-    }
-
-    private fun selectLanguages(originLanguage: String, destinationLanguage: String) {
-        clickOnSpinner(R.id.origin_spinner)
-        selectTextInSpinner(originLanguage)
-
-        clickOnSpinner(R.id.destination_spinner)
-        selectTextInSpinner(destinationLanguage)
-    }
-
-    private fun checkResult(title: String, translation: String) {
-        onView(withId(R.id.result_recyclerView))
-                .check(matches(hasDescendant(withText(title))))
-        onView(withId(R.id.result_recyclerView))
-                .check(matches(hasDescendant(withText(translation))))
-    }
-
-    private fun clickOnSpinner(spinnerId: Int) {
-        val originSpinner = onView(
-                allOf(withId(spinnerId),
-                        withParent(allOf(withId(R.id.activity_main),
-                                withParent(withId(android.R.id.content)))),
-                        isDisplayed()))
-        originSpinner.perform(click())
-    }
-
-    private fun selectTextInSpinner(text: String) {
-        val originSpinnerTextView = onView(
-                allOf(withId(android.R.id.text1), withText(text), isDisplayed()))
-        originSpinnerTextView.perform(click())
-    }
-
-    private fun clickOnButton(buttonId: Int) {
-        val changeLanguageButton = onView(
-                allOf(withId(buttonId),
-                        withParent(allOf(withId(R.id.activity_main),
-                                withParent(withId(android.R.id.content)))),
-                        isDisplayed()))
-        changeLanguageButton.perform(click())
-    }
-
-    private fun checkSpinnerEqualsToText(spinnerId: Int, text: String) {
-        onView(allOf(withId(android.R.id.text1),
-                childAtPosition(withId(spinnerId), 0),
-                isDisplayed()))
-                .check(matches(withText(text)))
-    }
-
-    private fun typeTextAndPressEnter(text: String) {
-        val appCompatEditText = onView(
-                allOf(withId(R.id.word_editText),
-                        withParent(allOf(withId(R.id.activity_main),
-                                withParent(withId(android.R.id.content)))),
-                        isDisplayed()))
-        appCompatEditText.perform(replaceText(text), closeSoftKeyboard())
-        appCompatEditText.perform(pressImeActionButton())
-    }
-
-    private fun childAtPosition(
-            parentMatcher: Matcher<View>, position: Int): Matcher<View> {
-
-        return object : TypeSafeMatcher<View>() {
-            override fun describeTo(description: Description) {
-                description.appendText("Child at position $position in parent ")
-                parentMatcher.describeTo(description)
-            }
-
-            public override fun matchesSafely(view: View): Boolean {
-                val parent = view.parent
-                return parent is ViewGroup && parentMatcher.matches(parent)
-                        && view == parent.getChildAt(position)
-            }
-        }
     }
 }
