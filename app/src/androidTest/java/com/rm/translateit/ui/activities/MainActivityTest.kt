@@ -44,27 +44,34 @@ open class MainActivityTest {
     }
 
     @Test
-    fun testRussianPolishTranslation() {
+    fun testRussianPolishBablaTranslation() {
+        selectLanguages("Russian", "Polish")
+        typeTextAndPressEnter("сверло")
+
+        checkResult("babla", "świder [сверло́], {n}")
+    }
+
+    @Test
+    fun testRussianPolishWikiTranslation() {
+        selectLanguages("Russian", "Polish")
+        typeTextAndPressEnter("сверло")
+
+        checkResult("wikipedia", "Wiertło")
+    }
+
+    private fun selectLanguages(originLanguage: String, destinationLanguage: String) {
         clickOnSpinner(R.id.origin_spinner)
-        selectTextInSpinner("Russian")
+        selectTextInSpinner(originLanguage)
 
         clickOnSpinner(R.id.destination_spinner)
-        selectTextInSpinner("Polish")
+        selectTextInSpinner(destinationLanguage)
+    }
 
-        typeTextAndPressEnter("привет")
-
+    private fun checkResult(title: String, translation: String) {
         onView(withId(R.id.result_recyclerView))
-                .check(matches(hasDescendant(withText("babla"))))
-
-//        val textView2 = onView(
-//                allOf(withId(R.id.translation_textView), withText("pozdrowienie, pozdrowienia [приве́т], {m} \nwitam, witaj, serwus, czołem, witajcie, siema, witamy, dzień dobry, cześć [приве́т], {interj.} \n"),
-//                        childAtPosition(
-//                                childAtPosition(
-//                                        withId(R.id.result_recyclerView),
-//                                        0),
-//                                1),
-//                        isDisplayed()))
-//        textView2.check(matches(withText("pozdrowienie, pozdrowienia [приве́т], {m}  witam, witaj, serwus, czołem, witajcie, siema, witamy, dzień dobry, cześć [приве́т], {interj.}  ")))
+                .check(matches(hasDescendant(withText(title))))
+        onView(withId(R.id.result_recyclerView))
+                .check(matches(hasDescendant(withText(translation))))
     }
 
     private fun clickOnSpinner(spinnerId: Int) {

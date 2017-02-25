@@ -7,6 +7,8 @@ class SimpleTranslationResultDecorator : TranslationResultDecorator {
         val tags = item.tags.toOneLineString()
         val words = item.words.toOneLineString()
 
-        return "$words <small>$tags</small> <br/>"
+        if (tags.isEmpty()) return words
+
+        return "$words <small>$tags</small>"
     }
 }
