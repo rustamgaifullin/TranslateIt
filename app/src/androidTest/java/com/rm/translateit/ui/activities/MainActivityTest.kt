@@ -4,10 +4,8 @@ import android.support.test.filters.LargeTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import com.rm.translateit.R
-import com.rm.translateit.utils.checkSpinnerEqualsToText
-import com.rm.translateit.utils.clickOnButton
-import com.rm.translateit.utils.clickOnSpinner
-import com.rm.translateit.utils.selectTextInSpinner
+import com.rm.translateit.api.translation.Services
+import com.rm.translateit.utils.*
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -21,7 +19,7 @@ open class MainActivityTest {
     var mActivityTestRule = ActivityTestRule(MainActivity::class.java)
 
     @Test
-    fun testChangeLanguageButton() {
+    fun checkLanguageButtonSwapLanguagesProperly() {
         val originLanguage = "English"
         val destinationLanguage = "Polish"
 
@@ -35,5 +33,20 @@ open class MainActivityTest {
 
         checkSpinnerEqualsToText(R.id.origin_spinner, destinationLanguage)
         checkSpinnerEqualsToText(R.id.destination_spinner, originLanguage)
+    }
+
+    @Test
+    fun checkDestinationSpinnerShowsCorrectLanguages() {
+        val listOfLanguages = Services.languageService().languages().map { it.name }
+
+        listOfLanguages.forEach {
+            val originLanguage = it
+            clickOnSpinner(R.id.origin_spinner)
+            selectTextInSpinner(originLanguage)
+
+            val expectedDestinationLanguages = listOfLanguages.filter { it != originLanguage }
+            checkTextInSpinner(R.id.destination_spinner, expectedDestinationLanguages)
+            checkTextNotInSpinner(R.id.destination_spinner, originLanguage)
+        }
     }
 }
