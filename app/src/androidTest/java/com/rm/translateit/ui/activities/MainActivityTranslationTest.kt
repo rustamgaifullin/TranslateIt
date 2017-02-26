@@ -1,11 +1,13 @@
 package com.rm.translateit.ui.activities
 
+import android.support.test.espresso.Espresso.closeSoftKeyboard
 import android.support.test.filters.LargeTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import com.rm.translateit.utils.checkResult
 import com.rm.translateit.utils.selectLanguages
 import com.rm.translateit.utils.typeTextAndPressEnter
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -16,6 +18,11 @@ open class MainActivityTranslationTest {
     @JvmField
     @Rule
     var mActivityTestRule = ActivityTestRule(MainActivity::class.java)
+
+    @Before
+    fun setup() {
+        closeSoftKeyboard()
+    }
 
     @Test
     fun testRussianPolishBablaTranslation() {
