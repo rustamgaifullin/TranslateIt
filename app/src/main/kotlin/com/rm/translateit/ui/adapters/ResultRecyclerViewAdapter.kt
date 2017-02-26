@@ -2,7 +2,6 @@ package com.rm.translateit.ui.adapters
 
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.Adapter
-import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +11,7 @@ import com.rm.translateit.api.models.translation.TranslationItem
 import com.rm.translateit.api.models.translation.TranslationResult
 import com.rm.translateit.ui.decarators.SimpleTranslationResultDecorator
 import com.rm.translateit.ui.decarators.TranslationResultDecorator
+import com.rm.translateit.ui.fromHtml
 
 class ResultRecyclerViewAdapter(val items: MutableList<TranslationResult>) : Adapter<ResultRecyclerViewAdapter.ViewHolder>() {
 
@@ -24,19 +24,16 @@ class ResultRecyclerViewAdapter(val items: MutableList<TranslationResult>) : Ada
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ResultRecyclerViewAdapter.ViewHolder {
         val v = LayoutInflater.from(parent?.context).inflate(R.layout.result_view, parent, false)
         return ViewHolder(v)
-
     }
 
-    //TODO: oh wow...using of deprecated method? should fix this ASAP!
     override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
         val (source, translation) = items[position]
 
-        val translationText = Html.fromHtml(multilineText(translation).toString())
+        val translationText = fromHtml(multilineText(translation))
         holder?.translationTextView?.text = translationText
         holder?.sourceTextView?.text = source.name
     }
 
-    //TODO: this whole method shouldn't be in adapter, externalize it
     private fun multilineText(translation: List<TranslationItem>):CharSequence = translation
             .map { item -> item.toOneLine(decorator) }
             .reduce { first, second -> "$first\n$second" }

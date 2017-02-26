@@ -19,7 +19,6 @@ import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.subscriptions.Subscriptions
 
-//TODO: use RxLifecycle to prevent memory leaks for subscriptions.
 class MainActivity : BaseActivity() {
     companion object {
         private val TAG = "MainActivity"
