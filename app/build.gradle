@@ -15,11 +15,25 @@ task createTestResources << {
 
 buildscript {
     ext {
-        kotlin_version = '1.0.6'
+        kotlin_version = '1.1.0'
         dbflow_version = '3.1.1'
+        constraintlayout_version = '1.0.1'
         retrofit_version = '2.1.0'
+        rxjava_version = '1.1.9'
+        rxkotlin_version = '0.60.0'
+        rxandroid_version = '1.2.1'
         rxbinding_version = '0.4.0'
-        spek_version = '1.0.89'
+        kotterknife_version = '0.1.0-SNAPSHOT'
+        support_library_v7_version = '25.2.0'
+        okhttp3_version = '3.3.0'
+        gson_version = '2.7'
+        jsoup_version = '1.9.2'
+        junit_version = '4.12'
+        junit_platform_runner_version = '1.0.0-M2'
+        mockito_version = '2.6.4'
+        android_espresso_version = '2.2.2'
+        android_support_test_version = '0.5'
+        uiautomator_version = '2.1.2'
     }
 
     repositories {
@@ -80,65 +94,59 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-    compile 'com.android.support:appcompat-v7:25.1.0'
-    compile 'com.android.support:support-annotations:25.1.0'
+    compile "com.android.support.constraint:constraint-layout:$constraintlayout_version"
+    compile "com.android.support:appcompat-v7:$support_library_v7_version"
+    compile "com.android.support:recyclerview-v7:$support_library_v7_version"
+    compile "com.android.support:design:$support_library_v7_version"
+    compile "com.android.support:support-annotations:$support_library_v7_version"
 
     compile "com.squareup.retrofit2:retrofit:$retrofit_version"
     compile "com.squareup.retrofit2:retrofit-mock:$retrofit_version"
     compile "com.squareup.retrofit2:converter-gson:$retrofit_version"
     compile "com.squareup.retrofit2:adapter-rxjava:$retrofit_version"
-    compile 'com.squareup.okhttp3:logging-interceptor:3.3.0'
+    compile "com.squareup.okhttp3:logging-interceptor:$okhttp3_version"
 
-    compile "com.google.code.gson:gson:2.7"
+    compile "com.google.code.gson:gson:$gson_version"
 
-    compile "io.reactivex:rxjava:1.1.9"
-    compile "io.reactivex:rxkotlin:0.60.0"
-    compile "io.reactivex:rxandroid:1.2.1"
+    compile "io.reactivex:rxjava:$rxjava_version"
+    compile "io.reactivex:rxkotlin:$rxkotlin_version"
+    compile "io.reactivex:rxandroid:$rxandroid_version"
 
     compile "com.jakewharton.rxbinding:rxbinding:$rxbinding_version"
     compile "com.jakewharton.rxbinding:rxbinding-support-v4:$rxbinding_version"
     compile "com.jakewharton.rxbinding:rxbinding-appcompat-v7:$rxbinding_version"
     compile "com.jakewharton.rxbinding:rxbinding-design:$rxbinding_version"
 
-    //At first I need to figure out how lifecycle works by myself and then to use this library.
-    compile 'com.trello:rxlifecycle:1.0'
-    compile 'com.trello:rxlifecycle-android:1.0'
-    compile 'com.trello:rxlifecycle-kotlin:1.0'
+    compile "com.jakewharton:kotterknife:$kotterknife_version"
 
-    compile "com.jakewharton:kotterknife:0.1.0-SNAPSHOT"
-
-    compile "org.jsoup:jsoup:1.9.2"
+    compile "org.jsoup:jsoup:$jsoup_version"
 
     kapt "com.github.Raizlabs.DBFlow:dbflow-processor:$dbflow_version"
     compile "com.github.Raizlabs.DBFlow:dbflow-core:$dbflow_version"
     compile "com.github.Raizlabs.DBFlow:dbflow:$dbflow_version"
     compile "com.github.Raizlabs.DBFlow:dbflow-kotlinextensions:$dbflow_version"
 
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
+    androidTestCompile("com.android.support.test.espresso:espresso-core:$android_espresso_version", {
+        exclude group: "com.android.support", module: "support-annotations"
     })
-    androidTestCompile('com.android.support.test:runner:0.5', {
-        exclude group: 'com.android.support', module: 'support-annotations'
+    androidTestCompile("com.android.support.test:runner:$android_support_test_version", {
+        exclude group: "com.android.support", module: "support-annotations"
     })
-    androidTestCompile('com.android.support.test:rules:0.5', {
-        exclude group: 'com.android.support', module: 'support-annotations'
+    androidTestCompile("com.android.support.test:rules:$android_support_test_version", {
+        exclude group: "com.android.support", module: "support-annotations"
     })
-    androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
+    androidTestCompile "com.android.support.test.uiautomator:uiautomator-v18:$uiautomator_version", {
+        exclude group: "com.android.support", module: "support-annotations"
     }
 
-    testCompile "junit:junit:4.12"
+    testCompile "junit:junit:$junit_version"
     testCompile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
-    testCompile 'com.squareup.okhttp3:mockwebserver:3.3.0'
+    testCompile "com.squareup.okhttp3:mockwebserver:$okhttp3_version"
 
-    testCompile "org.jetbrains.spek:spek-api:$spek_version"
-    testCompile "org.jetbrains.spek:spek-junit-platform-engine:$spek_version"
-    testCompile 'org.junit.platform:junit-platform-runner:1.0.0-M2'
+    testCompile "org.junit.platform:junit-platform-runner:$junit_platform_runner_version"
 
-    testCompile 'org.mockito:mockito-core:2.6.4'
-
-    compile 'com.android.support.constraint:constraint-layout:1.0.0'
+    testCompile "org.mockito:mockito-core:$mockito_version"
 }
 
 kapt {

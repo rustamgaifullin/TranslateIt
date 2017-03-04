@@ -75,14 +75,12 @@ class MainActivity : BaseActivity() {
                                     action == IME_ACTION_SEARCH
                         }
                         .subscribe({
-                            action ->
                             translate()
                         }))
 
         subscriptions.add(
                 RxAdapterView.itemSelections(destinationSpinner)
                         .subscribe {
-                            onNext ->
                             val language = destinationAdapter.getItem(destinationSpinner.selectedItemPosition)
                             languageService.updateDestinationLastUsage(language)
                             translate()
