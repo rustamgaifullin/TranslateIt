@@ -8,11 +8,11 @@ import org.junit.BeforeClass
 import org.junit.Test
 
 class DBLanguagesTest {
-
     private val sut = DBLanguages()
 
     companion object {
         @BeforeClass
+        @JvmStatic
         fun setUp() {
             val context = InstrumentationRegistry.getTargetContext()
             FlowManager.init(FlowConfig.Builder(context)
