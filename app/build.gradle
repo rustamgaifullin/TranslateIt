@@ -18,6 +18,7 @@ buildscript {
     ext {
         kotlin_version = '1.1.0'
         dbflow_version = '3.1.1'
+        support_library_v7_version = '25.2.0'
         constraintlayout_version = '1.0.1'
         retrofit_version = '2.1.0'
         rxjava_version = '1.1.9'
@@ -25,10 +26,10 @@ buildscript {
         rxandroid_version = '1.2.1'
         rxbinding_version = '0.4.0'
         kotterknife_version = '0.1.0-SNAPSHOT'
-        support_library_v7_version = '25.2.0'
         okhttp3_version = '3.3.0'
         gson_version = '2.7'
         jsoup_version = '1.9.2'
+        dagger_version = '2.9'
         junit_version = '4.12'
         junit_platform_runner_version = '1.0.0-M2'
         mockito_version = '2.6.4'
@@ -122,8 +123,10 @@ dependencies {
 
     compile "org.jsoup:jsoup:$jsoup_version"
 
+    compile "com.google.dagger:dagger:$dagger_version"
+    kapt "com.google.dagger:dagger-compiler:$dagger_version"
+
     kapt "com.github.Raizlabs.DBFlow:dbflow-processor:$dbflow_version"
-    annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:${dbflow_version}"
     compile "com.github.Raizlabs.DBFlow:dbflow-core:$dbflow_version"
     compile "com.github.Raizlabs.DBFlow:dbflow:$dbflow_version"
     compile "com.github.Raizlabs.DBFlow:dbflow-kotlinextensions:$dbflow_version"

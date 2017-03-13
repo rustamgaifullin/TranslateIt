@@ -3,7 +3,7 @@ package com.rm.translateit.api.languages
 import com.rm.translateit.api.models.Language
 
 class StaticLanguages: Languages {
-    override fun languages(): List<Language> {
+    override fun all(): List<Language> {
         return listOf(
                 Language("EN", "English"),
                 Language("PL", "Polish"),
@@ -12,11 +12,11 @@ class StaticLanguages: Languages {
     }
 
     override fun originLanguages(): List<Language> {
-        return languages()
+        return all()
     }
 
     override fun destinationLanguages(exceptOriginCode: String): List<Language> {
-        return languages().filter { language -> language.code != exceptOriginCode.toUpperCase() }
+        return all().filter { language -> language.code != exceptOriginCode.toUpperCase() }
     }
 
     override fun updateOriginLastUsage(model: Language) {

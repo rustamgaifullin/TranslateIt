@@ -8,7 +8,7 @@ import com.rm.translateit.api.models.Language
 import com.rm.translateit.api.models.Language_Table
 
 class DBLanguages : Languages {
-    override fun languages(): List<Language> {
+    override fun all(): List<Language> {
         return (select from Language::class).list
     }
 

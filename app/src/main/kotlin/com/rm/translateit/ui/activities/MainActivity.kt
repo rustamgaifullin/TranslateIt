@@ -10,14 +10,17 @@ import com.jakewharton.rxbinding.view.RxView
 import com.jakewharton.rxbinding.widget.RxAdapterView
 import com.jakewharton.rxbinding.widget.RxTextView
 import com.rm.translateit.R
+import com.rm.translateit.api.languages.Languages
 import com.rm.translateit.api.models.translation.TranslationResult
-import com.rm.translateit.api.translation.Services
+import com.rm.translateit.api.translation.Sources
 import com.rm.translateit.extension.hideKeyboard
+import com.rm.translateit.extension.translationComponent
 import com.rm.translateit.ui.adapters.LanguageSpinnerAdapter
 import com.rm.translateit.ui.adapters.ResultRecyclerViewAdapter
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.subscriptions.Subscriptions
+import javax.inject.Inject
 
 class MainActivity : BaseActivity() {
     companion object {
@@ -34,7 +37,12 @@ class MainActivity : BaseActivity() {
     private lateinit var originAdapter: LanguageSpinnerAdapter
     private lateinit var destinationAdapter: LanguageSpinnerAdapter
 
-    private val languageService = Services.languageService()
+    @Inject
+    lateinit var languages: Languages
+
+    @Inject
+    lateinit var allSources: Sources
+
     private var items: MutableList<TranslationResult> = arrayListOf()
 
     private var translatorSubscription: Subscription = Subscriptions.unsubscribed()
@@ -46,13 +54,17 @@ class MainActivity : BaseActivity() {
         return R.layout.activity_main
     }
 
+    override fun prepareDI() {
+        translationComponent().inject(this)
+    }
+
     override fun prepareUI() {
         originAdapter = LanguageSpinnerAdapter(this)
         originSpinner.adapter = originAdapter
-        val originLanguages = languageService.originLanguages()
+        val originLanguages = languages.originLanguages()
         originAdapter.updateLanguages(originLanguages)
 
-        val destinationLanguages = languageService.destinationLanguages(originLanguages.first().code)
+        val destinationLanguages = languages.destinationLanguages(originLanguages.first().code)
         destinationAdapter = LanguageSpinnerAdapter(this)
         destinationAdapter.updateLanguages(destinationLanguages)
         destinationSpinner.adapter = destinationAdapter
@@ -82,7 +94,7 @@ class MainActivity : BaseActivity() {
                 RxAdapterView.itemSelections(destinationSpinner)
                         .subscribe {
                             val language = destinationAdapter.getItem(destinationSpinner.selectedItemPosition)
-                            languageService.updateDestinationLastUsage(language)
+                            languages.updateDestinationLastUsage(language)
                             translate()
                         })
 
@@ -102,9 +114,9 @@ class MainActivity : BaseActivity() {
                     currentOriginIndex ->
                     if (originSpinner.selectedItemPosition >= 0) {
                         val language = originAdapter.getItem(originSpinner.selectedItemPosition)
-                        languageService.updateOriginLastUsage(language)
+                        languages.updateOriginLastUsage(language)
 
-                        destinationAdapter.updateLanguages(languageService.destinationLanguages(language.code))
+                        destinationAdapter.updateLanguages(languages.destinationLanguages(language.code))
 
                         translate()
                     }
@@ -122,7 +134,7 @@ class MainActivity : BaseActivity() {
         val indexForOrigin = originAdapter.getItemIndex(destinationLanguage)
         originSpinner.setSelection(indexForOrigin)
 
-        val destinationLanguages = languageService.destinationLanguages(destinationLanguage.code)
+        val destinationLanguages = languages.destinationLanguages(destinationLanguage.code)
         destinationAdapter.updateLanguages(destinationLanguages)
         val indexForDestionation = destinationAdapter.getItemIndex(originLanguage);
         destinationSpinner.setSelection(indexForDestionation)
@@ -141,7 +153,7 @@ class MainActivity : BaseActivity() {
         val fromLanguage = originAdapter.getItem(originSpinner.selectedItemPosition)
         val toLanguage = destinationAdapter.getItem(destinationSpinner.selectedItemPosition)
 
-        translatorSubscription = Services.translate(word, fromLanguage, toLanguage)
+        translatorSubscription = allSources.translate(word, fromLanguage, toLanguage)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
                     clearAndNotify()

@@ -4,11 +4,12 @@ import android.support.test.filters.LargeTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import com.rm.translateit.R
-import com.rm.translateit.api.translation.Services
+import com.rm.translateit.api.languages.Languages
 import com.rm.translateit.utils.*
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import javax.inject.Inject
 
 
 @LargeTest
@@ -17,6 +18,9 @@ open class MainActivityTest {
     @JvmField
     @Rule
     var mActivityTestRule = ActivityTestRule(MainActivity::class.java)
+
+    @Inject
+    lateinit var languageService: Languages
 
     @Test
     fun checkLanguageButtonSwapLanguagesProperly() {
@@ -37,7 +41,7 @@ open class MainActivityTest {
 
     @Test
     fun checkDestinationSpinnerShowsCorrectLanguages() {
-        val listOfLanguages = Services.languageService().languages().map { it.name }
+        val listOfLanguages = languageService.all().map { it.name }
 
         listOfLanguages.forEach {
             val originLanguage = it

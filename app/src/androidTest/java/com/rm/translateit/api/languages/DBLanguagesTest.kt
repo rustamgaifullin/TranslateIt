@@ -22,14 +22,14 @@ class DBLanguagesTest {
 
     @Test
     fun check_if_database_returns_list_of_languages() {
-        val result = sut.languages()
+        val result = sut.all()
 
         Assert.assertTrue("List of languages should not be empty", result.isNotEmpty())
     }
 
     @Test
     fun check_if_database_returns_list_of_origin_languages() {
-        val sizeOfAllLanguages = sut.languages().size
+        val sizeOfAllLanguages = sut.all().size
         val result = sut.originLanguages()
 
         Assert.assertTrue("List of languages should not be empty", result.isNotEmpty())
@@ -38,7 +38,7 @@ class DBLanguagesTest {
 
     @Test
     fun check_if_database_returns_proper_list_of_destination_languages() {
-        val sizeOfAllLanguages = sut.languages().size
+        val sizeOfAllLanguages = sut.all().size
         val result = sut.destinationLanguages("EN")
 
         Assert.assertTrue("List of languages should not be empty", result.isNotEmpty())

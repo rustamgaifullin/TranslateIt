@@ -10,7 +10,7 @@ class StaticLanguagesTest {
         val sut = StaticLanguages()
 
         //when
-        val result = sut.languages()
+        val result = sut.all()
 
         //then
         assertTrue(result.isNotEmpty(), "List of languages should not be empty")

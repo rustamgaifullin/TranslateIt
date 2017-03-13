@@ -12,6 +12,7 @@ abstract class BaseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(getLayoutId())
 
+        prepareDI()
         prepareUI()
     }
 
@@ -40,6 +41,8 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     abstract fun getLayoutId(): Int
+
+    abstract fun prepareDI()
 
     abstract fun prepareUI()
 
