@@ -5,4 +5,4 @@ machine:
       
 dependencies:
   pre:
-    - echo y | android update sdk --no-ui --all --filter tools.platform-tools.build-tools-25.0.2,android-25
+    - ( sleep 5 && while [ 1 ]; do sleep 1; echo y; done ) | android update sdk --no-ui --all --filter "tools,android-25,build-tools-25.0.2,platform-tools,extra-google-m2repository,extra-android-m2repository,extra-android-support,extra-google-google_play_services"
