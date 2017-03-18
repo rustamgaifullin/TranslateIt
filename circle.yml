@@ -12,7 +12,7 @@ dependencies:
     # Android Support Repository, revision 45 / Local Maven repository for Support Libraries
     - if [ ! -d "/usr/local/android-sdk-linux/extras/android/m2repository/com/android/support/design/25.3.0" ]; then echo y | android update sdk --no-ui --all --filter "extra-android-m2repository"; fi
     # Constraint Layout
-    - if [ ! -d "/usr/local/android-sdk-linux/extras/m2repository/com/android/support/constraint/constraint-layout/1.0.2" ]; then echo y | android update sdk --no-ui --all --filter "extra-m2repository"; fi
+    - if [ ! -d "/usr/local/android-sdk-linux/extras/m2repository/com/android/support/constraint/constraint-layout/1.0.2" ]; then echo y | android update sdk --no-ui --all --filter "com.android.support.constraint-constraint-layout-1.0.2"; fi
 
 
   cache_directories:
