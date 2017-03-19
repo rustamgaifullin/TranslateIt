@@ -5,18 +5,21 @@ machine:
       
 dependencies:
   pre:
+    - mkdir -p $ANDROID_HOME/licenses
+    - echo $ANDROID_SDK_LICENSE > $ANDROID_HOME/licenses/android-sdk-license
+
     # Android SDK Platform 25
-    - if [ ! -d "/usr/local/android-sdk-linux/platforms/android-25" ]; then echo y | android update sdk --no-ui --all --filter "android-25"; fi
+    # - if [ ! -d "/usr/local/android-sdk-linux/platforms/android-25" ]; then echo y | android update sdk --no-ui --all --filter "android-25"; fi
     # Android SDK Build-tools, revision 24.0.1
-    - if [ ! -d "/usr/local/android-sdk-linux/build-tools/25.0.2" ]; then echo y | android update sdk --no-ui --all --filter "build-tools-25.0.2"; fi
+    # - if [ ! -d "/usr/local/android-sdk-linux/build-tools/25.0.2" ]; then echo y | android update sdk --no-ui --all --filter "build-tools-25.0.2"; fi
     # Android Support Repository, revision 45 / Local Maven repository for Support Libraries
-    - if [ ! -d "/usr/local/android-sdk-linux/extras/android/m2repository/com/android/support/design/25.3.0" ]; then echo y | android update sdk --no-ui --all --filter "extra-android-m2repository"; fi
+    # - if [ ! -d "/usr/local/android-sdk-linux/extras/android/m2repository/com/android/support/design/25.3.0" ]; then echo y | android update sdk --no-ui --all --filter "extra-android-m2repository"; fi
     # Constraint Layout
-    - if [ ! -d "/usr/local/android-sdk-linux/extras/m2repository/com/android/support/constraint/constraint-layout/1.0.2" ]; then echo y | android update sdk --no-ui --all --filter "com.android.support.constraint-constraint-layout-1.0.2"; fi
+    # - if [ ! -d "/usr/local/android-sdk-linux/extras/m2repository/com/android/support/constraint/constraint-layout/1.0.2" ]; then echo y | android update sdk --no-ui --all --filter "com.android.support.constraint-constraint-layout-1.0.2"; fi
 
 
-  cache_directories:
-    - /usr/local/android-sdk-linux/platforms/android-25
-    - /usr/local/android-sdk-linux/build-tools/25.0.2
-    - /usr/local/android-sdk-linux/extras/android/m2repository
-    - /usr/local/android-sdk-linux/extras/m2repository
+  # cache_directories:
+  #  - /usr/local/android-sdk-linux/platforms/android-25
+  #  - /usr/local/android-sdk-linux/build-tools/25.0.2
+  #  - /usr/local/android-sdk-linux/extras/android/m2repository
+  #  - /usr/local/android-sdk-linux/extras/m2repository
