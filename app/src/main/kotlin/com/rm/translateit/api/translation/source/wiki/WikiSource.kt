@@ -1,26 +1,18 @@
 package com.rm.translateit.api.translation.source.wiki
 
-import com.google.gson.GsonBuilder
 import com.rm.translateit.api.models.Language
 import com.rm.translateit.api.models.translation.SourceName
 import com.rm.translateit.api.models.translation.TranslationItem
 import com.rm.translateit.api.models.translation.Words.Companion.words
 import com.rm.translateit.api.translation.source.Source
 import com.rm.translateit.api.translation.source.Url
-import com.rm.translateit.api.translation.source.wiki.deserializers.LanguageDeserializer
-import com.rm.translateit.api.translation.source.wiki.response.LanguageLinksResult
 import com.rm.translateit.api.translation.source.wiki.response.LanguageResult
 import com.rm.translateit.api.translation.source.wiki.response.SearchResult
-import retrofit2.Retrofit
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
 import rx.Observable
 import rx.schedulers.Schedulers
 import javax.inject.Inject
 
-class WikiSource @Inject constructor(private val wikiUrl: Url) : Source {
-    private val service = wikiService()
-
+class WikiSource @Inject constructor(private val wikiUrl: Url, private val service: WikiRestService) : Source {
     override fun name() = SourceName("wikipedia")
 
     override fun translate(word: String, from: Language, to: Language): Observable<List<TranslationItem>> {
@@ -51,19 +43,5 @@ class WikiSource @Inject constructor(private val wikiUrl: Url) : Source {
                 .map { result ->
                     result.searchList.map(SearchResult::title)
                 }
-    }
-
-    private fun wikiService(): WikiRestService {
-        val gson = GsonBuilder()
-                .registerTypeAdapter(LanguageLinksResult::class.java, LanguageDeserializer())
-                .create()
-                
-        val retrofit = Retrofit.Builder()
-                .baseUrl("http://wikipedia.org")
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build()
-
-        return retrofit.create(WikiRestService::class.java)
     }
 }

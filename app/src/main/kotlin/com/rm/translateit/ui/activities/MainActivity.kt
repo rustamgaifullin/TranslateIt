@@ -111,7 +111,6 @@ class MainActivity : BaseActivity() {
     private fun subscriptionForOriginSpinner() {
         originSpinnerSubscription = RxAdapterView.itemSelections(originSpinner)
                 .subscribe {
-                    currentOriginIndex ->
                     if (originSpinner.selectedItemPosition >= 0) {
                         val language = originAdapter.getItem(originSpinner.selectedItemPosition)
                         languages.updateOriginLastUsage(language)
@@ -136,8 +135,8 @@ class MainActivity : BaseActivity() {
 
         val destinationLanguages = languages.destinationLanguages(destinationLanguage.code)
         destinationAdapter.updateLanguages(destinationLanguages)
-        val indexForDestionation = destinationAdapter.getItemIndex(originLanguage);
-        destinationSpinner.setSelection(indexForDestionation)
+        val indexForDestination = destinationAdapter.getItemIndex(originLanguage)
+        destinationSpinner.setSelection(indexForDestination)
 
         subscriptionForOriginSpinner()
     }
