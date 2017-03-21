@@ -14,7 +14,7 @@ class DummySourceTest {
 
     @Before
     fun setUp() {
-        RxJavaHooks.setOnIOScheduler { scheduler -> Schedulers.immediate() }
+        RxJavaHooks.setOnIOScheduler { Schedulers.immediate() }
     }
 
     @After

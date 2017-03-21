@@ -12,7 +12,9 @@ import org.junit.Ignore
 import org.junit.Test
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
+import retrofit2.Retrofit
 import retrofit2.adapter.rxjava.HttpException
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 import rx.observers.TestSubscriber
 import rx.plugins.RxJavaHooks
 import rx.schedulers.Schedulers
@@ -20,6 +22,11 @@ import rx.schedulers.Schedulers
 class BablaSourceTest {
     private val bablaUrl = mock(BablaUrl::class.java)
     private val bablaHtmlParser = mock(BablaHtmlParser::class.java)
+    private val bablaRestService: BablaRestService = Retrofit.Builder()
+            .baseUrl("http://bab.la")
+            .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+            .build()
+            .create(BablaRestService::class.java)
 
     private lateinit var server : MockWebServer
     private val word = "WORD"
@@ -32,7 +39,7 @@ class BablaSourceTest {
         server = MockWebServer()
         server.start()
 
-        RxJavaHooks.setOnIOScheduler { scheduler -> Schedulers.immediate() }
+        RxJavaHooks.setOnIOScheduler { Schedulers.immediate() }
     }
 
     @After
@@ -45,7 +52,7 @@ class BablaSourceTest {
     @Test
     fun should_successfully_return_response_with_translation() {
         //given
-        val sut = BablaSource(bablaUrl, bablaHtmlParser)
+        val sut = BablaSource(bablaRestService, bablaUrl, bablaHtmlParser)
         val testSubscriber = TestSubscriber<List<TranslationItem>>()
 
         //when
@@ -70,7 +77,7 @@ class BablaSourceTest {
     @Test
     fun should_successfully_return_response_without_translation() {
         //given
-        val sut = BablaSource(bablaUrl, bablaHtmlParser)
+        val sut = BablaSource(bablaRestService, bablaUrl, bablaHtmlParser)
         val testSubscriber = TestSubscriber<List<TranslationItem>>()
 
         //when
@@ -90,7 +97,7 @@ class BablaSourceTest {
     @Test
     fun should_successfully_handle_error() {
         //given
-        val sut = BablaSource(bablaUrl, bablaHtmlParser)
+        val sut = BablaSource(bablaRestService, bablaUrl, bablaHtmlParser)
         val testSubscriber = TestSubscriber<List<TranslationItem>>()
 
         //when
