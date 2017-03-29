@@ -31,7 +31,6 @@ class BablaSourceTest {
     private lateinit var server : MockWebServer
     private val word = "WORD"
     private val from = Language("EN", "English")
-
     private val to = Language("PL", "Polish")
 
     @Before

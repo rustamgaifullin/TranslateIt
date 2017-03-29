@@ -2,33 +2,17 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
-task createTestResources << {
-    def mockMakerFile = new File("$projectDir/src/test/resources/mockito-extensions/org.mockito.plugins.MockMaker")
-    if (System.env.MOCK_MAKER != null) {
-        logger.info("Using MockMaker ${System.env.MOCK_MAKER}")
-        mockMakerFile.parentFile.mkdirs()
-        mockMakerFile.createNewFile()
-        mockMakerFile.write(System.env.MOCK_MAKER)
-    } else {
-        logger.info("Using default MockMaker")
-    }
-}
-
 buildscript {
     ext {
-        kotlin_version = '1.1.0'
+        kotlin_version = '1.1.1'
         dbflow_version = '3.1.1'
-        support_library_v7_version = '25.3.0'
+        support_library_v7_version = '25.3.1'
         constraintlayout_version = '1.0.2'
-        retrofit_version = '2.1.0'
         rxjava_version = '1.1.9'
         rxkotlin_version = '0.60.0'
         rxandroid_version = '1.2.1'
         rxbinding_version = '0.4.0'
         kotterknife_version = '0.1.0-SNAPSHOT'
-        okhttp3_version = '3.3.0'
-        gson_version = '2.7'
-        jsoup_version = '1.9.2'
         dagger_version = '2.9'
         junit_version = '4.12'
         junit_platform_runner_version = '1.0.0-M2'
@@ -83,32 +67,15 @@ android {
     }
 }
 
-afterEvaluate {
-    android.sourceSets.all { sourceSet ->
-        if (!sourceSet.name.startsWith("test"))
-        {
-            sourceSet.kotlin.setSrcDirs([])
-        }
-    }
-}
-
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile project(':api')
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-
     compile "com.android.support.constraint:constraint-layout:$constraintlayout_version"
     compile "com.android.support:appcompat-v7:$support_library_v7_version"
     compile "com.android.support:recyclerview-v7:$support_library_v7_version"
     compile "com.android.support:design:$support_library_v7_version"
     compile "com.android.support:support-annotations:$support_library_v7_version"
-
-    compile "com.squareup.retrofit2:retrofit:$retrofit_version"
-    compile "com.squareup.retrofit2:retrofit-mock:$retrofit_version"
-    compile "com.squareup.retrofit2:converter-gson:$retrofit_version"
-    compile "com.squareup.retrofit2:adapter-rxjava:$retrofit_version"
-    compile "com.squareup.okhttp3:logging-interceptor:$okhttp3_version"
-
-    compile "com.google.code.gson:gson:$gson_version"
 
     compile "io.reactivex:rxjava:$rxjava_version"
     compile "io.reactivex:rxkotlin:$rxkotlin_version"
@@ -121,12 +88,11 @@ dependencies {
 
     compile "com.jakewharton:kotterknife:$kotterknife_version"
 
-    compile "org.jsoup:jsoup:$jsoup_version"
-
     compile "com.google.dagger:dagger:$dagger_version"
-    kapt "com.google.dagger:dagger-compiler:$dagger_version"
 
+    kapt "com.google.dagger:dagger-compiler:$dagger_version"
     kapt "com.github.Raizlabs.DBFlow:dbflow-processor:$dbflow_version"
+
     compile "com.github.Raizlabs.DBFlow:dbflow-core:$dbflow_version"
     compile "com.github.Raizlabs.DBFlow:dbflow:$dbflow_version"
     compile "com.github.Raizlabs.DBFlow:dbflow-kotlinextensions:$dbflow_version"
@@ -140,10 +106,7 @@ dependencies {
     testCompile "junit:junit:$junit_version"
     testCompile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
-    testCompile "com.squareup.okhttp3:mockwebserver:$okhttp3_version"
-
     testCompile "org.junit.platform:junit-platform-runner:$junit_platform_runner_version"
-
     testCompile "org.mockito:mockito-core:$mockito_version"
 }
 
