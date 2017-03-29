@@ -7,7 +7,7 @@ import com.raizlabs.android.dbflow.structure.BaseModel
 import com.rm.translateit.db.AppDatabase
 
 @Table(database = AppDatabase::class)
-data class Language(
+data class LanguageModel(
         @PrimaryKey var code: String = "",
         @Column var name: String = "",
         @Column var originLastUsage: Long = 0,

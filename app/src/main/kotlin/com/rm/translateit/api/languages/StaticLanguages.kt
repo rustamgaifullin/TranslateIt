@@ -1,29 +1,29 @@
 package com.rm.translateit.api.languages
 
-import com.rm.translateit.api.models.Language
+import com.rm.translateit.api.models.LanguageModel
 
 class StaticLanguages: Languages {
-    override fun all(): List<Language> {
+    override fun all(): List<LanguageModel> {
         return listOf(
-                Language("EN", "English"),
-                Language("PL", "Polish"),
-                Language("RU", "Russian")
+                LanguageModel("EN", "English"),
+                LanguageModel("PL", "Polish"),
+                LanguageModel("RU", "Russian")
         )
     }
 
-    override fun originLanguages(): List<Language> {
+    override fun originLanguages(): List<LanguageModel> {
         return all()
     }
 
-    override fun destinationLanguages(exceptOriginCode: String): List<Language> {
+    override fun destinationLanguages(exceptOriginCode: String): List<LanguageModel> {
         return all().filter { language -> language.code != exceptOriginCode.toUpperCase() }
     }
 
-    override fun updateOriginLastUsage(model: Language) {
+    override fun updateOriginLastUsage(model: LanguageModel) {
 
     }
 
-    override fun updateDestinationLastUsage(model: Language) {
+    override fun updateDestinationLastUsage(model: LanguageModel) {
 
     }
 }
