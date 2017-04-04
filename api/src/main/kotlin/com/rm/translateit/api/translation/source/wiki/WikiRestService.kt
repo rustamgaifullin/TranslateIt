@@ -16,6 +16,6 @@ interface WikiRestService {
     fun query(@Url url: String): Observable<LanguageLinksResult>
 
     @Headers("User-Agent: Android_Translate")
-    @GET("/w/api.php?action=query&format=json&prop=&list=search&titles=&srinfo=suggestion&srprop=redirecttitle")
+    @GET("/w/com.rm.translateit.api.php?action=query&format=json&prop=&list=search&titles=&srinfo=suggestion&srprop=redirecttitle")
     fun suggestions(@Query("srsearch") title: String, @Query("sroffset") offset: Int): Observable<SuggestionResult>
 }

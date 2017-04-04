@@ -35,7 +35,7 @@ class ResultRecyclerViewAdapter(val items: MutableList<TranslationResult>) : Ada
     }
 
     private fun multilineText(translation: List<TranslationItem>):CharSequence = translation
-            .map { item -> item.toOneLine(decorator) }
+            .map { item -> decorator.toSingleLine(item) }
             .reduce { first, second -> "$first\n$second" }
 
     class ViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
