@@ -2,23 +2,25 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
-task createTestResources << {
-    def mockMakerFile = new File("$projectDir/src/test/resources/mockito-extensions/org.mockito.plugins.MockMaker")
-    if (System.env.MOCK_MAKER != null) {
-        logger.info("Using MockMaker ${System.env.MOCK_MAKER}")
-        mockMakerFile.parentFile.mkdirs()
-        mockMakerFile.createNewFile()
-        mockMakerFile.write(System.env.MOCK_MAKER)
-    } else {
-        logger.info("Using default MockMaker")
+task createTestResources  {
+    doLast {
+        def mockMakerFile = new File("$projectDir/src/test/resources/mockito-extensions/org.mockito.plugins.MockMaker")
+        if (System.env.MOCK_MAKER != null) {
+            logger.info("Using MockMaker ${System.env.MOCK_MAKER}")
+            mockMakerFile.parentFile.mkdirs()
+            mockMakerFile.createNewFile()
+            mockMakerFile.write(System.env.MOCK_MAKER)
+        } else {
+            logger.info("Using default MockMaker")
+        }
     }
 }
 
 buildscript {
     ext {
-        kotlin_version = '1.1.0'
+        kotlin_version = '1.1.1'
         dbflow_version = '3.1.1'
-        support_library_v7_version = '25.3.0'
+        support_library_v7_version = '25.3.1'
         constraintlayout_version = '1.0.2'
         retrofit_version = '2.1.0'
         rxjava_version = '1.1.9'
@@ -145,10 +147,6 @@ dependencies {
     testCompile "org.junit.platform:junit-platform-runner:$junit_platform_runner_version"
 
     testCompile "org.mockito:mockito-core:$mockito_version"
-}
-
-kapt {
-    generateStubs = true
 }
 
 repositories {
