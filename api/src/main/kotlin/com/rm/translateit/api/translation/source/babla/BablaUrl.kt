@@ -8,7 +8,7 @@ import com.rm.translateit.api.translation.source.Url
  * For example: english - english-polish, polish - polski-angelski, russin - русский-английский
  * It will be possible if language name will be stored for every supported languages.
  */
-class BablaUrl: Url {
+internal class BablaUrl: Url {
     //TODO: when they fix redirects remove en and add %s parameter
     private val fullUrl = "http://en.bab.la/dictionary/%s/%s"
 

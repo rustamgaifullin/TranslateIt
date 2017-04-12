@@ -12,7 +12,7 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 import javax.inject.Singleton
 
 @Module
-class BablaModule {
+internal class BablaModule {
 
     @Provides
     @Singleton

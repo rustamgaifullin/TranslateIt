@@ -2,7 +2,7 @@ package com.rm.translateit.api.translation.source.wiki.response
 
 import com.google.gson.annotations.SerializedName
 
-class LanguageResult {
+internal class LanguageResult {
     @SerializedName("lang")
     var code: String = ""
 

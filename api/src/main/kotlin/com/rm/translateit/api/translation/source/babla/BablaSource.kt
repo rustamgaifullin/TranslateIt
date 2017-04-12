@@ -11,7 +11,7 @@ import rx.schedulers.Schedulers
 import javax.inject.Inject
 
 
-class BablaSource @Inject constructor(private val bablaService: BablaRestService, private val bablaUrl: Url, private val bablaHtmlParser: HtmlParser) : Source {
+internal class BablaSource @Inject constructor(private val bablaService: BablaRestService, private val bablaUrl: Url, private val bablaHtmlParser: HtmlParser) : Source {
     override fun name() = SourceName("babla")
 
     override fun translate(word: String, from: Language, to: Language): Observable<List<TranslationItem>> {

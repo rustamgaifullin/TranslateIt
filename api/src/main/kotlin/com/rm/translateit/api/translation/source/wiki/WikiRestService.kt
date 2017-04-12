@@ -8,7 +8,7 @@ import retrofit2.http.Headers
 import retrofit2.http.Query
 import rx.Observable
 
-interface WikiRestService {
+internal interface WikiRestService {
     //TODO: also thinkg about client login https://www.mediawiki.org/wiki/API:Login
 
     @Headers("User-Agent: Android_Translate")

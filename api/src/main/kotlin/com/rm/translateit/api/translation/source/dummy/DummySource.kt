@@ -8,7 +8,7 @@ import com.rm.translateit.api.translation.source.Source
 import rx.Observable
 import rx.schedulers.Schedulers
 
-class DummySource : Source {
+internal class DummySource : Source {
     override fun name() = SourceName("dummy")
 
     override fun translate(word: String, from: Language, to: Language): Observable<List<TranslationItem>> {

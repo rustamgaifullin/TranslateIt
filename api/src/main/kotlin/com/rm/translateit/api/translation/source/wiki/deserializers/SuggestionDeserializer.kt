@@ -8,7 +8,7 @@ import com.rm.translateit.api.extenstion.getOrEmpty
 import com.rm.translateit.api.translation.source.wiki.response.SuggestionResult
 import java.lang.reflect.Type
 
-class SuggestionDeserializer: JsonDeserializer<SuggestionResult> {
+internal class SuggestionDeserializer: JsonDeserializer<SuggestionResult> {
     override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): SuggestionResult {
         var suggestionResult = SuggestionResult()
 

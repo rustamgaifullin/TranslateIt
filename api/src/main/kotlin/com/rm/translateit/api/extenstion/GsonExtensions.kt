@@ -3,7 +3,7 @@ package com.rm.translateit.api.extenstion
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 
-fun JsonObject.getOrEmpty(memberName: String): JsonElement {
+internal fun JsonObject.getOrEmpty(memberName: String): JsonElement {
     var result: JsonElement = JsonObject()
     val element = get(memberName)
 
@@ -12,7 +12,7 @@ fun JsonObject.getOrEmpty(memberName: String): JsonElement {
     return result
 }
 
-fun JsonObject.getFirst(): JsonElement {
+internal fun JsonObject.getFirst(): JsonElement {
     var result: JsonElement = JsonObject()
 
     if (entrySet().size > 0) result = entrySet().iterator().next().value

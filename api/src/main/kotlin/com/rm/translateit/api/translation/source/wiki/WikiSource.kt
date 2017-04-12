@@ -12,7 +12,7 @@ import rx.Observable
 import rx.schedulers.Schedulers
 import javax.inject.Inject
 
-class WikiSource @Inject constructor(private val wikiUrl: Url, private val service: WikiRestService) : Source {
+internal class WikiSource @Inject constructor(private val wikiUrl: Url, private val service: WikiRestService) : Source {
     override fun name() = SourceName("wikipedia")
 
     override fun translate(word: String, from: Language, to: Language): Observable<List<TranslationItem>> {

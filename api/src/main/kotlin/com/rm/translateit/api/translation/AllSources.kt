@@ -8,7 +8,7 @@ import rx.Observable
 import rx.lang.kotlin.onError
 import javax.inject.Inject
 
-class AllSources @Inject constructor(private val services: Set<Source>, private val logger: Logger): Sources {
+internal class AllSources @Inject constructor(private val services: Set<Source>, private val logger: Logger): Sources {
     override fun translate(word: String, from: Language, to: Language): Observable<TranslationResult> {
         return Observable.from(services)
                 .flatMap {  provider ->

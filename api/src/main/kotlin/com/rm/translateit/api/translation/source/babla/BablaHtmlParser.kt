@@ -8,7 +8,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 
 
-class BablaHtmlParser: HtmlParser {
+internal class BablaHtmlParser: HtmlParser {
     override fun getTranslateItemsFrom(htmlString: String): List<TranslationItem> {
         val document = Jsoup.parse(htmlString)
         val resultElements = document.select("div.content:not(#similarWords) div.quick-results div.quick-result-entry:has(.quick-result-overview)")

@@ -11,6 +11,6 @@ import javax.inject.Singleton
         BablaModule::class
 ))
 @Singleton
-interface SourcesComponent {
+internal interface SourcesComponent {
     fun sources(): Set<Source>
 }

@@ -5,7 +5,7 @@ import retrofit2.http.GET
 import retrofit2.http.Url
 import rx.Observable
 
-interface BablaRestService {
+internal interface BablaRestService {
 
     @GET
     fun translate(@Url url: String): Observable<ResponseBody>
