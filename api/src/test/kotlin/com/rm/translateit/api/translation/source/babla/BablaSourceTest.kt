@@ -1,6 +1,6 @@
 package com.rm.translateit.api.translation.source.babla
 
-import com.rm.translateit.api.models.Language
+import com.rm.translateit.api.models.LanguageModel
 import com.rm.translateit.api.models.translation.Tags.Companion.tags
 import com.rm.translateit.api.models.translation.TranslationItem
 import com.rm.translateit.api.models.translation.Words.Companion.words
@@ -30,8 +30,8 @@ class BablaSourceTest {
 
     private lateinit var server : MockWebServer
     private val word = "WORD"
-    private val from = Language("EN", "English")
-    private val to = Language("PL", "Polish")
+    private val from = LanguageModel("EN", "English")
+    private val to = LanguageModel("PL", "Polish")
 
     @Before
     fun setUp() {

@@ -1,6 +1,6 @@
 package com.rm.translateit.api.translation.source.babla
 
-import com.rm.translateit.api.models.Language
+import com.rm.translateit.api.models.LanguageModel
 import com.rm.translateit.api.models.translation.SourceName
 import com.rm.translateit.api.models.translation.TranslationItem
 import com.rm.translateit.api.translation.source.HtmlParser
@@ -14,7 +14,7 @@ import javax.inject.Inject
 internal class BablaSource @Inject constructor(private val bablaService: BablaRestService, private val bablaUrl: Url, private val bablaHtmlParser: HtmlParser) : Source {
     override fun name() = SourceName("babla")
 
-    override fun translate(word: String, from: Language, to: Language): Observable<List<TranslationItem>> {
+    override fun translate(word: String, from: LanguageModel, to: LanguageModel): Observable<List<TranslationItem>> {
         val url = bablaUrl.construct(word, from, to)
 
         return bablaService.translate(url)

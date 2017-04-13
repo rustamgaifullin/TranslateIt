@@ -1,7 +1,7 @@
 package com.rm.translateit.api.translation.source.wiki
 
 import com.google.gson.GsonBuilder
-import com.rm.translateit.api.models.Language
+import com.rm.translateit.api.models.LanguageModel
 import com.rm.translateit.api.models.translation.TranslationItem
 import com.rm.translateit.api.models.translation.Words.Companion.words
 import com.rm.translateit.api.translation.source.wiki.deserializers.LanguageDeserializer
@@ -28,8 +28,8 @@ class WikiSourceTest {
     private val restService: WikiRestService
     private lateinit var server: MockWebServer
     private val word = "WORD"
-    private val from = Language("EN", "English")
-    private val to = Language("PL", "Polish")
+    private val from = LanguageModel("EN", "English")
+    private val to = LanguageModel("PL", "Polish")
 
     init {
         val gson = GsonBuilder()

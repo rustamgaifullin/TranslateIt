@@ -41,7 +41,7 @@ class MainActivity : BaseActivity() {
     @Inject
     lateinit var languages: Languages
 
-//    @Inject
+    @Inject
     lateinit var allSources: Sources
 
     private var items: MutableList<TranslationResult> = arrayListOf()

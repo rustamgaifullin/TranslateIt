@@ -1,6 +1,6 @@
 package com.rm.translateit.api.translation.source.wiki
 
-import com.rm.translateit.api.models.Language
+import com.rm.translateit.api.models.LanguageModel
 import com.rm.translateit.api.models.translation.SourceName
 import com.rm.translateit.api.models.translation.TranslationItem
 import com.rm.translateit.api.models.translation.Words.Companion.words
@@ -15,7 +15,7 @@ import javax.inject.Inject
 internal class WikiSource @Inject constructor(private val wikiUrl: Url, private val service: WikiRestService) : Source {
     override fun name() = SourceName("wikipedia")
 
-    override fun translate(word: String, from: Language, to: Language): Observable<List<TranslationItem>> {
+    override fun translate(word: String, from: LanguageModel, to: LanguageModel): Observable<List<TranslationItem>> {
         val url = wikiUrl.construct(word, from, to)
         
         return service.query(url)

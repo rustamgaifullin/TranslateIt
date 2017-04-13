@@ -6,18 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
-import com.rm.translateit.api.models.LanguageModel
+import com.rm.translateit.api.models.Language
 
 class LanguageSpinnerAdapter(private val context: Context) : BaseAdapter() {
 
-    private var languages = emptyList<LanguageModel>()
+    private var languages = emptyList<Language>()
 
-    fun updateLanguages(languages: List<LanguageModel>) {
+    fun updateLanguages(languages: List<Language>) {
         this.languages = languages
         notifyDataSetChanged()
     }
 
-    fun getItemIndex(languageToSearch: LanguageModel): Int {
+    fun getItemIndex(languageToSearch: Language): Int {
         return languages.indexOfFirst { it.code == languageToSearch.code}
     }
 
@@ -25,7 +25,7 @@ class LanguageSpinnerAdapter(private val context: Context) : BaseAdapter() {
         return languages.count()
     }
 
-    override fun getItem(position: Int): LanguageModel {
+    override fun getItem(position: Int): Language {
         return languages[position]
     }
 

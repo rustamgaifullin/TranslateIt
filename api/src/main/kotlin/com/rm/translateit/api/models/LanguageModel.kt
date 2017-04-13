@@ -1,5 +1,5 @@
 package com.rm.translateit.api.models
 
-data class Language(
+data class LanguageModel(
         var code: String,
         var name: String)

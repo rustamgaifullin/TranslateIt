@@ -1,6 +1,6 @@
 package com.rm.translateit.api.translation.source.dummy
 
-import com.rm.translateit.api.models.Language
+import com.rm.translateit.api.models.LanguageModel
 import com.rm.translateit.api.models.translation.TranslationItem
 import com.rm.translateit.api.models.translation.Words.Companion.words
 import org.junit.After
@@ -28,8 +28,8 @@ class DummySourceTest {
         val testSubscriber = TestSubscriber<List<TranslationItem>>()
         val sut = DummySource()
         val word = "AWESOME"
-        val from = Language("pl", "Polish")
-        val to = Language("en", "English")
+        val from = LanguageModel("pl", "Polish")
+        val to = LanguageModel("en", "English")
 
         //when
         sut.translate(word, from, to).subscribe(testSubscriber)
