@@ -2,7 +2,7 @@ package com.rm.translateit.api
 
 import com.rm.translateit.api.logger.Logger
 
-class AndroidLogger: Logger() {
+class AndroidLogger: Logger {
     override fun info(message: String) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
