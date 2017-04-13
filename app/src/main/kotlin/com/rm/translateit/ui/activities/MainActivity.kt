@@ -12,6 +12,7 @@ import com.jakewharton.rxbinding.widget.RxTextView
 import com.rm.translateit.R
 import com.rm.translateit.api.languages.Languages
 import com.rm.translateit.api.models.translation.TranslationResult
+import com.rm.translateit.api.toLanguage
 import com.rm.translateit.api.translation.Sources
 import com.rm.translateit.extension.hideKeyboard
 import com.rm.translateit.extension.translationComponent
@@ -149,8 +150,8 @@ class MainActivity : BaseActivity() {
         }
 
         val word = wordEditText.text.toString()
-        val fromLanguage = originAdapter.getItem(originSpinner.selectedItemPosition)
-        val toLanguage = destinationAdapter.getItem(destinationSpinner.selectedItemPosition)
+        val fromLanguage = originAdapter.getItem(originSpinner.selectedItemPosition).toLanguage()
+        val toLanguage = destinationAdapter.getItem(destinationSpinner.selectedItemPosition).toLanguage()
 
         translatorSubscription = allSources.translate(word, fromLanguage, toLanguage)
                 .observeOn(AndroidSchedulers.mainThread())

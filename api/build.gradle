@@ -1,0 +1,77 @@
+apply plugin: 'kotlin'
+apply plugin: 'kotlin-kapt'
+
+buildscript {
+    ext {
+        kotlin_version = '1.1.1'
+        retrofit_version = '2.1.0'
+        rxjava_version = '1.1.9'
+        rxkotlin_version = '0.60.0'
+        okhttp3_version = '3.3.0'
+        gson_version = '2.7'
+        jsoup_version = '1.9.2'
+        dagger_version = '2.9'
+        junit_version = '4.12'
+        junit_platform_runner_version = '1.0.0-M2'
+        mockito_version = '2.6.4'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+    compile "com.squareup.retrofit2:retrofit:$retrofit_version"
+    compile "com.squareup.retrofit2:retrofit-mock:$retrofit_version"
+    compile "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    compile "com.squareup.retrofit2:adapter-rxjava:$retrofit_version"
+    compile "com.squareup.okhttp3:logging-interceptor:$okhttp3_version"
+
+    compile "com.google.code.gson:gson:$gson_version"
+
+    compile "io.reactivex:rxjava:$rxjava_version"
+    compile "io.reactivex:rxkotlin:$rxkotlin_version"
+
+    compile "org.jsoup:jsoup:$jsoup_version"
+
+    compile "com.google.dagger:dagger:$dagger_version"
+    kapt "com.google.dagger:dagger-compiler:$dagger_version"
+
+    testCompile "junit:junit:$junit_version"
+    testCompile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+    testCompile "com.squareup.okhttp3:mockwebserver:$okhttp3_version"
+
+    testCompile "org.junit.platform:junit-platform-runner:$junit_platform_runner_version"
+
+    testCompile "org.mockito:mockito-core:$mockito_version"
+}
+
+task createTestResources  {
+    doLast {
+        def mockMakerFile = new File("$projectDir/src/test/resources/mockito-extensions/org.mockito.plugins.MockMaker")
+        if (System.env.MOCK_MAKER != null) {
+            logger.info("Using MockMaker ${System.env.MOCK_MAKER}")
+            mockMakerFile.parentFile.mkdirs()
+            mockMakerFile.createNewFile()
+            mockMakerFile.write(System.env.MOCK_MAKER)
+        } else {
+            logger.info("Using default MockMaker")
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+sourceSets.main.java.srcDir file("$buildDir/generated/source/kapt/")
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
