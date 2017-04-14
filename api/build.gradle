@@ -1,5 +1,6 @@
 apply plugin: 'kotlin'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'idea'
 
 buildscript {
     ext {
@@ -53,6 +54,10 @@ dependencies {
     testCompile "org.mockito:mockito-core:$mockito_version"
 }
 
+repositories {
+    mavenCentral()
+}
+
 task createTestResources  {
     doLast {
         def mockMakerFile = new File("$projectDir/src/test/resources/mockito-extensions/org.mockito.plugins.MockMaker")
@@ -67,11 +72,22 @@ task createTestResources  {
     }
 }
 
-repositories {
-    mavenCentral()
+idea {
+    module {
+        excludeDirs -= buildDir
+        excludeDirs += file("$buildDir/classes")
+        excludeDirs += file("$buildDir/kotlin")
+        excludeDirs += file("$buildDir/kotlin-classes")
+        excludeDirs += file("$buildDir/libs")
+        excludeDirs += file("$buildDir/reports")
+        excludeDirs += file("$buildDir/resources")
+        excludeDirs += file("$buildDir/test-results")
+        excludeDirs += file("$buildDir/tmp")
+
+    }
 }
 
-sourceSets.main.java.srcDir file("$buildDir/generated/source/kapt/")
+sourceSets.main.java.srcDir file("$buildDir/generated/source/kapt")
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
