@@ -15,5 +15,5 @@ class MainModule {
 
     @Provides
     @Singleton
-    fun allSources(): Sources = Api().allSources()
+    fun allSources(): Sources = Api().sources
 }

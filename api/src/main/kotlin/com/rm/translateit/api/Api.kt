@@ -2,26 +2,19 @@ package com.rm.translateit.api
 
 import com.rm.translateit.api.logger.EmptyLogger
 import com.rm.translateit.api.logger.Logger
+import com.rm.translateit.api.translation.AllSources
 import com.rm.translateit.api.translation.DaggerSourcesComponent
 import com.rm.translateit.api.translation.Sources
-import javax.inject.Inject
 
 class Api(private val logger: Logger = EmptyLogger()) {
 
-    @Inject
-    lateinit internal var sources: Sources
+    val sources: Sources
 
     init {
-        val sources = DaggerSourcesComponent
+        val sourceSet = DaggerSourcesComponent
                 .create()
                 .sources()
-        val apiModule = ApiModule(sources, logger)
 
-        DaggerApiComponent.builder()
-                .apiModule(apiModule)
-                .build()
-                .inject(this)
+        sources = AllSources(sourceSet, logger)
     }
-
-    fun allSources() = sources
 }
