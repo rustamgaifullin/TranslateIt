@@ -14,8 +14,8 @@ import com.rm.translateit.api.languages.Languages
 import com.rm.translateit.api.models.translation.TranslationResult
 import com.rm.translateit.api.toLanguage
 import com.rm.translateit.api.translation.Sources
-import com.rm.translateit.extension.hideKeyboard
-import com.rm.translateit.extension.translationComponent
+import com.rm.translateit.ui.extension.hideKeyboard
+import com.rm.translateit.ui.extension.translationComponent
 import com.rm.translateit.ui.adapters.LanguageSpinnerAdapter
 import com.rm.translateit.ui.adapters.ResultRecyclerViewAdapter
 import rx.Subscription

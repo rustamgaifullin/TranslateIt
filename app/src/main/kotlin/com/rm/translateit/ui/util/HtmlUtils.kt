@@ -1,4 +1,4 @@
-package com.rm.translateit.ui
+package com.rm.translateit.ui.util
 
 import android.annotation.TargetApi
 import android.os.Build

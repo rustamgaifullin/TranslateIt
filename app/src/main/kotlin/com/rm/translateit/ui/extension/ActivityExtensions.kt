@@ -1,4 +1,4 @@
-package com.rm.translateit.extension
+package com.rm.translateit.ui.extension
 
 import android.app.Activity
 import android.content.Context
