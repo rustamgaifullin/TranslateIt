@@ -2,6 +2,7 @@ package com.rm.translateit.ui
 
 import android.support.test.filters.SmallTest
 import android.support.test.runner.AndroidJUnit4
+import com.rm.translateit.ui.util.fromHtml
 import junit.framework.Assert
 import org.junit.Test
 import org.junit.runner.RunWith

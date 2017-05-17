@@ -4,7 +4,7 @@ apply plugin: 'kotlin-kapt'
 
 buildscript {
     ext {
-        kotlin_version = '1.1.1'
+        kotlin_version = '1.1.2-3'
         dbflow_version = '3.1.1'
         support_library_v7_version = '25.3.1'
         constraintlayout_version = '1.0.2'

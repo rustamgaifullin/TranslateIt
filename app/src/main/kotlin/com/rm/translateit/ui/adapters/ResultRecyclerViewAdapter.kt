@@ -11,7 +11,7 @@ import com.rm.translateit.api.models.translation.TranslationItem
 import com.rm.translateit.api.models.translation.TranslationResult
 import com.rm.translateit.ui.decarators.SimpleTranslationResultDecorator
 import com.rm.translateit.ui.decarators.TranslationResultDecorator
-import com.rm.translateit.ui.fromHtml
+import com.rm.translateit.ui.util.fromHtml
 
 class ResultRecyclerViewAdapter(val items: MutableList<TranslationResult>) : Adapter<ResultRecyclerViewAdapter.ViewHolder>() {
 
