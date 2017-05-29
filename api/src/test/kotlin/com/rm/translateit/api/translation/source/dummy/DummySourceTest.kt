@@ -1,6 +1,8 @@
 package com.rm.translateit.api.translation.source.dummy
 
 import com.rm.translateit.api.models.LanguageModel
+import com.rm.translateit.api.models.translation.Details
+import com.rm.translateit.api.models.translation.Translation
 import com.rm.translateit.api.models.translation.TranslationItem
 import com.rm.translateit.api.models.translation.Words.Companion.words
 import org.junit.After
@@ -25,7 +27,7 @@ class DummySourceTest {
     @Test
     fun translate() {
         //given
-        val testSubscriber = TestSubscriber<List<TranslationItem>>()
+        val testSubscriber = TestSubscriber<Translation>()
         val sut = DummySource()
         val word = "AWESOME"
         val from = LanguageModel("pl", "Polish")
@@ -36,8 +38,16 @@ class DummySourceTest {
 
         //then
         testSubscriber.assertNoErrors()
-        testSubscriber.assertReceivedOnNext(listOf(listOf(TranslationItem(words("Translation")))))
+        testSubscriber.assertReceivedOnNext(expectedTranslationResult())
     }
+
+    private fun expectedTranslationResult() = listOf(
+            Translation(translationItemList(), details())
+    )
+
+    private fun translationItemList() = listOf(TranslationItem(words("Translation")))
+
+    private fun details() = Details("", "")
 
     @Test
     fun suggestions() {

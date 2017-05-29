@@ -6,7 +6,6 @@ import com.google.gson.JsonObject
 import com.rm.translateit.api.translation.source.wiki.deserializers.LanguageDeserializer
 import org.junit.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
 
 class LanguageDeserializerTest {
     @Test
@@ -18,37 +17,8 @@ class LanguageDeserializerTest {
         val result = sut.deserialize(jsonWithData(), null, null)
 
         //then
-        assertEquals(result.list.size, 1, "list should not be empty")
-        assertEquals(result.list[0].code, "pl", "first element should contain language code")
-        assertEquals(result.list[0].title, "translation", "first element should contain translation result")
-    }
-
-    @Test
-    fun deserialize_json_with_empty_data() {
-        //given
-        val sut = LanguageDeserializer()
-
-        //when
-        val result = sut.deserialize(JsonObject(), null, null)
-
-        //then
-        assertNotNull(result, "Should not be a null")
-        assertNotNull(result.list, "Should not be a null")
-        assertEquals(result.list.size, 0, "List should be empty")
-    }
-
-    @Test
-    fun deserialize_json_with_null_data() {
-        //given
-        val sut = LanguageDeserializer()
-
-        //when
-        val result = sut.deserialize(null, null, null)
-
-        //then
-        assertNotNull(result, "Should not be a null")
-        assertNotNull(result.list, "Should not be a null")
-        assertEquals(result.list.size, 0, "List should be empty")
+        assertEquals(result.code, "pl", "first element should contain language code")
+        assertEquals(result.title, "translation", "first element should contain translation result")
     }
 
     private fun jsonWithData(): JsonElement? {

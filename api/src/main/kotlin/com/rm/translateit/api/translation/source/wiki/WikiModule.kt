@@ -4,7 +4,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.rm.translateit.api.translation.source.Source
 import com.rm.translateit.api.translation.source.wiki.deserializers.LanguageDeserializer
-import com.rm.translateit.api.translation.source.wiki.response.LanguageLinksResult
+import com.rm.translateit.api.translation.source.wiki.response.LanguageResult
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoSet
@@ -20,14 +20,18 @@ internal class WikiModule {
     @Singleton
     fun url() = WikiUrl()
 
+    @Provides
+    @Singleton
+    fun detailsUrl() = WikiDetailsUrl()
+
     @Provides @IntoSet
     @Singleton
-    fun service(url: WikiUrl, restService: WikiRestService): Source = WikiSource(url, restService)
+    fun service(url: WikiUrl, detailsUrl: WikiDetailsUrl, restService: WikiRestService): Source = WikiSource(url, detailsUrl, restService)
 
     @Provides
     @Singleton
     fun gson(): Gson = GsonBuilder()
-            .registerTypeAdapter(LanguageLinksResult::class.java, LanguageDeserializer())
+            .registerTypeAdapter(LanguageResult::class.java, LanguageDeserializer())
             .create()
 
     @Provides
