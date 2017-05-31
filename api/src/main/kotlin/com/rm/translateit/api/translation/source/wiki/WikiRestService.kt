@@ -20,8 +20,6 @@ internal interface WikiRestService {
     @GET
     fun details(@Url url: String): Observable<DetailsResult>
 
-
-
     @Headers("User-Agent: Android_Translate")
     @GET("/w/api.php?action=query&format=json&prop=&list=search&titles=&srinfo=suggestion&srprop=redirecttitle")
     fun suggestions(@Query("srsearch") title: String, @Query("sroffset") offset: Int): Observable<SuggestionResult>

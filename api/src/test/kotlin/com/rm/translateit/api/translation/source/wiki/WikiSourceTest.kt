@@ -78,6 +78,7 @@ class WikiSourceTest {
     fun should_successfully_return_response_with_translation() {
         //when
         server.enqueue(successfulResponseWithTranslation())
+        server.enqueue(successfulResponseWithDetails())
         sut.translate(word, from, to).subscribe(testSubscriber)
 
         //expect
@@ -128,6 +129,14 @@ class WikiSourceTest {
 
     private fun successfulResponseWithTranslation(): MockResponse? {
         val responsePath = getResponsePath(forFile = "wiki_translation_response.json")
+
+        return MockResponse()
+                .setResponseCode(200)
+                .setBody(File(responsePath).readText())
+    }
+
+    private fun successfulResponseWithDetails(): MockResponse? {
+        val responsePath = getResponsePath(forFile = "wiki_translation_details_response.json")
 
         return MockResponse()
                 .setResponseCode(200)

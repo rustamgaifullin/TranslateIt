@@ -1,9 +1,8 @@
-package com.rm.translateit.api.translation.source.wiki
+package com.rm.translateit.api.translation.source.wiki.deserializers
 
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
-import com.rm.translateit.api.translation.source.wiki.deserializers.LanguageDeserializer
 import org.junit.Test
 import kotlin.test.assertEquals
 
@@ -21,6 +20,7 @@ class LanguageDeserializerTest {
         assertEquals(result.title, "translation", "first element should contain translation result")
     }
 
+    //TODO: DSL
     private fun jsonWithData(): JsonElement? {
         val rootObject = JsonObject()
         val queryObject = JsonObject()

@@ -1,0 +1,23 @@
+{
+  "batchcomplete": "",
+  "query": {
+    "pages": {
+      "262387": {
+        "pageid": 262387,
+        "ns": 0,
+        "title": "Translate",
+        "extract": "Full translation description",
+        "contentmodel": "wikitext",
+        "pagelanguage": "ru",
+        "pagelanguagehtmlcode": "ru",
+        "pagelanguagedir": "ltr",
+        "touched": "2017-05-16T11:06:52Z",
+        "lastrevid": 84546697,
+        "length": 3548,
+        "fullurl": "https://en.wikipedia.org/wiki/Translate",
+        "editurl": "https://en.wikipedia.org//w/index.php?title=Translate&action=edit",
+        "canonicalurl": "https://en.wikipedia.org/wiki/Translate"
+      }
+    }
+  }
+}

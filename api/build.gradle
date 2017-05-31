@@ -18,7 +18,6 @@ buildscript {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     compile "com.squareup.retrofit2:retrofit:$retrofit_version"
@@ -66,6 +65,15 @@ idea {
 }
 
 sourceSets.main.java.srcDir file("$buildDir/generated/source/kapt")
+
+//HACK: I don't know why, but resources folder not in classpath, here's workaround to be able to read
+//files for unit testing.
+task copyTestResources(type: Copy) {
+    from "${projectDir}/src/test/resources"
+    into "${buildDir}/classes/test"
+}
+processTestResources.dependsOn copyTestResources
+//HACKEND
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7

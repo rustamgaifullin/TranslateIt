@@ -3,7 +3,6 @@ package com.rm.translateit.api.translation.source.wiki.deserializers
 import com.google.gson.Gson
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonElement
-import com.rm.translateit.api.extenstion.getFirst
 import com.rm.translateit.api.extenstion.getOrEmpty
 import com.rm.translateit.api.translation.source.wiki.response.LanguageResult
 import java.lang.reflect.Type
@@ -13,7 +12,7 @@ internal class LanguageDeserializer : WikiJsonDeserializer<LanguageResult>() {
         val firstPage = contentFromFirstPage(json)
         val langLinksJson = firstPage
                 .asJsonObject.getOrEmpty("langlinks")
-                .asJsonObject.getFirst()
+                .asJsonArray.first()
 
         return Gson().fromJson(langLinksJson, LanguageResult::class.java)
     }
