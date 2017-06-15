@@ -6,8 +6,7 @@ import com.rm.translateit.api.models.translation.Details
 import com.rm.translateit.api.models.translation.Translation
 import com.rm.translateit.api.models.translation.TranslationItem
 import com.rm.translateit.api.models.translation.Words.Companion.words
-import com.rm.translateit.api.translation.source.wiki.deserializers.LanguageDeserializer
-import com.rm.translateit.api.translation.source.wiki.response.LanguageResult
+import com.rm.translateit.api.translation.source.wiki.deserializers.LanguageTypeAdapterFactory
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
@@ -39,7 +38,7 @@ class WikiSourceTest {
 
     init {
         val gson = GsonBuilder()
-                .registerTypeAdapter(LanguageResult::class.java, LanguageDeserializer())
+                .registerTypeAdapterFactory(LanguageTypeAdapterFactory())
                 .create()
 
         restService = Retrofit.Builder()
@@ -125,7 +124,7 @@ class WikiSourceTest {
 
     private fun translationItemList() = listOf(TranslationItem(words("Translate")))
 
-    private fun details() = Details("", "")
+    private fun details() = Details("Full translation description", "https://en.wikipedia.org/wiki/Translate")
 
     private fun successfulResponseWithTranslation(): MockResponse? {
         val responsePath = getResponsePath(forFile = "wiki_translation_response.json")

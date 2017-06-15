@@ -3,8 +3,7 @@ package com.rm.translateit.api.translation.source.wiki
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.rm.translateit.api.translation.source.Source
-import com.rm.translateit.api.translation.source.wiki.deserializers.LanguageDeserializer
-import com.rm.translateit.api.translation.source.wiki.response.LanguageResult
+import com.rm.translateit.api.translation.source.wiki.deserializers.LanguageTypeAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoSet
@@ -31,7 +30,7 @@ internal class WikiModule {
     @Provides
     @Singleton
     fun gson(): Gson = GsonBuilder()
-            .registerTypeAdapter(LanguageResult::class.java, LanguageDeserializer())
+            .registerTypeAdapterFactory(LanguageTypeAdapterFactory())
             .create()
 
     @Provides

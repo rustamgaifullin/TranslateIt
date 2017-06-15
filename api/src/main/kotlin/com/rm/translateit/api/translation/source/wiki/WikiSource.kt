@@ -8,9 +8,9 @@ import com.rm.translateit.api.models.translation.TranslationItem
 import com.rm.translateit.api.models.translation.Words.Companion.words
 import com.rm.translateit.api.translation.source.Source
 import com.rm.translateit.api.translation.source.Url
-import com.rm.translateit.api.translation.source.wiki.response.DetailsResult
-import com.rm.translateit.api.translation.source.wiki.response.LanguageResult
-import com.rm.translateit.api.translation.source.wiki.response.SearchResult
+import com.rm.translateit.api.translation.source.wiki.response.DetailsResponse
+import com.rm.translateit.api.translation.source.wiki.response.LanguageResponse
+import com.rm.translateit.api.translation.source.wiki.response.SearchResponse
 import rx.Observable
 import rx.schedulers.Schedulers
 import javax.inject.Inject
@@ -30,7 +30,6 @@ internal class WikiSource @Inject constructor(
         val details = service.details(detailsUrl)
                 .subscribeOn(Schedulers.io())
 
-
         return Observable.zip(search, details) {languageResult, detailsResult ->
             val translationItems = createResultList(languageResult)
             val details = createDetails(detailsResult)
@@ -39,11 +38,11 @@ internal class WikiSource @Inject constructor(
         }
     }
 
-    private fun createDetails(detailsResult: DetailsResult) = Details(detailsResult.description, detailsResult.url)
+    private fun createDetails(detailsResponse: DetailsResponse) = Details(detailsResponse.description, detailsResponse.url)
 
-    private fun createResultList(languageResult: LanguageResult?): List<TranslationItem> {
-        return if (languageResult != null) {
-            listOf(TranslationItem(words(languageResult.title)))
+    private fun createResultList(languageResponse: LanguageResponse?): List<TranslationItem> {
+        return if (languageResponse != null) {
+            listOf(TranslationItem(words(languageResponse.title)))
         } else {
             emptyList()
         }
@@ -53,7 +52,7 @@ internal class WikiSource @Inject constructor(
         return service.suggestions(title, offset)
                 .subscribeOn(Schedulers.io())
                 .map { result ->
-                    result.searchList.map(SearchResult::title)
+                    result.searchList.map(SearchResponse::title)
                 }
     }
 }
