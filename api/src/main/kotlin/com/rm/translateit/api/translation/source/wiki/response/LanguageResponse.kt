@@ -8,4 +8,6 @@ internal class LanguageResponse {
 
     @SerializedName("*")
     var title: String = ""
+
+    fun isNotEmpty() = code.isNotEmpty() && title.isNotEmpty()
 }

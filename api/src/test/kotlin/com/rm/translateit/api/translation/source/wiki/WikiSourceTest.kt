@@ -109,7 +109,7 @@ class WikiSourceTest {
 
     //TODO: rewrite this with UnknownHostException
     @Test
-    fun should_work_when_no_connection() {
+    fun should_be_able_manage_no_connection_behavior() {
         //when
         server.shutdown()
         sut.translate(word, from, to).subscribe(testSubscriber)

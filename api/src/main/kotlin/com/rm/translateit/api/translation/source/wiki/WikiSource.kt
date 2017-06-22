@@ -23,14 +23,19 @@ internal class WikiSource @Inject constructor(
 
     override fun translate(word: String, from: LanguageModel, to: LanguageModel): Observable<Translation> {
         val url = wikiUrl.construct(word, from, to)
-        val detailsUrl = detailsWikiUrl.construct(word, from, to)
 
-        val search = service.search(url)
+        return service.search(url)
                 .subscribeOn(Schedulers.io())
-        val details = service.details(detailsUrl)
-                .subscribeOn(Schedulers.io())
+                .filter { it.isNotEmpty() }
+                .flatMap { languageResult: LanguageResponse ->
+                    val detailsUrl = detailsWikiUrl.construct(word, from, to)
 
-        return Observable.zip(search, details) {languageResult, detailsResult ->
+                    service.details(detailsUrl).map(toTranslation(languageResult))
+                }
+    }
+
+    private fun toTranslation(languageResult: LanguageResponse): (DetailsResponse) -> Translation {
+        return { detailsResult: DetailsResponse ->
             val translationItems = createResultList(languageResult)
             val details = createDetails(detailsResult)
 
@@ -38,15 +43,9 @@ internal class WikiSource @Inject constructor(
         }
     }
 
-    private fun createDetails(detailsResponse: DetailsResponse) = Details(detailsResponse.description, detailsResponse.url)
+    private fun createResultList(languageResponse: LanguageResponse) = listOf(TranslationItem(words(languageResponse.title)))
 
-    private fun createResultList(languageResponse: LanguageResponse?): List<TranslationItem> {
-        return if (languageResponse != null) {
-            listOf(TranslationItem(words(languageResponse.title)))
-        } else {
-            emptyList()
-        }
-    }
+    private fun createDetails(detailsResponse: DetailsResponse) = Details(detailsResponse.description, detailsResponse.url)
 
     override fun suggestions(title: String, from: String, offset: Int): Observable<List<String>> {
         return service.suggestions(title, offset)
