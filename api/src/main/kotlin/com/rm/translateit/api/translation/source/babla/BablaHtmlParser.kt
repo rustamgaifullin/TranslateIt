@@ -1,5 +1,6 @@
 package com.rm.translateit.api.translation.source.babla
 
+import com.rm.translateit.api.models.translation.Details
 import com.rm.translateit.api.models.translation.Tags
 import com.rm.translateit.api.models.translation.TranslationItem
 import com.rm.translateit.api.models.translation.Words
@@ -26,4 +27,9 @@ internal class BablaHtmlParser: HtmlParser {
     private fun extractTranslatedWords(element: Element) = element.select("div.quick-result-overview ul.sense-group-results li a").map { it.text() }
 
     private fun extractTags(element: Element) = element.select("div.quick-result-option span.suffix").map { it.text() }
+
+    //TODO: not implemented yet
+    override fun getDetailsFrom(htmlString: String): Details {
+        return Details("", "")
+    }
 }

@@ -1,12 +1,12 @@
 package com.rm.translateit.api.translation.source.babla
 
 import com.rm.translateit.api.models.LanguageModel
-import com.rm.translateit.api.models.translation.Details
 import com.rm.translateit.api.models.translation.SourceName
 import com.rm.translateit.api.models.translation.Translation
 import com.rm.translateit.api.translation.source.HtmlParser
 import com.rm.translateit.api.translation.source.Source
 import com.rm.translateit.api.translation.source.Url
+import okhttp3.ResponseBody
 import rx.Observable
 import rx.schedulers.Schedulers
 import javax.inject.Inject
@@ -20,12 +20,16 @@ internal class BablaSource @Inject constructor(private val bablaService: BablaRe
 
         return bablaService.translate(url)
                 .subscribeOn(Schedulers.io())
-                .map { responseBody ->
-                    val translateItems = bablaHtmlParser.getTranslateItemsFrom(responseBody.string())
-                    val details = Details("", url)
+                .map(toTranslation())
+    }
 
-                    Translation(translateItems, details)
-                }
+    private fun toTranslation(): (ResponseBody) -> Translation {
+        return { responseBody ->
+            val translateItems = bablaHtmlParser.getTranslateItemsFrom(responseBody.string())
+            val details = bablaHtmlParser.getDetailsFrom(responseBody.string())
+
+            Translation(translateItems, details)
+        }
     }
 
     override fun suggestions(title: String, from: String, offset: Int): Observable<List<String>> {

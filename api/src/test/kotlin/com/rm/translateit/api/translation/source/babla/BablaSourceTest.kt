@@ -51,6 +51,8 @@ class BablaSourceTest {
                 .thenReturn(server.url("").toString())
         `when`(bablaHtmlParser.getTranslateItemsFrom(""))
                 .thenReturn(emptyList())
+        `when`(bablaHtmlParser.getDetailsFrom(""))
+                .thenReturn(Details("", ""))
 
         RxJavaHooks.setOnIOScheduler { Schedulers.immediate() }
     }
@@ -86,7 +88,7 @@ class BablaSourceTest {
 
         //expect
         testSubscriber.assertNoErrors()
-        testSubscriber.assertReceivedOnNext(emptyList())
+        testSubscriber.assertReceivedOnNext(listOfEmptyTranslation())
         testSubscriber.assertCompleted()
     }
 
@@ -120,6 +122,8 @@ class BablaSourceTest {
                 .setResponseCode(200)
                 .setBody("")
     }
+
+    private fun listOfEmptyTranslation() = listOf(Translation(emptyList(), Details("", "")))
 
     private fun errorResponse(): MockResponse? {
         val body = "ERROR"
