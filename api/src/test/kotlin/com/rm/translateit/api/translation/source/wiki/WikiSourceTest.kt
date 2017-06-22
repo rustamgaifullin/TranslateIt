@@ -2,10 +2,11 @@ package com.rm.translateit.api.translation.source.wiki
 
 import com.google.gson.GsonBuilder
 import com.rm.translateit.api.models.LanguageModel
+import com.rm.translateit.api.models.translation.Details
+import com.rm.translateit.api.models.translation.Translation
 import com.rm.translateit.api.models.translation.TranslationItem
 import com.rm.translateit.api.models.translation.Words.Companion.words
-import com.rm.translateit.api.translation.source.wiki.deserializers.LanguageDeserializer
-import com.rm.translateit.api.translation.source.wiki.response.LanguageLinksResult
+import com.rm.translateit.api.translation.source.wiki.deserializers.LanguageTypeAdapterFactory
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
@@ -25,15 +26,19 @@ import java.net.ConnectException
 
 class WikiSourceTest {
     private val wikiUrl = mock(WikiUrl::class.java)
+    private val wikiDetailsUrl = mock(WikiDetailsUrl::class.java)
     private val restService: WikiRestService
-    private lateinit var server: MockWebServer
     private val word = "WORD"
     private val from = LanguageModel("EN", "English")
     private val to = LanguageModel("PL", "Polish")
 
+    private lateinit var server: MockWebServer
+    private lateinit var testSubscriber: TestSubscriber<Translation>
+    private lateinit var sut: WikiSource
+
     init {
         val gson = GsonBuilder()
-                .registerTypeAdapter(LanguageLinksResult::class.java, LanguageDeserializer())
+                .registerTypeAdapterFactory(LanguageTypeAdapterFactory())
                 .create()
 
         restService = Retrofit.Builder()
@@ -49,6 +54,16 @@ class WikiSourceTest {
         server = MockWebServer()
         server.start()
 
+        testSubscriber = TestSubscriber<Translation>()
+
+        sut = WikiSource(wikiUrl, wikiDetailsUrl, restService)
+
+        `when`(wikiUrl.construct(word, from, to))
+                .thenReturn(server.url("").toString())
+        `when`(wikiDetailsUrl.construct(word, from, to))
+                .thenReturn(server.url("").toString())
+
+
         RxJavaHooks.setOnIOScheduler { Schedulers.immediate() }
     }
 
@@ -60,50 +75,32 @@ class WikiSourceTest {
 
     @Test
     fun should_successfully_return_response_with_translation() {
-        //given
-        val sut = WikiSource(wikiUrl, restService)
-        val testSubscriber = TestSubscriber<List<TranslationItem>>()
-
         //when
         server.enqueue(successfulResponseWithTranslation())
-        `when`(wikiUrl.construct(word, from, to))
-                .thenReturn(server.url("").toString())
+        server.enqueue(successfulResponseWithDetails())
         sut.translate(word, from, to).subscribe(testSubscriber)
 
-        //then
+        //expect
         testSubscriber.assertNoErrors()
-        testSubscriber.assertReceivedOnNext(listOf(listOf(TranslationItem(words("Translate")))))
+        testSubscriber.assertReceivedOnNext(expectedTranslation())
         testSubscriber.assertCompleted()
     }
 
     @Test
     fun should_successfully_return_response_without_translation() {
-        //given
-        val sut = WikiSource(wikiUrl, restService)
-        val testSubscriber = TestSubscriber<List<TranslationItem>>()
-
         //when
         server.enqueue(successfulResponseWithoutTranslation())
-        `when`(wikiUrl.construct(word, from, to))
-                .thenReturn(server.url("").toString())
         sut.translate(word, from, to).subscribe(testSubscriber)
 
-        //then
+        //expect
         testSubscriber.assertNoErrors()
-        testSubscriber.assertReceivedOnNext(listOf(emptyList()))
         testSubscriber.assertCompleted()
     }
 
     @Test
     fun should_return_error_exception() {
-        //given
-        val sut = WikiSource(wikiUrl, restService)
-        val testSubscriber = TestSubscriber<List<TranslationItem>>()
-
         //when
         server.enqueue(errorResponse())
-        `when`(wikiUrl.construct(word, from, to))
-                .thenReturn(server.url("").toString())
         sut.translate(word, from, to).subscribe(testSubscriber)
 
         //then
@@ -112,23 +109,33 @@ class WikiSourceTest {
 
     //TODO: rewrite this with UnknownHostException
     @Test
-    fun should_work_when_no_connection() {
-        //given
-        val sut = WikiSource(wikiUrl, restService)
-        val testSubscriber = TestSubscriber<List<TranslationItem>>()
-
+    fun should_be_able_manage_no_connection_behavior() {
         //when
         server.shutdown()
-        `when`(wikiUrl.construct(word, from, to))
-                .thenReturn(server.url("").toString())
         sut.translate(word, from, to).subscribe(testSubscriber)
 
-        //then
+        //expect
         testSubscriber.assertError(ConnectException::class.java)
     }
 
+    private fun expectedTranslation() = listOf(
+            Translation(translationItemList(), details())
+    )
+
+    private fun translationItemList() = listOf(TranslationItem(words("Translate")))
+
+    private fun details() = Details("Full translation description", "https://en.wikipedia.org/wiki/Translate")
+
     private fun successfulResponseWithTranslation(): MockResponse? {
         val responsePath = getResponsePath(forFile = "wiki_translation_response.json")
+
+        return MockResponse()
+                .setResponseCode(200)
+                .setBody(File(responsePath).readText())
+    }
+
+    private fun successfulResponseWithDetails(): MockResponse? {
+        val responsePath = getResponsePath(forFile = "wiki_translation_details_response.json")
 
         return MockResponse()
                 .setResponseCode(200)

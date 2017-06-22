@@ -14,7 +14,6 @@ internal class AllSources @Inject constructor(private val services: Set<Source>,
                 .flatMap {  provider ->
                     provider.translate(word, from, to)
                             .onError { error -> logger.debug("error message: $error") }
-                            .filter { it.isNotEmpty() }
                             .map { result ->
                                 TranslationResult(provider.name(), result)
                             }

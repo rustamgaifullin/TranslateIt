@@ -29,7 +29,7 @@ class ResultRecyclerViewAdapter(val items: MutableList<TranslationResult>) : Ada
     override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
         val (source, translation) = items[position]
 
-        val translationText = fromHtml(multilineText(translation))
+        val translationText = fromHtml(multilineText(translation.translationItems))
         holder?.translationTextView?.text = translationText
         holder?.sourceTextView?.text = source.name
     }
