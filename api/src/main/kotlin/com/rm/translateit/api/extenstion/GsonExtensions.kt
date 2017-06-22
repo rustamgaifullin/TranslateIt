@@ -5,7 +5,7 @@ import com.google.gson.JsonObject
 import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonToken
 
-//TODO: ADD MORE TESTS!
+//TODO: Should be moved as part of the KSON library ;)
 internal fun JsonObject.getOrEmpty(memberName: String): JsonElement {
     var result: JsonElement = JsonObject()
     val element = get(memberName)

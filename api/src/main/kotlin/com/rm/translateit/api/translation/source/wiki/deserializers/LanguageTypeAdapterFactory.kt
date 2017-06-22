@@ -63,9 +63,9 @@ internal class LanguageType : TypeAdapter<LanguageResponse>() {
 
 internal class DetailsType : TypeAdapter<DetailsResponse>() {
     override fun read(jsonReader: JsonReader?): DetailsResponse {
-        if (jsonReader == null) return DetailsResponse("", "")
+        if (jsonReader == null) return DetailsResponse()
 
-        val detailsResponse = DetailsResponse("", "")
+        val detailsResponse = DetailsResponse()
 
         with(jsonReader) {
             start {
