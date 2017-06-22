@@ -10,7 +10,6 @@ import com.rm.translateit.api.extenstion.*
 import com.rm.translateit.api.translation.source.wiki.response.DetailsResponse
 import com.rm.translateit.api.translation.source.wiki.response.LanguageResponse
 
-//TODO: TEST!
 internal class LanguageTypeAdapterFactory : TypeAdapterFactory {
     override fun <T : Any?> create(gson: Gson?, type: TypeToken<T>?): TypeAdapter<T>? {
         if (LanguageResponse::class.java.isAssignableFrom(type?.rawType)) {
