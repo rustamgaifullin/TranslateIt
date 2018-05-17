@@ -2,20 +2,25 @@
 
 buildscript {
     ext {
-        kotlin_version = '1.1.2-3'
-        rxjava_version = '1.1.9'
-        rxkotlin_version = '0.60.0'
-        mockito_version = '2.8.9'
+        kotlin_version = '1.2.31'
+        rxjava_version = '1.3.2'
+        rxkotlin_version = '1.0.0'
+        mockito_version = '2.18.3'
         junit_version = '4.12'
         junit_platform_runner_version = '1.0.0-M4'
-        dagger_version = '2.11'
+        dagger_version = '2.16'
     }
 
     repositories {
         jcenter()
+      maven {
+        url 'https://maven.google.com/'
+        name 'Google'
+      }
+      google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.2'
+        classpath 'com.android.tools.build:gradle:3.1.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -23,6 +28,10 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+      maven {
+        url 'https://maven.google.com/'
+        name 'Google'
+      }
     }
 }
 
