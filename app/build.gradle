@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android-extensions'
 
 buildscript {
     ext {
@@ -8,8 +9,6 @@ buildscript {
         support_library_v7_version = '27.1.1'
         constraintlayout_version = '1.1.0'
         rxandroid_version = '1.2.1'
-        rxbinding_version = '0.4.0'
-        kotterknife_version = '0.1.0-SNAPSHOT'
         android_espresso_version = '2.2.2'
         android_support_test_version = '0.5'
         uiautomator_version = '2.1.2'
@@ -62,7 +61,7 @@ android {
 
 
 dependencies {
-    implementation project(':api')
+    api project(':api')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "com.android.support.constraint:constraint-layout:$constraintlayout_version"
@@ -74,13 +73,6 @@ dependencies {
     implementation "io.reactivex:rxjava:$rxjava_version"
     implementation "io.reactivex:rxkotlin:$rxkotlin_version"
     implementation "io.reactivex:rxandroid:$rxandroid_version"
-
-    implementation "com.jakewharton.rxbinding:rxbinding:$rxbinding_version"
-    implementation "com.jakewharton.rxbinding:rxbinding-support-v4:$rxbinding_version"
-    implementation "com.jakewharton.rxbinding:rxbinding-appcompat-v7:$rxbinding_version"
-    implementation "com.jakewharton.rxbinding:rxbinding-design:$rxbinding_version"
-
-    implementation "com.jakewharton:kotterknife:$kotterknife_version"
 
     implementation "com.google.dagger:dagger:$dagger_version"
 
@@ -107,6 +99,5 @@ dependencies {
 
 repositories {
     mavenCentral()
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
     maven { url "https://www.jitpack.io" }
 }

@@ -14,32 +14,31 @@ import com.rm.translateit.ui.decarators.TranslationResultDecorator
 import com.rm.translateit.ui.util.fromHtml
 
 class ResultRecyclerViewAdapter(val items: MutableList<TranslationResult>) : Adapter<ResultRecyclerViewAdapter.ViewHolder>() {
-
     private val decorator: TranslationResultDecorator = SimpleTranslationResultDecorator()
 
     override fun getItemCount(): Int {
         return items.count()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ResultRecyclerViewAdapter.ViewHolder {
-        val v = LayoutInflater.from(parent?.context).inflate(R.layout.result_view, parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ResultRecyclerViewAdapter.ViewHolder {
+        val v = LayoutInflater.from(parent.context).inflate(R.layout.result_view, parent, false)
         return ViewHolder(v)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val (source, translation) = items[position]
 
         val translationText = fromHtml(multilineText(translation.translationItems))
-        holder?.translationTextView?.text = translationText
-        holder?.sourceTextView?.text = source.name
+        holder.translationTextView.text = translationText
+        holder.sourceTextView.text = source.name
     }
 
     private fun multilineText(translation: List<TranslationItem>):CharSequence = translation
             .map { item -> decorator.toSingleLine(item) }
             .reduce { first, second -> "$first\n$second" }
 
-    class ViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
-        var sourceTextView: TextView = itemView?.findViewById(R.id.source_textView) as TextView
-        var translationTextView: TextView = itemView?.findViewById(R.id.translation_textView) as TextView
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        var sourceTextView: TextView = itemView.findViewById(R.id.source_textView)
+        var translationTextView: TextView = itemView.findViewById(R.id.translation_textView)
     }
 }
