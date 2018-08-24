@@ -15,6 +15,6 @@ class BablaUrlTest {
         val result = sut.construct("word", LanguageModel("EN", "English"), LanguageModel("PL", "Polish"))
 
         //then
-        Assert.assertEquals("should be the same", "http://en.bab.la/dictionary/english-polish/word", result)
+        Assert.assertEquals("should be the same", "https://en.bab.la/dictionary/english-polish/word", result)
     }
 }

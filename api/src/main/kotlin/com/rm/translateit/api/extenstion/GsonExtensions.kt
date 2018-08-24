@@ -69,15 +69,7 @@ internal fun JsonReader.findFirstArray(value: String, found: () -> Unit) {
 
 private fun JsonReader.findArray(stopOnFirst: Boolean, value: String, found: () -> Unit) {
     while (hasNext()) {
-        val fieldName = nextName()
-
-        if (fieldName == value) {
-            beginArray {
-                found()
-            }
-
-            if (stopOnFirst) return
-        } else if (peek() == JsonToken.BEGIN_ARRAY) {
+        if (peek() == JsonToken.BEGIN_ARRAY) {
             beginArray {
                 findArray(stopOnFirst, value, found)
             }
@@ -85,6 +77,12 @@ private fun JsonReader.findArray(stopOnFirst: Boolean, value: String, found: () 
             beginObject {
                 findArray(stopOnFirst, value, found)
             }
+        } else if (nextName() == value) {
+            beginArray {
+                found()
+            }
+
+            if (stopOnFirst) return
         } else {
             skipValue()
         }

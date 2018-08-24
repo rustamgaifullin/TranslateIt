@@ -10,7 +10,7 @@ import com.rm.translateit.api.translation.source.Url
  */
 internal class BablaUrl: Url {
     //TODO: when they fix redirects remove en and add %s parameter
-    private val fullUrl = "http://en.bab.la/dictionary/%s/%s"
+    private val fullUrl = "https://en.bab.la/dictionary/%s/%s"
 
     override fun construct(word: String, from: LanguageModel, to: LanguageModel): String {
         val fromTo = createFromTo(from, to)
