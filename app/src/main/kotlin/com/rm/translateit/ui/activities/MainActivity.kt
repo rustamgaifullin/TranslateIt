@@ -1,6 +1,7 @@
 package com.rm.translateit.ui.activities
 
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo.*
 import android.widget.Adapter
@@ -101,7 +102,6 @@ class MainActivity : BaseActivity() {
             swapLanguages()
         }
 
-
         subscriptionForOriginSpinner()
     }
 
@@ -169,6 +169,7 @@ class MainActivity : BaseActivity() {
                             resultAdapter.notifyDataSetChanged()
                         },
                         { error ->
+                            Log.e(TAG, error.message, error)
                             Toast.makeText(this, error.message, Toast.LENGTH_SHORT).show()
                         }
                 )
