@@ -1,5 +1,6 @@
 package com.rm.translateit.api.translation.source.wiki
 
+import com.jayway.jsonpath.JsonPath
 import com.rm.translateit.api.models.LanguageModel
 import com.rm.translateit.api.models.translation.Details
 import com.rm.translateit.api.models.translation.SourceName
@@ -8,9 +9,10 @@ import com.rm.translateit.api.models.translation.TranslationItem
 import com.rm.translateit.api.models.translation.Words.Companion.words
 import com.rm.translateit.api.translation.source.Source
 import com.rm.translateit.api.translation.source.Url
-import com.rm.translateit.api.translation.source.wiki.response.DetailsResponse
 import com.rm.translateit.api.translation.source.wiki.response.LanguageResponse
 import com.rm.translateit.api.translation.source.wiki.response.SearchResponse
+import net.minidev.json.JSONArray
+import okhttp3.ResponseBody
 import rx.Observable
 import rx.schedulers.Schedulers
 import javax.inject.Inject
@@ -26,18 +28,26 @@ internal class WikiSource @Inject constructor(
 
         return service.search(url)
                 .subscribeOn(Schedulers.io())
+                .map { t: ResponseBody? -> t?.string() ?: ""}
                 .filter { it.isNotEmpty() }
-                .flatMap { languageResult: LanguageResponse ->
-                    val detailsUrl = detailsWikiUrl.construct(word, from, to)
+                .flatMap { json: String ->
+                    val title = JsonPath.read<JSONArray>(json, "$.query.pages.*.langlinks[0].['*']")[0].toString()
+                    val code = JsonPath.read<JSONArray>(json, "$.query.pages.*.langlinks[0].lang")[0].toString()
+                    val languageResponse = LanguageResponse(code, title)
 
-                    service.details(detailsUrl).map(toTranslation(languageResult))
+                    val detailsUrl = detailsWikiUrl.construct(title, from, to)
+
+                    service.details(detailsUrl)
+                            .map { t: ResponseBody? -> t?.string() ?: "" }
+                            .filter { it.isNotEmpty() }
+                            .map(toTranslation(languageResponse))
                 }
     }
 
-    private fun toTranslation(languageResult: LanguageResponse): (DetailsResponse) -> Translation {
-        return { detailsResult: DetailsResponse ->
+    private fun toTranslation(languageResult: LanguageResponse): (String) -> Translation {
+        return { response ->
             val translationItems = createResultList(languageResult)
-            val details = createDetails(detailsResult)
+            val details = createDetails(response)
 
             Translation(translationItems, details)
         }
@@ -45,7 +55,12 @@ internal class WikiSource @Inject constructor(
 
     private fun createResultList(languageResponse: LanguageResponse) = listOf(TranslationItem(words(languageResponse.title)))
 
-    private fun createDetails(detailsResponse: DetailsResponse) = Details(detailsResponse.description, detailsResponse.url)
+    private fun createDetails(json: String): Details {
+        val description = JsonPath.read<JSONArray>(json, "$.query.pages.*.extract")[0].toString()
+        val url = JsonPath.read<JSONArray>(json, "$.query.pages.*.fullurl")[0].toString()
+
+        return Details(description, url)
+    }
 
     override fun suggestions(title: String, from: String, offset: Int): Observable<List<String>> {
         return service.suggestions(title, offset)
