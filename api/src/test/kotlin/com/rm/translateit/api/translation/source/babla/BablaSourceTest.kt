@@ -14,8 +14,8 @@ import org.junit.Ignore
 import org.junit.Test
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
+import retrofit2.HttpException
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava.HttpException
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 import rx.observers.TestSubscriber
 import rx.plugins.RxJavaHooks
@@ -121,8 +121,6 @@ class BablaSourceTest {
                 .setResponseCode(200)
                 .setBody("")
     }
-
-    private fun listOfEmptyTranslation() = listOf(Translation(emptyList(), Details("", "")))
 
     private fun errorResponse(): MockResponse? {
         val body = "ERROR"
