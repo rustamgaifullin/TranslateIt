@@ -28,14 +28,18 @@ internal class WikiSource @Inject constructor(
 
         return service.search(url)
                 .subscribeOn(Schedulers.io())
-                .map { t: ResponseBody? -> t?.string() ?: ""}
+                .map { t: ResponseBody? -> t?.string() ?: "" }
                 .filter { it.isNotEmpty() }
-                .map { JsonPath.read<Map<*, *>>(it, "$.query.pages")} // reading pages object first
-                .filter { it.isNotEmpty() && it.keys.isNotEmpty() && it.keys.first() != "-1" } //check if it's present and keys are present and first key is not -1
-                .map { (it[it.keys.first()] as Map<*, *>)["langlinks"] as JSONArray } //getting langlinks object
-                .filter { it.isNotEmpty() } //checking if it's not empty
-                .map { it[0] as Map<*, *> } //getting first object from the map because it should be only one
-                .filter { it.contains("*") && it.contains("lang") } //checking if map contains all required keys
+                .map { JsonPath.read<Map<*, *>>(it, "$") }
+                .map {
+                    it.getOrNull("query")
+                            ?.getOrNull("pages")
+                            ?.getFirst("-1")
+                            ?.getJsonArray("langlinks")
+                            ?.getFirstObject()
+                }
+                .filter { it != null}
+                .map { it!! }
                 .flatMap { responseMap ->
                     val title = responseMap["*"].toString()
                     val code = responseMap["lang"].toString()
@@ -62,8 +66,13 @@ internal class WikiSource @Inject constructor(
     private fun createResultList(languageResponse: LanguageResponse) = listOf(TranslationItem(words(languageResponse.title)))
 
     private fun createDetails(json: String): Details {
-        val description = JsonPath.read<JSONArray>(json, "$.query.pages.*.extract")[0].toString()
-        val url = JsonPath.read<JSONArray>(json, "$.query.pages.*.fullurl")[0].toString()
+        val map = JsonPath.read<Map<*, *>>(json, "$")
+        val result = map.getOrNull("query")
+                ?.getOrNull("pages")
+                ?.getFirst("-1")
+
+        val description = result?.get("extract") as String? ?: ""
+        val url = result?.get("fullurl") as String? ?: ""
 
         return Details(description, url)
     }
@@ -74,5 +83,37 @@ internal class WikiSource @Inject constructor(
                 .map { result ->
                     result.searchList.map(SearchResponse::title)
                 }
+    }
+
+    private fun Map<*, *>.getOrNull(key: String): Map<*, *>? {
+        if (containsKey(key)) {
+            return get(key) as Map<*, *>
+        }
+
+        return null
+    }
+
+    private fun Map<*, *>.getFirst(excludedKey: String): Map<*, *>? {
+        val key = keys.first()
+
+        if (key == excludedKey) return null
+
+        return get(key) as Map<*, *>
+    }
+
+    private fun Map<*, *>.getJsonArray(key: String): JSONArray? {
+        if (containsKey(key)) {
+            return get(key) as JSONArray?
+        }
+
+        return null
+    }
+
+    private fun JSONArray.getFirstObject(): Map<*, *>? {
+        if (size > 0) {
+            return get(0) as Map<*, *>
+        }
+
+        return null
     }
 }

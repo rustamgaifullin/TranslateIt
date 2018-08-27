@@ -76,9 +76,57 @@ class WikiSourceTest {
     }
 
     @Test
+    fun should_successfully_return_response_with_translation_without_details() {
+        //when
+        server.enqueue(successfulResponseWithTranslation())
+        server.enqueue(successfulResponseWithoutDetails())
+        sut.translate(word, from, to).subscribe(testSubscriber)
+
+        //expect
+        testSubscriber.assertNoErrors()
+        testSubscriber.assertReceivedOnNext(expectedTranslationWithoutDetails())
+        testSubscriber.assertCompleted()
+    }
+
+    @Test
+    fun should_successfully_return_response_with_translation_without_details_for_empty_details_json() {
+        //when
+        server.enqueue(successfulResponseWithTranslation())
+        server.enqueue(successfulResponseForEmptyJson())
+        sut.translate(word, from, to).subscribe(testSubscriber)
+
+        //expect
+        testSubscriber.assertNoErrors()
+        testSubscriber.assertReceivedOnNext(expectedTranslationWithoutDetails())
+        testSubscriber.assertCompleted()
+    }
+
+    @Test
     fun should_successfully_return_response_without_translation() {
         //when
         server.enqueue(successfulResponseWithoutTranslation())
+        sut.translate(word, from, to).subscribe(testSubscriber)
+
+        //expect
+        testSubscriber.assertNoErrors()
+        testSubscriber.assertCompleted()
+    }
+
+    @Test
+    fun should_successfully_return_response_without_langlinks() {
+        //when
+        server.enqueue(successfulResponseWithoutLanglinks())
+        sut.translate(word, from, to).subscribe(testSubscriber)
+
+        //expect
+        testSubscriber.assertNoErrors()
+        testSubscriber.assertCompleted()
+    }
+
+    @Test
+    fun should_successfully_return_response_for_empty_json() {
+        //when
+        server.enqueue(successfulResponseForEmptyJson())
         sut.translate(word, from, to).subscribe(testSubscriber)
 
         //expect
@@ -111,9 +159,15 @@ class WikiSourceTest {
             Translation(translationItemList(), details())
     )
 
+    private fun expectedTranslationWithoutDetails() = listOf(
+            Translation(translationItemList(), emptyDetails())
+    )
+
     private fun translationItemList() = listOf(TranslationItem(words("Translate")))
 
     private fun details() = Details("Full translation description", "https://en.wikipedia.org/wiki/Translate")
+
+    private fun emptyDetails() = Details("", "")
 
     private fun successfulResponseWithTranslation(): MockResponse? {
         val responsePath = getResponsePath(forFile = "wiki_translation_response.json")
@@ -131,8 +185,32 @@ class WikiSourceTest {
                 .setBody(File(responsePath).readText())
     }
 
+    private fun successfulResponseWithoutDetails(): MockResponse? {
+        val responsePath = getResponsePath(forFile = "wiki_translation_details_empty_response.json")
+
+        return MockResponse()
+                .setResponseCode(200)
+                .setBody(File(responsePath).readText())
+    }
+
     private fun successfulResponseWithoutTranslation(): MockResponse? {
         val responsePath = getResponsePath(forFile = "wiki_translation_empty_response.json")
+
+        return MockResponse()
+                .setResponseCode(200)
+                .setBody(File(responsePath).readText())
+    }
+
+    private fun successfulResponseWithoutLanglinks(): MockResponse? {
+        val responsePath = getResponsePath(forFile = "wiki_translation_response_without_langlinks.json")
+
+        return MockResponse()
+                .setResponseCode(200)
+                .setBody(File(responsePath).readText())
+    }
+
+    private fun successfulResponseForEmptyJson(): MockResponse? {
+        val responsePath = getResponsePath(forFile = "wiki_empty_json.json")
 
         return MockResponse()
                 .setResponseCode(200)
