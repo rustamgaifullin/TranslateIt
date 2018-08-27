@@ -1,12 +1,11 @@
 package com.rm.translateit.api.translation.source.wiki
 
-import com.google.gson.GsonBuilder
+import com.nhaarman.mockitokotlin2.any
 import com.rm.translateit.api.models.LanguageModel
 import com.rm.translateit.api.models.translation.Details
 import com.rm.translateit.api.models.translation.Translation
 import com.rm.translateit.api.models.translation.TranslationItem
 import com.rm.translateit.api.models.translation.Words.Companion.words
-import com.rm.translateit.api.translation.source.wiki.deserializers.LanguageTypeAdapterFactory
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
@@ -14,10 +13,9 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
+import retrofit2.HttpException
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava.HttpException
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
 import rx.observers.TestSubscriber
 import rx.plugins.RxJavaHooks
 import rx.schedulers.Schedulers
@@ -27,7 +25,11 @@ import java.net.ConnectException
 class WikiSourceTest {
     private val wikiUrl = mock(WikiUrl::class.java)
     private val wikiDetailsUrl = mock(WikiDetailsUrl::class.java)
-    private val restService: WikiRestService
+    private val restService: WikiRestService = Retrofit.Builder()
+            .baseUrl("http://wikipedia.org")
+            .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+            .build()
+            .create(WikiRestService::class.java)
     private val word = "WORD"
     private val from = LanguageModel("EN", "English")
     private val to = LanguageModel("PL", "Polish")
@@ -36,31 +38,18 @@ class WikiSourceTest {
     private lateinit var testSubscriber: TestSubscriber<Translation>
     private lateinit var sut: WikiSource
 
-    init {
-        val gson = GsonBuilder()
-                .registerTypeAdapterFactory(LanguageTypeAdapterFactory())
-                .create()
-
-        restService = Retrofit.Builder()
-                .baseUrl("http://wikipedia.org")
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build()
-                .create(WikiRestService::class.java)
-    }
-
     @Before
     fun setUp() {
         server = MockWebServer()
         server.start()
 
-        testSubscriber = TestSubscriber<Translation>()
+        testSubscriber = TestSubscriber()
 
         sut = WikiSource(wikiUrl, wikiDetailsUrl, restService)
 
         `when`(wikiUrl.construct(word, from, to))
                 .thenReturn(server.url("").toString())
-        `when`(wikiDetailsUrl.construct(word, from, to))
+        `when`(wikiDetailsUrl.construct(any(), any(), any()))
                 .thenReturn(server.url("").toString())
 
 
