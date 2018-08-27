@@ -88,7 +88,6 @@ class BablaSourceTest {
 
         //expect
         testSubscriber.assertNoErrors()
-        testSubscriber.assertReceivedOnNext(listOfEmptyTranslation())
         testSubscriber.assertCompleted()
     }
 
