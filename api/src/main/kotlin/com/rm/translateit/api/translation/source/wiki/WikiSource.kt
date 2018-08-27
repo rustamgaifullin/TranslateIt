@@ -30,9 +30,15 @@ internal class WikiSource @Inject constructor(
                 .subscribeOn(Schedulers.io())
                 .map { t: ResponseBody? -> t?.string() ?: ""}
                 .filter { it.isNotEmpty() }
-                .flatMap { json: String ->
-                    val title = JsonPath.read<JSONArray>(json, "$.query.pages.*.langlinks[0].['*']")[0].toString()
-                    val code = JsonPath.read<JSONArray>(json, "$.query.pages.*.langlinks[0].lang")[0].toString()
+                .map { JsonPath.read<Map<*, *>>(it, "$.query.pages")} // reading pages object first
+                .filter { it.isNotEmpty() && it.keys.isNotEmpty() && it.keys.first() != "-1" } //check if it's present and keys are present and first key is not -1
+                .map { (it[it.keys.first()] as Map<*, *>)["langlinks"] as JSONArray } //getting langlinks object
+                .filter { it.isNotEmpty() } //checking if it's not empty
+                .map { it[0] as Map<*, *> } //getting first object from the map because it should be only one
+                .filter { it.contains("*") && it.contains("lang") } //checking if map contains all required keys
+                .flatMap { responseMap ->
+                    val title = responseMap["*"].toString()
+                    val code = responseMap["lang"].toString()
                     val languageResponse = LanguageResponse(code, title)
 
                     val detailsUrl = detailsWikiUrl.construct(title, from, to)

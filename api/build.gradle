@@ -9,6 +9,7 @@ buildscript {
         gson_version = '2.8.4'
         jsoup_version = '1.11.3'
         jsonpath_verison = '2.4.0'
+        mockito_kotlin_version = '2.0.0-RC1'
     }
     repositories {
         mavenCentral()
@@ -45,6 +46,7 @@ dependencies {
     testImplementation "org.junit.platform:junit-platform-runner:$junit_platform_runner_version"
     testImplementation "org.mockito:mockito-core:$mockito_version"
     testImplementation "org.mockito:mockito-inline:$mockito_version"
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockito_kotlin_version"
 }
 
 repositories {
