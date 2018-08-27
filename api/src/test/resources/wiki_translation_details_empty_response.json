@@ -1,0 +1,25 @@
+{
+  "batchcomplete": "",
+  "query": {
+    "normalized": [
+      {
+        "from": "asdf123",
+        "to": "Asdf123"
+      }
+    ],
+    "pages": {
+      "-1": {
+        "ns": 0,
+        "title": "Asdf123",
+        "missing": "",
+        "contentmodel": "wikitext",
+        "pagelanguage": "en",
+        "pagelanguagehtmlcode": "en",
+        "pagelanguagedir": "ltr",
+        "fullurl": "https://en.wikipedia.org/wiki/Asdf123",
+        "editurl": "https://en.wikipedia.org/w/index.php?title=Asdf123&action=edit",
+        "canonicalurl": "https://en.wikipedia.org/wiki/Asdf123"
+      }
+    }
+  }
+}

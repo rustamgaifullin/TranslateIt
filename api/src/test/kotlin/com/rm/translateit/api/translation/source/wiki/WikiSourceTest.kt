@@ -1,12 +1,11 @@
 package com.rm.translateit.api.translation.source.wiki
 
-import com.google.gson.GsonBuilder
+import com.nhaarman.mockitokotlin2.any
 import com.rm.translateit.api.models.LanguageModel
 import com.rm.translateit.api.models.translation.Details
 import com.rm.translateit.api.models.translation.Translation
 import com.rm.translateit.api.models.translation.TranslationItem
 import com.rm.translateit.api.models.translation.Words.Companion.words
-import com.rm.translateit.api.translation.source.wiki.deserializers.LanguageTypeAdapterFactory
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
@@ -14,10 +13,9 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
+import retrofit2.HttpException
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava.HttpException
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
 import rx.observers.TestSubscriber
 import rx.plugins.RxJavaHooks
 import rx.schedulers.Schedulers
@@ -27,7 +25,11 @@ import java.net.ConnectException
 class WikiSourceTest {
     private val wikiUrl = mock(WikiUrl::class.java)
     private val wikiDetailsUrl = mock(WikiDetailsUrl::class.java)
-    private val restService: WikiRestService
+    private val restService: WikiRestService = Retrofit.Builder()
+            .baseUrl("http://wikipedia.org")
+            .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+            .build()
+            .create(WikiRestService::class.java)
     private val word = "WORD"
     private val from = LanguageModel("EN", "English")
     private val to = LanguageModel("PL", "Polish")
@@ -36,31 +38,18 @@ class WikiSourceTest {
     private lateinit var testSubscriber: TestSubscriber<Translation>
     private lateinit var sut: WikiSource
 
-    init {
-        val gson = GsonBuilder()
-                .registerTypeAdapterFactory(LanguageTypeAdapterFactory())
-                .create()
-
-        restService = Retrofit.Builder()
-                .baseUrl("http://wikipedia.org")
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build()
-                .create(WikiRestService::class.java)
-    }
-
     @Before
     fun setUp() {
         server = MockWebServer()
         server.start()
 
-        testSubscriber = TestSubscriber<Translation>()
+        testSubscriber = TestSubscriber()
 
         sut = WikiSource(wikiUrl, wikiDetailsUrl, restService)
 
         `when`(wikiUrl.construct(word, from, to))
                 .thenReturn(server.url("").toString())
-        `when`(wikiDetailsUrl.construct(word, from, to))
+        `when`(wikiDetailsUrl.construct(any(), any(), any()))
                 .thenReturn(server.url("").toString())
 
 
@@ -87,9 +76,57 @@ class WikiSourceTest {
     }
 
     @Test
+    fun should_successfully_return_response_with_translation_without_details() {
+        //when
+        server.enqueue(successfulResponseWithTranslation())
+        server.enqueue(successfulResponseWithoutDetails())
+        sut.translate(word, from, to).subscribe(testSubscriber)
+
+        //expect
+        testSubscriber.assertNoErrors()
+        testSubscriber.assertReceivedOnNext(expectedTranslationWithoutDetails())
+        testSubscriber.assertCompleted()
+    }
+
+    @Test
+    fun should_successfully_return_response_with_translation_without_details_for_empty_details_json() {
+        //when
+        server.enqueue(successfulResponseWithTranslation())
+        server.enqueue(successfulResponseForEmptyJson())
+        sut.translate(word, from, to).subscribe(testSubscriber)
+
+        //expect
+        testSubscriber.assertNoErrors()
+        testSubscriber.assertReceivedOnNext(expectedTranslationWithoutDetails())
+        testSubscriber.assertCompleted()
+    }
+
+    @Test
     fun should_successfully_return_response_without_translation() {
         //when
         server.enqueue(successfulResponseWithoutTranslation())
+        sut.translate(word, from, to).subscribe(testSubscriber)
+
+        //expect
+        testSubscriber.assertNoErrors()
+        testSubscriber.assertCompleted()
+    }
+
+    @Test
+    fun should_successfully_return_response_without_langlinks() {
+        //when
+        server.enqueue(successfulResponseWithoutLanglinks())
+        sut.translate(word, from, to).subscribe(testSubscriber)
+
+        //expect
+        testSubscriber.assertNoErrors()
+        testSubscriber.assertCompleted()
+    }
+
+    @Test
+    fun should_successfully_return_response_for_empty_json() {
+        //when
+        server.enqueue(successfulResponseForEmptyJson())
         sut.translate(word, from, to).subscribe(testSubscriber)
 
         //expect
@@ -122,9 +159,15 @@ class WikiSourceTest {
             Translation(translationItemList(), details())
     )
 
+    private fun expectedTranslationWithoutDetails() = listOf(
+            Translation(translationItemList(), emptyDetails())
+    )
+
     private fun translationItemList() = listOf(TranslationItem(words("Translate")))
 
     private fun details() = Details("Full translation description", "https://en.wikipedia.org/wiki/Translate")
+
+    private fun emptyDetails() = Details("", "")
 
     private fun successfulResponseWithTranslation(): MockResponse? {
         val responsePath = getResponsePath(forFile = "wiki_translation_response.json")
@@ -142,8 +185,32 @@ class WikiSourceTest {
                 .setBody(File(responsePath).readText())
     }
 
+    private fun successfulResponseWithoutDetails(): MockResponse? {
+        val responsePath = getResponsePath(forFile = "wiki_translation_details_empty_response.json")
+
+        return MockResponse()
+                .setResponseCode(200)
+                .setBody(File(responsePath).readText())
+    }
+
     private fun successfulResponseWithoutTranslation(): MockResponse? {
         val responsePath = getResponsePath(forFile = "wiki_translation_empty_response.json")
+
+        return MockResponse()
+                .setResponseCode(200)
+                .setBody(File(responsePath).readText())
+    }
+
+    private fun successfulResponseWithoutLanglinks(): MockResponse? {
+        val responsePath = getResponsePath(forFile = "wiki_translation_response_without_langlinks.json")
+
+        return MockResponse()
+                .setResponseCode(200)
+                .setBody(File(responsePath).readText())
+    }
+
+    private fun successfulResponseForEmptyJson(): MockResponse? {
+        val responsePath = getResponsePath(forFile = "wiki_empty_json.json")
 
         return MockResponse()
                 .setResponseCode(200)
