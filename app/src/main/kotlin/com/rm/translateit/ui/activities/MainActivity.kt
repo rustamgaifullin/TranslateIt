@@ -64,8 +64,8 @@ class MainActivity : BaseActivity() {
         destination_spinner.adapter = destinationAdapter
 
         resultAdapter = ResultRecyclerViewAdapter(items)
-        result_recyclerView.adapter = resultAdapter
-        result_recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        resultRecyclerView.adapter = resultAdapter
+        resultRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
         word_editText.setImeActionLabel(getString(R.string.ime_action_translate), IME_ACTION_TRANSLATE)
     }
@@ -157,11 +157,16 @@ class MainActivity : BaseActivity() {
                 .doOnSubscribe {
                     clearAndNotify()
                     progressBar.visibility = View.VISIBLE
+                    showNotFoundView(false)
                 }
-                .doOnError { progressBar.visibility = View.GONE }
+                .doOnError {
+                    progressBar.visibility = View.GONE
+                    showNotFoundView(items.size == 0)
+                }
                 .doOnCompleted {
                     progressBar.visibility = View.GONE
                     hideKeyboard { items.size > 0 }
+                    showNotFoundView(items.size == 0)
                 }
                 .subscribe(
                         { result ->
@@ -173,6 +178,16 @@ class MainActivity : BaseActivity() {
                             Toast.makeText(this, error.message, Toast.LENGTH_SHORT).show()
                         }
                 )
+    }
+
+    private fun showNotFoundView(showView: Boolean) {
+        if (showView) {
+            notFoundView.visibility = View.VISIBLE
+            resultRecyclerView.visibility = View.GONE
+        } else {
+            notFoundView.visibility = View.GONE
+            resultRecyclerView.visibility = View.VISIBLE
+        }
     }
 
     private fun clearAndNotify() {
