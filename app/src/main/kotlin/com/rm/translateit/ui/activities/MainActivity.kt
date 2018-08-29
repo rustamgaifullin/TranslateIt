@@ -86,7 +86,7 @@ class MainActivity : BaseActivity() {
         }
 
         destination_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
                 val language = destinationAdapter.getItem(destination_spinner.selectedItemPosition)
                 languages.updateDestinationLastUsage(language)
                 translate()
@@ -107,7 +107,7 @@ class MainActivity : BaseActivity() {
 
     private fun subscriptionForOriginSpinner() {
         origin_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
                 val language = originAdapter.getItem(origin_spinner.selectedItemPosition)
                 languages.updateOriginLastUsage(language)
 
