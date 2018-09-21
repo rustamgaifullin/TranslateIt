@@ -1,5 +1,6 @@
 package com.rm.translateit.ui.activities
 
+import android.net.Uri
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.View
@@ -21,6 +22,9 @@ import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.subscriptions.Subscriptions
 import javax.inject.Inject
+import android.support.customtabs.CustomTabsIntent
+import android.support.v4.content.ContextCompat
+
 
 class MainActivity : BaseActivity() {
     companion object {
@@ -63,7 +67,14 @@ class MainActivity : BaseActivity() {
         destinationAdapter.updateLanguages(destinationLanguages)
         destination_spinner.adapter = destinationAdapter
 
-        resultAdapter = ResultRecyclerViewAdapter(items)
+        resultAdapter = ResultRecyclerViewAdapter(items) {
+            val customTabsIntent = CustomTabsIntent.Builder()
+                    .setShowTitle(true)
+                    .setToolbarColor(ContextCompat.getColor(MainActivity@this, R.color.primary))
+                    .build()
+            customTabsIntent.launchUrl(MainActivity@this, Uri.parse(it))
+        }
+
         resultRecyclerView.adapter = resultAdapter
         resultRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
@@ -119,7 +130,6 @@ class MainActivity : BaseActivity() {
             override fun onNothingSelected(parent: AdapterView<out Adapter>?) {
 
             }
-
         }
     }
 

@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView.Adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import com.rm.translateit.R
 import com.rm.translateit.api.models.translation.TranslationItem
@@ -13,7 +14,9 @@ import com.rm.translateit.ui.decarators.SimpleTranslationResultDecorator
 import com.rm.translateit.ui.decarators.TranslationResultDecorator
 import com.rm.translateit.ui.util.fromHtml
 
-class ResultRecyclerViewAdapter(val items: MutableList<TranslationResult>) : Adapter<ResultRecyclerViewAdapter.ViewHolder>() {
+class ResultRecyclerViewAdapter(
+        private val items: MutableList<TranslationResult>,
+        private val buttonCallback: (String) -> Unit) : Adapter<ResultRecyclerViewAdapter.ViewHolder>() {
     private val decorator: TranslationResultDecorator = SimpleTranslationResultDecorator()
 
     override fun getItemCount(): Int {
@@ -31,6 +34,13 @@ class ResultRecyclerViewAdapter(val items: MutableList<TranslationResult>) : Ada
         val translationText = fromHtml(multilineText(translation.translationItems))
         holder.translationTextView.text = translationText
         holder.sourceTextView.text = source.name
+        holder.descriptionTextView.text = translation.details.description
+        holder.urlButton.text = translation.details.url
+        holder.urlButton.setOnClickListener {
+            buttonCallback.invoke(translation.details.url)
+        }
+
+        holder.applyVisibilityIfNeeded()
     }
 
     private fun multilineText(translation: List<TranslationItem>): CharSequence {
@@ -40,7 +50,20 @@ class ResultRecyclerViewAdapter(val items: MutableList<TranslationResult>) : Ada
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var sourceTextView: TextView = itemView.findViewById(R.id.source_textView)
-        var translationTextView: TextView = itemView.findViewById(R.id.translation_textView)
+        var sourceTextView: TextView = itemView.findViewById(R.id.sourceTextView)
+        var translationTextView: TextView = itemView.findViewById(R.id.translationTextView)
+        var descriptionTextView: TextView = itemView.findViewById(R.id.descriptionTextView)
+        var urlButton: Button = itemView.findViewById(R.id.urlButton)
+
+        fun applyVisibilityIfNeeded() {
+            descriptionTextView.visibility = getVisibilityBasedOnText(descriptionTextView.text)
+            urlButton.visibility = getVisibilityBasedOnText(urlButton.text)
+        }
+
+        private fun getVisibilityBasedOnText(text: CharSequence): Int {
+            if (text.isNotEmpty()) return View.VISIBLE
+
+            return View.GONE
+        }
     }
 }
