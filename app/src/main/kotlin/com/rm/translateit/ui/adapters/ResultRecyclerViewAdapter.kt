@@ -29,11 +29,10 @@ class ResultRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val (source, translation) = items[position]
+        val (_, translation) = items[position]
 
         val translationText = fromHtml(multilineText(translation.translationItems))
         holder.translationTextView.text = translationText
-        holder.sourceTextView.text = source.name
         holder.descriptionTextView.text = translation.details.description
         holder.urlButton.setOnClickListener {
             buttonCallback.invoke(translation.details.url)
@@ -56,7 +55,6 @@ class ResultRecyclerViewAdapter(
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var sourceTextView: TextView = itemView.findViewById(R.id.sourceTextView)
         var translationTextView: TextView = itemView.findViewById(R.id.translationTextView)
         var descriptionTextView: TextView = itemView.findViewById(R.id.descriptionTextView)
 
