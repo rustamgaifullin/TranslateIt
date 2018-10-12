@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView.Adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import com.rm.translateit.R
 import com.rm.translateit.api.models.translation.TranslationItem
@@ -13,7 +14,9 @@ import com.rm.translateit.ui.decarators.SimpleTranslationResultDecorator
 import com.rm.translateit.ui.decarators.TranslationResultDecorator
 import com.rm.translateit.ui.util.fromHtml
 
-class ResultRecyclerViewAdapter(val items: MutableList<TranslationResult>) : Adapter<ResultRecyclerViewAdapter.ViewHolder>() {
+class ResultRecyclerViewAdapter(
+        private val items: MutableList<TranslationResult>,
+        private val buttonCallback: (String) -> Unit) : Adapter<ResultRecyclerViewAdapter.ViewHolder>() {
     private val decorator: TranslationResultDecorator = SimpleTranslationResultDecorator()
 
     override fun getItemCount(): Int {
@@ -26,11 +29,17 @@ class ResultRecyclerViewAdapter(val items: MutableList<TranslationResult>) : Ada
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val (source, translation) = items[position]
+        val (_, translation) = items[position]
 
         val translationText = fromHtml(multilineText(translation.translationItems))
         holder.translationTextView.text = translationText
-        holder.sourceTextView.text = source.name
+        holder.descriptionTextView.text = translation.details.description
+        holder.urlButton.setOnClickListener {
+            buttonCallback.invoke(translation.details.url)
+        }
+
+        holder.descriptionTextView.visibility = getVisibilityBasedOnText(translation.details.description)
+        holder.urlButton.visibility = getVisibilityBasedOnText(translation.details.url)
     }
 
     private fun multilineText(translation: List<TranslationItem>): CharSequence {
@@ -39,8 +48,16 @@ class ResultRecyclerViewAdapter(val items: MutableList<TranslationResult>) : Ada
                 .fold("") { first, second -> "$first\n$second" }
     }
 
+    private fun getVisibilityBasedOnText(text: CharSequence): Int {
+        if (text.isNotEmpty()) return View.VISIBLE
+
+        return View.GONE
+    }
+
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var sourceTextView: TextView = itemView.findViewById(R.id.source_textView)
-        var translationTextView: TextView = itemView.findViewById(R.id.translation_textView)
+        var translationTextView: TextView = itemView.findViewById(R.id.translationTextView)
+        var descriptionTextView: TextView = itemView.findViewById(R.id.descriptionTextView)
+
+        var urlButton: Button = itemView.findViewById(R.id.urlButton)
     }
 }

@@ -1,5 +1,6 @@
 package com.rm.translateit.ui.activities
 
+import android.net.Uri
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.View
@@ -21,6 +22,9 @@ import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.subscriptions.Subscriptions
 import javax.inject.Inject
+import android.support.customtabs.CustomTabsIntent
+import android.support.v4.content.ContextCompat
+
 
 class MainActivity : BaseActivity() {
     companion object {
@@ -63,15 +67,22 @@ class MainActivity : BaseActivity() {
         destinationAdapter.updateLanguages(destinationLanguages)
         destination_spinner.adapter = destinationAdapter
 
-        resultAdapter = ResultRecyclerViewAdapter(items)
+        resultAdapter = ResultRecyclerViewAdapter(items) {
+            val customTabsIntent = CustomTabsIntent.Builder()
+                    .setShowTitle(true)
+                    .setToolbarColor(ContextCompat.getColor(MainActivity@this, R.color.primary))
+                    .build()
+            customTabsIntent.launchUrl(MainActivity@this, Uri.parse(it))
+        }
+
         resultRecyclerView.adapter = resultAdapter
         resultRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
-        word_editText.setImeActionLabel(getString(R.string.ime_action_translate), IME_ACTION_TRANSLATE)
+        wordEditText.setImeActionLabel(getString(R.string.ime_action_translate), IME_ACTION_TRANSLATE)
     }
 
     override fun createBindings() {
-        word_editText.setOnEditorActionListener { _, action, _ ->
+        wordEditText.setOnEditorActionListener { _, action, _ ->
             if (action == IME_ACTION_TRANSLATE ||
                     action == IME_ACTION_DONE ||
                     action == IME_ACTION_GO ||
@@ -119,7 +130,6 @@ class MainActivity : BaseActivity() {
             override fun onNothingSelected(parent: AdapterView<out Adapter>?) {
 
             }
-
         }
     }
 
@@ -142,13 +152,13 @@ class MainActivity : BaseActivity() {
     }
 
     private fun translate() {
-        if (word_editText.text.isNullOrEmpty()) return
+        if (wordEditText.text.isNullOrEmpty()) return
 
         if (!translatorSubscription.isUnsubscribed) {
             translatorSubscription.unsubscribe()
         }
 
-        val word = word_editText.text.toString()
+        val word = wordEditText.text.toString()
         val fromLanguage = originAdapter.getItem(origin_spinner.selectedItemPosition).toLanguage()
         val toLanguage = destinationAdapter.getItem(destination_spinner.selectedItemPosition).toLanguage()
 

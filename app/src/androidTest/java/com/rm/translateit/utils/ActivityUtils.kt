@@ -23,9 +23,9 @@ fun selectLanguages(originLanguage: String, destinationLanguage: String) {
 }
 
 fun checkResult(title: String, translation: String) {
-    onView(withId(R.id.result_recyclerView))
+    onView(withId(R.id.resultRecyclerView))
             .check(matches(hasDescendant(withText(title))))
-    onView(withId(R.id.result_recyclerView))
+    onView(withId(R.id.resultRecyclerView))
             .check(matches(hasDescendant(withText(translation))))
 }
 
@@ -74,7 +74,7 @@ fun checkSpinnerEqualsToText(spinnerId: Int, text: String) {
 
 fun typeTextAndPressEnter(text: String) {
     val appCompatEditText = onView(
-            allOf(withId(R.id.word_editText),
+            allOf(withId(R.id.wordEditText),
                     withParent(allOf(withId(R.id.activity_main),
                             withParent(withId(android.R.id.content)))),
                     isDisplayed()))
