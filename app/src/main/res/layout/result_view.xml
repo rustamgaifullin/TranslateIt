@@ -60,17 +60,18 @@
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@+id/translationTextView"
       tools:text="Description"
-      tools:visibility="visible" />
+      tools:visibility="visible"
+      app:layout_constraintBottom_toTopOf="@+id/urlButton"
+      android:layout_marginBottom="8dp"
+      />
 
   <Button
       android:id="@+id/urlButton"
       style="@style/Widget.AppCompat.Button"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginStart="@dimen/margin_small"
-      android:layout_marginTop="@dimen/margin_small"
       android:layout_marginEnd="@dimen/margin_small"
-      android:layout_marginBottom="@dimen/margin_small"
+      android:layout_marginBottom="16dp"
       android:paddingStart="@dimen/margin_small"
       android:paddingEnd="@dimen/margin_small"
       android:background="@color/primaryDark"
@@ -78,10 +79,10 @@
       android:textAllCaps="true"
       android:textColor="@android:color/white"
       android:visibility="gone"
+      android:text="@string/button_more"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/descriptionTextView"
-      tools:text="Button"
-      tools:visibility="visible" />
+      tools:text="@string/button_more"
+      tools:visibility="visible"
+      />
 </android.support.constraint.ConstraintLayout>

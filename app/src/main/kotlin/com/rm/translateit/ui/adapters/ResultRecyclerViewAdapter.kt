@@ -35,12 +35,12 @@ class ResultRecyclerViewAdapter(
         holder.translationTextView.text = translationText
         holder.sourceTextView.text = source.name
         holder.descriptionTextView.text = translation.details.description
-        holder.urlButton.text = translation.details.url
         holder.urlButton.setOnClickListener {
             buttonCallback.invoke(translation.details.url)
         }
 
-        holder.applyVisibilityIfNeeded()
+        holder.descriptionTextView.visibility = getVisibilityBasedOnText(translation.details.description)
+        holder.urlButton.visibility = getVisibilityBasedOnText(translation.details.url)
     }
 
     private fun multilineText(translation: List<TranslationItem>): CharSequence {
@@ -49,21 +49,17 @@ class ResultRecyclerViewAdapter(
                 .fold("") { first, second -> "$first\n$second" }
     }
 
+    private fun getVisibilityBasedOnText(text: CharSequence): Int {
+        if (text.isNotEmpty()) return View.VISIBLE
+
+        return View.GONE
+    }
+
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var sourceTextView: TextView = itemView.findViewById(R.id.sourceTextView)
         var translationTextView: TextView = itemView.findViewById(R.id.translationTextView)
         var descriptionTextView: TextView = itemView.findViewById(R.id.descriptionTextView)
+
         var urlButton: Button = itemView.findViewById(R.id.urlButton)
-
-        fun applyVisibilityIfNeeded() {
-            descriptionTextView.visibility = getVisibilityBasedOnText(descriptionTextView.text)
-            urlButton.visibility = getVisibilityBasedOnText(urlButton.text)
-        }
-
-        private fun getVisibilityBasedOnText(text: CharSequence): Int {
-            if (text.isNotEmpty()) return View.VISIBLE
-
-            return View.GONE
-        }
     }
 }
