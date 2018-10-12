@@ -67,6 +67,7 @@ dependencies {
     implementation "com.android.support.constraint:constraint-layout:$constraintlayout_version"
     implementation "com.android.support:appcompat-v7:$support_library_v7_version"
     implementation "com.android.support:recyclerview-v7:$support_library_v7_version"
+    implementation "com.android.support:cardview-v7:$support_library_v7_version"
     implementation "com.android.support:design:$support_library_v7_version"
     implementation "com.android.support:support-annotations:$support_library_v7_version"
 
