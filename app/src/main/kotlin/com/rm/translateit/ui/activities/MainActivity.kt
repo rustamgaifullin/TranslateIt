@@ -78,11 +78,11 @@ class MainActivity : BaseActivity() {
         resultRecyclerView.adapter = resultAdapter
         resultRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
-        word_editText.setImeActionLabel(getString(R.string.ime_action_translate), IME_ACTION_TRANSLATE)
+        wordEditText.setImeActionLabel(getString(R.string.ime_action_translate), IME_ACTION_TRANSLATE)
     }
 
     override fun createBindings() {
-        word_editText.setOnEditorActionListener { _, action, _ ->
+        wordEditText.setOnEditorActionListener { _, action, _ ->
             if (action == IME_ACTION_TRANSLATE ||
                     action == IME_ACTION_DONE ||
                     action == IME_ACTION_GO ||
@@ -152,13 +152,13 @@ class MainActivity : BaseActivity() {
     }
 
     private fun translate() {
-        if (word_editText.text.isNullOrEmpty()) return
+        if (wordEditText.text.isNullOrEmpty()) return
 
         if (!translatorSubscription.isUnsubscribed) {
             translatorSubscription.unsubscribe()
         }
 
-        val word = word_editText.text.toString()
+        val word = wordEditText.text.toString()
         val fromLanguage = originAdapter.getItem(origin_spinner.selectedItemPosition).toLanguage()
         val toLanguage = destinationAdapter.getItem(destination_spinner.selectedItemPosition).toLanguage()
 
