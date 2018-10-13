@@ -1,0 +1,73 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/code
+    docker:
+      - image: circleci/android:api-27-alpha
+    environment:
+      JVM_OPTS: -Xmx3200m
+    steps:
+      - checkout
+      - restore_cache:
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+      - run:
+          name: Download Dependencies
+          command: ./gradlew androidDependencies
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+      - run:
+          name: Run Api Tests
+          command: ./gradlew :api:test
+      - store_artifacts:
+          path: api/build/reports
+          destination: reports/api
+      - store_test_results:
+          path: api/build/test-results
+      - run:
+          name: Run App Tests
+          command: ./gradlew :app:test
+      - store_artifacts:
+          path: app/build/reports
+          destination: reports/app
+      - store_test_results:
+          path: app/build/test-results
+      - run:
+          name: Run Lint Test
+          command: ./gradlew lint
+      - store_artifacts:
+          path: app/build/reports
+
+  deploy:
+    docker:
+      - image: circleci/android:api-27-alpha
+    steps:
+      - checkout
+      - restore_cache:
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+      - run:
+          name: Download Dependencies
+          command: ./gradlew androidDependencies
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+      - run:
+          name: Building app
+          command: ./gradlew assembleDebug
+      - run:
+          name: Uploading to HockeyApp
+          command: bash .circleci/deploy_dev.sh
+
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
