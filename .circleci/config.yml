@@ -22,7 +22,7 @@ jobs:
           command: ./gradlew :api:test
       - store_artifacts:
           path: api/build/reports
-          destination: reports
+          destination: reports/api
       - store_test_results:
           path: api/build/test-results
       - run:
@@ -30,7 +30,7 @@ jobs:
           command: ./gradlew :app:test
       - store_artifacts:
           path: app/build/reports
-          destination: reports
+          destination: reports/app
       - store_test_results:
           path: app/build/test-results
       - run:
