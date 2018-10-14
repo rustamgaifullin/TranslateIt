@@ -1,6 +1,8 @@
 package com.rm.translateit.ui.activities
 
 import android.net.Uri
+import android.support.customtabs.CustomTabsIntent
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.View
@@ -22,8 +24,6 @@ import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.subscriptions.Subscriptions
 import javax.inject.Inject
-import android.support.customtabs.CustomTabsIntent
-import android.support.v4.content.ContextCompat
 
 
 class MainActivity : BaseActivity() {
@@ -70,9 +70,9 @@ class MainActivity : BaseActivity() {
         resultAdapter = ResultRecyclerViewAdapter(items) {
             val customTabsIntent = CustomTabsIntent.Builder()
                     .setShowTitle(true)
-                    .setToolbarColor(ContextCompat.getColor(MainActivity@this, R.color.primary))
+                    .setToolbarColor(ContextCompat.getColor(this, R.color.primary))
                     .build()
-            customTabsIntent.launchUrl(MainActivity@this, Uri.parse(it))
+            customTabsIntent.launchUrl(this, Uri.parse(it))
         }
 
         resultRecyclerView.adapter = resultAdapter
