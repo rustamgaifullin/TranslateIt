@@ -9,18 +9,27 @@ import com.rm.translateit.api.translation.source.Url
  * It will be possible if language name will be stored for every supported languages.
  */
 internal class BablaUrl: Url {
-    //TODO: when they fix redirects remove en and add %s parameter
-    private val fullUrl = "https://en.bab.la/dictionary/%s/%s"
+    companion object {
+        private const val RUSSIAN_CODE = "ru"
+    }
+
+    private val fullUrl = "https://%s.bab.la/dictionary/%s/%s"
+    private val russianUrl = "https://www.babla.ru/%s/%s"
 
     override fun construct(word: String, from: LanguageModel, to: LanguageModel): String {
         val fromTo = createFromTo(from, to)
 
-        return fullUrl.format(fromTo, word)
+        if (from.code.toLowerCase() == RUSSIAN_CODE) {
+            return russianUrl.format(fromTo, word)
+        }
+
+        return fullUrl.format(from.code.toLowerCase(), fromTo, word)
     }
 
-    fun createFromTo(from: LanguageModel, to: LanguageModel): String {
-        val fromName = from.name.toLowerCase()
-        val toName = to.name.toLowerCase()
+    private fun createFromTo(from: LanguageModel, to: LanguageModel): String {
+        val names = from.names
+        val fromName = names.first { nameModel -> nameModel.code.equals(from.code, true)}.name.toLowerCase()
+        val toName = names.first { nameModel -> nameModel.code.equals(to.code, true) }.name.toLowerCase()
 
         return "$fromName-$toName"
     }

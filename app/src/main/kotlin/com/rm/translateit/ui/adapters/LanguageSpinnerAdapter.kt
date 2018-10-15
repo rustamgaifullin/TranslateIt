@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
 import com.rm.translateit.api.models.Language
+import com.rm.translateit.ui.extension.currentLocale
 
 class LanguageSpinnerAdapter(private val context: Context) : BaseAdapter() {
 
@@ -46,7 +47,7 @@ class LanguageSpinnerAdapter(private val context: Context) : BaseAdapter() {
 
         val language = languages[position]
         textView = view as TextView?
-        textView?.text = language.name
+        textView?.text = language.findName(context.currentLocale().language).capitalize()
 
         return view
     }

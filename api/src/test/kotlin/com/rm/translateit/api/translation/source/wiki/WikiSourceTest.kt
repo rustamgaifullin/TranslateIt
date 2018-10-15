@@ -2,6 +2,7 @@ package com.rm.translateit.api.translation.source.wiki
 
 import com.nhaarman.mockitokotlin2.any
 import com.rm.translateit.api.models.LanguageModel
+import com.rm.translateit.api.models.NameModel
 import com.rm.translateit.api.models.translation.Details
 import com.rm.translateit.api.models.translation.Translation
 import com.rm.translateit.api.models.translation.TranslationItem
@@ -31,8 +32,12 @@ class WikiSourceTest {
             .build()
             .create(WikiRestService::class.java)
     private val word = "WORD"
-    private val from = LanguageModel("EN", "English")
-    private val to = LanguageModel("PL", "Polish")
+    private val names = listOf(
+            NameModel("en", "english"),
+            NameModel("pl", "polish")
+    )
+    private val from = LanguageModel("EN", names)
+    private val to = LanguageModel("PL", names)
 
     private lateinit var server: MockWebServer
     private lateinit var testSubscriber: TestSubscriber<Translation>

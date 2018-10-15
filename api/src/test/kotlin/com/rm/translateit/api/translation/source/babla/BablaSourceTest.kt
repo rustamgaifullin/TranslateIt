@@ -1,6 +1,7 @@
 package com.rm.translateit.api.translation.source.babla
 
 import com.rm.translateit.api.models.LanguageModel
+import com.rm.translateit.api.models.NameModel
 import com.rm.translateit.api.models.translation.Details
 import com.rm.translateit.api.models.translation.Tags.Companion.tags
 import com.rm.translateit.api.models.translation.Translation
@@ -31,8 +32,12 @@ class BablaSourceTest {
             .create(BablaRestService::class.java)
 
     private val word = "WORD"
-    private val from = LanguageModel("EN", "English")
-    private val to = LanguageModel("PL", "Polish")
+    private val names = listOf(
+            NameModel("en", "english"),
+            NameModel("pl", "polish")
+    )
+    private val from = LanguageModel("EN", names)
+    private val to = LanguageModel("PL", names)
 
     private lateinit var server : MockWebServer
     private lateinit var sut : BablaSource
@@ -43,7 +48,7 @@ class BablaSourceTest {
         server = MockWebServer()
         server.start()
 
-        testSubscriber = TestSubscriber<Translation>()
+        testSubscriber = TestSubscriber()
 
         sut = BablaSource(bablaRestService, bablaUrl, bablaHtmlParser)
 
@@ -135,5 +140,4 @@ class BablaSourceTest {
     fun suggestions() {
 
     }
-
 }
