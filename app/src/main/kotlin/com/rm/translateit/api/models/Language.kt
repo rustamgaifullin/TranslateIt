@@ -17,6 +17,10 @@ data class Language(
         @Column var originLastUsage: Long = 0,
         @Column var destinationLastUsage: Long = 0) : BaseModel() {
 
+    companion object {
+        private const val DEFAULT_LANGUAGE_CODE = "en"
+    }
+
     var names: List<Name> = listOf()
         get() = SQLite
                 .select()
@@ -25,4 +29,27 @@ data class Language(
                 .on(Name_Table.id.eq(Language_Name_Table._id))
                 .where(Language_Name_Table.language_code.eq(code))
                 .queryList()
+
+    fun contains(code: String) = SQLite
+            .selectCountOf(Name_Table.id)
+            .from(Name::class)
+            .where(Name_Table.code.eq(code))
+            .count() > 0
+
+    fun findName(localeCode: String): String {
+        var codeToSearch = DEFAULT_LANGUAGE_CODE
+
+        if (contains(localeCode)) {
+            codeToSearch = localeCode
+        }
+
+        return SQLite
+                .select()
+                .from(Name::class)
+                .innerJoin(Language_Name::class)
+                .on(Name_Table.id.eq(Language_Name_Table._id))
+                .where(Language_Name_Table.language_code.eq(codeToSearch))
+                .and(Name_Table.code.eq(code))
+                .querySingle()!!.name
+    }
 }

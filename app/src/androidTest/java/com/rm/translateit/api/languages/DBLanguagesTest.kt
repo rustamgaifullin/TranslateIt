@@ -3,6 +3,7 @@ package com.rm.translateit.api.languages
 import android.support.test.InstrumentationRegistry
 import com.raizlabs.android.dbflow.config.FlowConfig
 import com.raizlabs.android.dbflow.config.FlowManager
+import com.rm.translateit.api.models.Language
 import org.junit.Assert
 import org.junit.BeforeClass
 import org.junit.Test
@@ -68,5 +69,54 @@ class DBLanguagesTest {
         val result = sut.destinationLanguages("")
 
         Assert.assertTrue("First language should be last updated", result.first() == languageToUpdate)
+    }
+
+    @Test
+    fun check_getting_all_names_for_a_language() {
+        val languages = sut.all()
+
+        languages.forEach {
+            val names = it.names
+
+            Assert.assertTrue(names.isNotEmpty())
+        }
+    }
+
+    @Test
+    fun check_finding_name_for_a_language() {
+        val languages = sut.all()
+
+        Assert.assertEquals("russian", getName(languages, "ru", "en"))
+        Assert.assertEquals("polish", getName(languages, "pl", "en"))
+        Assert.assertEquals("english", getName(languages, "en", "en"))
+        Assert.assertEquals("spanish", getName(languages, "es", "en"))
+        Assert.assertEquals("русский", getName(languages, "ru", "ru"))
+        Assert.assertEquals("польский", getName(languages, "pl", "ru"))
+        Assert.assertEquals("английский", getName(languages, "en", "ru"))
+        Assert.assertEquals("испанский", getName(languages, "es", "ru"))
+        Assert.assertEquals("rosyjski", getName(languages, "ru", "pl"))
+        Assert.assertEquals("polski", getName(languages, "pl", "pl"))
+        Assert.assertEquals("angielski", getName(languages, "en", "pl"))
+        Assert.assertEquals("hiszpanski", getName(languages, "es", "pl"))
+        Assert.assertEquals("ruso", getName(languages, "ru", "es"))
+        Assert.assertEquals("polaco", getName(languages, "pl", "es"))
+        Assert.assertEquals("ingles", getName(languages, "en", "es"))
+        Assert.assertEquals("espanol", getName(languages, "es", "es"))
+    }
+
+    @Test
+    fun return_default_names_for_unknown_locales() {
+        val languages = sut.all()
+
+        Assert.assertEquals("russian", getName(languages, "ru", "cn"))
+        Assert.assertEquals("polish", getName(languages, "pl", "kk"))
+        Assert.assertEquals("english", getName(languages, "en", "lol"))
+        Assert.assertEquals("spanish", getName(languages, "es", "what"))
+    }
+
+    private fun getName(languages: List<Language>, forLanguage: String, locale: String): String {
+        return languages
+                .first { it.code.equals(forLanguage, true) }
+                .findName(locale)
     }
 }

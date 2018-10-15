@@ -1,6 +1,7 @@
 package com.rm.translateit.api.translation.source.dummy
 
 import com.rm.translateit.api.models.LanguageModel
+import com.rm.translateit.api.models.NameModel
 import com.rm.translateit.api.models.translation.Details
 import com.rm.translateit.api.models.translation.Translation
 import com.rm.translateit.api.models.translation.TranslationItem
@@ -30,8 +31,12 @@ class DummySourceTest {
         val testSubscriber = TestSubscriber<Translation>()
         val sut = DummySource()
         val word = "AWESOME"
-        val from = LanguageModel("pl", "Polish")
-        val to = LanguageModel("en", "English")
+        val names = listOf(
+                NameModel("en", "english"),
+                NameModel("pl", "polish")
+        )
+        val from = LanguageModel("pl", names)
+        val to = LanguageModel("en", names)
 
         //when
         sut.translate(word, from, to).subscribe(testSubscriber)

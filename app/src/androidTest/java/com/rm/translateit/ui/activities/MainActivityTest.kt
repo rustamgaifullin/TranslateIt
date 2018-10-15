@@ -41,16 +41,20 @@ open class MainActivityTest {
 
     @Test
     fun checkDestinationSpinnerShowsCorrectLanguages() {
-        val listOfLanguages = languageService.all().map { it.name }
+        val listOfLanguages = languageService.all()
+        val localeCode = "en"
 
-        listOfLanguages.forEach {
-            val originLanguage = it
+        listOfLanguages.forEach { language ->
             clickOnSpinner(R.id.origin_spinner)
-            selectTextInSpinner(originLanguage)
+            selectTextInSpinner(language.findName(localeCode).capitalize())
 
-            val expectedDestinationLanguages = listOfLanguages.filter { it != originLanguage }
+            val expectedDestinationLanguages = listOfLanguages
+                    .asSequence()
+                    .filter { it != language}
+                    .mapNotNull { it.findName(localeCode) }
+                    .toList()
             checkTextInSpinner(R.id.destination_spinner, expectedDestinationLanguages)
-            checkTextNotInSpinner(R.id.destination_spinner, originLanguage)
+            checkTextNotInSpinner(R.id.destination_spinner, language.findName(localeCode))
         }
     }
 }
