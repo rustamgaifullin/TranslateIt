@@ -30,24 +30,17 @@ internal class BablaHtmlParser: HtmlParser {
 
     override fun getDetailsFrom(htmlString: String): Details {
         val document = Jsoup.parse(htmlString)
-        val resultElements = document.select("div.content:not(#similarWords) div.result-block.container div.sense-group div.sense-group")
+        val resultElements = document.select("div.content:not(#similarWords) div.result-block.container div.sense-group div.dict-entry div.dict-translation")
 
-        val list = resultElements
-                .filter { it.allElements.hasClass("dict-entry") }
-                .map { element ->
-                    val source = element.select("div.dict-entry div.dict-source").map { dictSource ->
-                        val strong = dictSource.getElementsByTag("strong").text()
-                        val text = dictSource.getElementsByTag("span").text()
-                        strong
-                    }
+        val detailsResult = resultElements.joinToString("") { element ->
+            val original = element.select("div.dict-source strong").text()
+            val alternative = element.select("div.dict-source span").text()
+            val translation = element.select("div.dict-result a[href] strong").text()
+            val type = element.select("div.dict-result span.suffix").text()
 
-                    element.select("div.dict-entry div.dict-result").map { dictResult ->
-                        dictResult.getElementsByTag("")
-                    }
+            "$original$alternative: $translation$type\n"
+        }
 
-                    source
-                }
-
-        return Details("", "")
+        return Details(detailsResult, "")
     }
 }

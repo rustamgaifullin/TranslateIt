@@ -26,8 +26,10 @@ internal class BablaSource @Inject constructor(private val bablaService: BablaRe
 
     private fun toTranslation(): (ResponseBody) -> Translation {
         return { responseBody ->
-            val translateItems = bablaHtmlParser.getTranslateItemsFrom(responseBody.string())
-            val details = bablaHtmlParser.getDetailsFrom(responseBody.string())
+            val htmlString = responseBody.string()
+
+            val translateItems = bablaHtmlParser.getTranslateItemsFrom(htmlString)
+            val details = bablaHtmlParser.getDetailsFrom(htmlString)
 
             Translation(translateItems, details)
         }
