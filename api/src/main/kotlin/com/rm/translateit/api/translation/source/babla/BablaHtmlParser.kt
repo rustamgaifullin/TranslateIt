@@ -28,8 +28,26 @@ internal class BablaHtmlParser: HtmlParser {
 
     private fun extractTags(element: Element) = element.select("div.quick-result-option span.suffix").map { it.text() }
 
-    //TODO: not implemented yet
     override fun getDetailsFrom(htmlString: String): Details {
+        val document = Jsoup.parse(htmlString)
+        val resultElements = document.select("div.content:not(#similarWords) div.result-block.container div.sense-group div.sense-group")
+
+        val list = resultElements
+                .filter { it.allElements.hasClass("dict-entry") }
+                .map { element ->
+                    val source = element.select("div.dict-entry div.dict-source").map { dictSource ->
+                        val strong = dictSource.getElementsByTag("strong").text()
+                        val text = dictSource.getElementsByTag("span").text()
+                        strong
+                    }
+
+                    element.select("div.dict-entry div.dict-result").map { dictResult ->
+                        dictResult.getElementsByTag("")
+                    }
+
+                    source
+                }
+
         return Details("", "")
     }
 }
