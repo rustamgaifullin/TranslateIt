@@ -18,12 +18,13 @@ internal class BablaUrl: Url {
 
     override fun construct(word: String, from: LanguageModel, to: LanguageModel): String {
         val fromTo = createFromTo(from, to)
+        val wordWithoutSpaces = word.replace(" ", "-")
 
         if (from.code.toLowerCase() == RUSSIAN_CODE) {
-            return russianUrl.format(fromTo, word)
+            return russianUrl.format(fromTo, wordWithoutSpaces)
         }
 
-        return fullUrl.format(from.code.toLowerCase(), fromTo, word)
+        return fullUrl.format(from.code.toLowerCase(), fromTo, wordWithoutSpaces)
     }
 
     private fun createFromTo(from: LanguageModel, to: LanguageModel): String {
