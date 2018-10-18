@@ -1,14 +1,9 @@
 package com.rm.translateit.ui.decarators
 
-import com.rm.translateit.api.models.translation.TranslationItem
+import com.rm.translateit.api.models.translation.Words
 
 class SimpleTranslationResultDecorator : TranslationResultDecorator {
-    override fun toSingleLine(item: TranslationItem): String {
-        val tags = item.tags.toOneLineString()
-        val words = item.words.toOneLineString()
-
-        if (tags.isEmpty()) return words
-
-        return "$words <small>$tags</small>"
+    override fun toSingleLine(words: Words): String {
+        return words.toOneLineString()
     }
 }

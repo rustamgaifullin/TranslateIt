@@ -5,7 +5,6 @@ import com.rm.translateit.api.models.LanguageModel
 import com.rm.translateit.api.models.translation.Details
 import com.rm.translateit.api.models.translation.SourceName
 import com.rm.translateit.api.models.translation.Translation
-import com.rm.translateit.api.models.translation.TranslationItem
 import com.rm.translateit.api.models.translation.Words.Companion.words
 import com.rm.translateit.api.translation.source.Source
 import com.rm.translateit.api.translation.source.Url
@@ -56,14 +55,12 @@ internal class WikiSource @Inject constructor(
 
     private fun toTranslation(languageResult: LanguageResponse): (String) -> Translation {
         return { response ->
-            val translationItems = createResultList(languageResult)
+            val translationItems = words(languageResult.title)
             val details = createDetails(response)
 
             Translation(translationItems, details)
         }
     }
-
-    private fun createResultList(languageResponse: LanguageResponse) = listOf(TranslationItem(words(languageResponse.title)))
 
     private fun createDetails(json: String): Details {
         val map = JsonPath.read<Map<*, *>>(json, "$")

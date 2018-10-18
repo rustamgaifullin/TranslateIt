@@ -21,13 +21,15 @@ internal class BablaSource @Inject constructor(private val bablaService: BablaRe
         return bablaService.translate(url)
                 .subscribeOn(Schedulers.io())
                 .map(toTranslation())
-                .filter { it.translationItems.isNotEmpty() }
+                .filter { it.words.toOneLineString().isNotEmpty() }
     }
 
     private fun toTranslation(): (ResponseBody) -> Translation {
         return { responseBody ->
-            val translateItems = bablaHtmlParser.getTranslateItemsFrom(responseBody.string())
-            val details = bablaHtmlParser.getDetailsFrom(responseBody.string())
+            val htmlString = responseBody.string()
+
+            val translateItems = bablaHtmlParser.getTranslateItemsFrom(htmlString)
+            val details = bablaHtmlParser.getDetailsFrom(htmlString)
 
             Translation(translateItems, details)
         }

@@ -5,7 +5,6 @@ import com.rm.translateit.api.models.LanguageModel
 import com.rm.translateit.api.models.NameModel
 import com.rm.translateit.api.models.translation.Details
 import com.rm.translateit.api.models.translation.Translation
-import com.rm.translateit.api.models.translation.TranslationItem
 import com.rm.translateit.api.models.translation.Words.Companion.words
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -161,14 +160,14 @@ class WikiSourceTest {
     }
 
     private fun expectedTranslation() = listOf(
-            Translation(translationItemList(), details())
+            Translation(listOfWords(), details())
     )
 
     private fun expectedTranslationWithoutDetails() = listOf(
-            Translation(translationItemList(), emptyDetails())
+            Translation(listOfWords(), emptyDetails())
     )
 
-    private fun translationItemList() = listOf(TranslationItem(words("Translate")))
+    private fun listOfWords() = words("Translate")
 
     private fun details() = Details("Full translation description", "https://en.wikipedia.org/wiki/Translate")
 

@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import com.rm.translateit.R
-import com.rm.translateit.api.models.translation.TranslationItem
 import com.rm.translateit.api.models.translation.TranslationResult
 import com.rm.translateit.ui.decarators.SimpleTranslationResultDecorator
 import com.rm.translateit.ui.decarators.TranslationResultDecorator
@@ -31,7 +30,7 @@ class ResultRecyclerViewAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val (_, translation) = items[position]
 
-        val translationText = fromHtml(multilineText(translation.translationItems))
+        val translationText = fromHtml(decorator.toSingleLine(translation.words))
         holder.translationTextView.text = translationText
         holder.descriptionTextView.text = translation.details.description
         holder.urlButton.setOnClickListener {
@@ -40,12 +39,6 @@ class ResultRecyclerViewAdapter(
 
         holder.descriptionTextView.visibility = getVisibilityBasedOnText(translation.details.description)
         holder.urlButton.visibility = getVisibilityBasedOnText(translation.details.url)
-    }
-
-    private fun multilineText(translation: List<TranslationItem>): CharSequence {
-        return translation
-                .map { item -> decorator.toSingleLine(item) }
-                .fold("") { first, second -> "$first\n$second" }
     }
 
     private fun getVisibilityBasedOnText(text: CharSequence): Int {
