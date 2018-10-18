@@ -17,6 +17,7 @@ import com.rm.translateit.api.toLanguage
 import com.rm.translateit.api.translation.Sources
 import com.rm.translateit.ui.adapters.LanguageSpinnerAdapter
 import com.rm.translateit.ui.adapters.ResultRecyclerViewAdapter
+import com.rm.translateit.ui.components.MarginItemDecoration
 import com.rm.translateit.ui.extension.hideKeyboard
 import com.rm.translateit.ui.extension.translationComponent
 import kotlinx.android.synthetic.main.activity_main.*
@@ -76,7 +77,10 @@ class MainActivity : BaseActivity() {
         }
 
         resultRecyclerView.adapter = resultAdapter
-        resultRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        resultRecyclerView.layoutManager = LinearLayoutManager(
+                this, LinearLayoutManager.VERTICAL, false)
+        resultRecyclerView.addItemDecoration(MarginItemDecoration(
+                resources.getDimension(R.dimen.margin_medium).toInt()))
 
         wordEditText.setImeActionLabel(getString(R.string.ime_action_translate), IME_ACTION_TRANSLATE)
     }

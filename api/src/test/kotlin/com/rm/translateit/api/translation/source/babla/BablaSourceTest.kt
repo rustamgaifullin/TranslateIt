@@ -3,9 +3,8 @@ package com.rm.translateit.api.translation.source.babla
 import com.rm.translateit.api.models.LanguageModel
 import com.rm.translateit.api.models.NameModel
 import com.rm.translateit.api.models.translation.Details
-import com.rm.translateit.api.models.translation.Tags.Companion.tags
 import com.rm.translateit.api.models.translation.Translation
-import com.rm.translateit.api.models.translation.TranslationItem
+import com.rm.translateit.api.models.translation.Words
 import com.rm.translateit.api.models.translation.Words.Companion.words
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -55,7 +54,7 @@ class BablaSourceTest {
         `when`(bablaUrl.construct(word, from, to))
                 .thenReturn(server.url("").toString())
         `when`(bablaHtmlParser.getTranslateItemsFrom(""))
-                .thenReturn(emptyList())
+                .thenReturn(Words(emptyList()))
         `when`(bablaHtmlParser.getDetailsFrom(""))
                 .thenReturn(Details("", ""))
 
@@ -110,10 +109,7 @@ class BablaSourceTest {
             Translation(expectedTranslationItemList(), expectedDetails())
     )
 
-    private fun expectedTranslationItemList() = listOf(
-            TranslationItem(words("witaj"), tags("interjection")),
-            TranslationItem(words("witam"), tags("interjection"))
-    )
+    private fun expectedTranslationItemList() = words("witaj", "witam")
 
     private fun successfulResponseWithTranslation(): MockResponse? {
         return MockResponse()

@@ -132,7 +132,7 @@
       android:textAlignment="center"
       android:textAppearance="@android:style/TextAppearance.Medium.Inverse"
       android:textColor="@color/primary_text"
-      android:visibility="visible"
+      android:visibility="gone"
       app:layout_constraintTop_toBottomOf="@+id/cardViewHeader"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"

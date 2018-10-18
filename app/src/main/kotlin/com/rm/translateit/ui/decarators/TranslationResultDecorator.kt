@@ -1,7 +1,7 @@
 package com.rm.translateit.ui.decarators
 
-import com.rm.translateit.api.models.translation.TranslationItem
+import com.rm.translateit.api.models.translation.Words
 
 interface TranslationResultDecorator {
-    fun toSingleLine(item: TranslationItem): String
+    fun toSingleLine(words: Words): String
 }
