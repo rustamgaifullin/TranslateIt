@@ -13,7 +13,7 @@ internal class BablaUrl: Url {
         private const val RUSSIAN_CODE = "ru"
     }
 
-    private val fullUrl = "https://%s.bab.la/dictionary/%s/%s"
+    private val fullUrl = "https://%s.bab.la/%s/%s/%s"
     private val russianUrl = "https://www.babla.ru/%s/%s"
 
     override fun construct(word: String, from: LanguageModel, to: LanguageModel): String {
@@ -24,7 +24,7 @@ internal class BablaUrl: Url {
             return russianUrl.format(fromTo, wordWithoutSpaces)
         }
 
-        return fullUrl.format(from.code.toLowerCase(), fromTo, wordWithoutSpaces)
+        return fullUrl.format(from.code.toLowerCase(), from.dictionary, fromTo, wordWithoutSpaces)
     }
 
     private fun createFromTo(from: LanguageModel, to: LanguageModel): String {
