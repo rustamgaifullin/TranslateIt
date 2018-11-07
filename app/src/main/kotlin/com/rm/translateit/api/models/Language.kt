@@ -15,7 +15,8 @@ import com.rm.translateit.db.AppDatabase
 data class Language(
         @PrimaryKey var code: String = "",
         @Column var originLastUsage: Long = 0,
-        @Column var destinationLastUsage: Long = 0) : BaseModel() {
+        @Column var destinationLastUsage: Long = 0,
+        @Column var dictionary: String = "") : BaseModel() {
 
     companion object {
         private const val DEFAULT_LANGUAGE_CODE = "en"
@@ -34,7 +35,7 @@ data class Language(
             .selectCountOf(Name_Table.id)
             .from(Name::class)
             .where(Name_Table.code.eq(code))
-            .count() > 0
+            .longValue() > 0
 
     fun findName(localeCode: String): String {
         var codeToSearch = DEFAULT_LANGUAGE_CODE

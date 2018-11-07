@@ -17,7 +17,9 @@ class BablaUrlTest {
                 NameModel("en", "english"),
                 NameModel("pl", "polish")
         )
-        val result = sut.construct("word", LanguageModel("EN", names), LanguageModel("PL", names))
+        val result = sut.construct("word",
+                LanguageModel("EN", names, "dictionary"),
+                LanguageModel("PL", names, "dictionary"))
 
         //then
         assertEquals("https://en.bab.la/dictionary/english-polish/word", result)
@@ -35,8 +37,8 @@ class BablaUrlTest {
         )
         val result = sut.construct(
                 "word with spaces",
-                LanguageModel("EN", names),
-                LanguageModel("PL", names))
+                LanguageModel("EN", names, "dictionary"),
+                LanguageModel("PL", names, "dictionary"))
 
         //then
         assertEquals("https://en.bab.la/dictionary/english-polish/word-with-spaces", result)
@@ -52,7 +54,9 @@ class BablaUrlTest {
                 NameModel("ru", "russian"),
                 NameModel("pl", "polish")
         )
-        val result = sut.construct("word", LanguageModel("RU", names), LanguageModel("PL", names))
+        val result = sut.construct("word",
+                LanguageModel("RU", names, "dictionary"),
+                LanguageModel("PL", names, "dictionary"))
 
         //then
         assertEquals("https://www.babla.ru/russian-polish/word", result)
@@ -70,10 +74,29 @@ class BablaUrlTest {
         )
         val result = sut.construct(
                 "word with spaces",
-                LanguageModel("RU", names),
-                LanguageModel("PL", names))
+                LanguageModel("RU", names, "dictionary"),
+                LanguageModel("PL", names, "dictionary"))
 
         //then
         assertEquals("https://www.babla.ru/russian-polish/word-with-spaces", result)
+    }
+
+    @Test
+    fun should_construct_proper_url_for_with_dictionary() {
+        //given
+        val sut = BablaUrl()
+
+        //when
+        val names = listOf(
+                NameModel("pl", "polish"),
+                NameModel("en", "english")
+        )
+        val result = sut.construct(
+                "word",
+                LanguageModel("PL", names, "superdictionary"),
+                LanguageModel("EN", names, "superdictionary"))
+
+        //then
+        assertEquals("https://pl.bab.la/superdictionary/polish-english/word", result)
     }
 }
