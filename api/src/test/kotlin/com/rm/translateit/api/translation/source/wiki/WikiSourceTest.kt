@@ -173,7 +173,7 @@ class WikiSourceTest {
 
     private fun emptyDetails() = Details("", "")
 
-    private fun successfulResponseWithTranslation(): MockResponse? {
+    private fun successfulResponseWithTranslation(): MockResponse {
         val responsePath = getResponsePath(forFile = "wiki_translation_response.json")
 
         return MockResponse()
@@ -181,7 +181,7 @@ class WikiSourceTest {
                 .setBody(File(responsePath).readText())
     }
 
-    private fun successfulResponseWithDetails(): MockResponse? {
+    private fun successfulResponseWithDetails(): MockResponse {
         val responsePath = getResponsePath(forFile = "wiki_translation_details_response.json")
 
         return MockResponse()
@@ -189,7 +189,7 @@ class WikiSourceTest {
                 .setBody(File(responsePath).readText())
     }
 
-    private fun successfulResponseWithoutDetails(): MockResponse? {
+    private fun successfulResponseWithoutDetails(): MockResponse {
         val responsePath = getResponsePath(forFile = "wiki_translation_details_empty_response.json")
 
         return MockResponse()
@@ -197,7 +197,7 @@ class WikiSourceTest {
                 .setBody(File(responsePath).readText())
     }
 
-    private fun successfulResponseWithoutTranslation(): MockResponse? {
+    private fun successfulResponseWithoutTranslation(): MockResponse {
         val responsePath = getResponsePath(forFile = "wiki_translation_empty_response.json")
 
         return MockResponse()
@@ -205,7 +205,7 @@ class WikiSourceTest {
                 .setBody(File(responsePath).readText())
     }
 
-    private fun successfulResponseWithoutLanglinks(): MockResponse? {
+    private fun successfulResponseWithoutLanglinks(): MockResponse {
         val responsePath = getResponsePath(forFile = "wiki_translation_response_without_langlinks.json")
 
         return MockResponse()
@@ -213,7 +213,7 @@ class WikiSourceTest {
                 .setBody(File(responsePath).readText())
     }
 
-    private fun successfulResponseForEmptyJson(): MockResponse? {
+    private fun successfulResponseForEmptyJson(): MockResponse {
         val responsePath = getResponsePath(forFile = "wiki_empty_json.json")
 
         return MockResponse()
@@ -221,11 +221,12 @@ class WikiSourceTest {
                 .setBody(File(responsePath).readText())
     }
 
-    private fun errorResponse(): MockResponse? {
+    private fun errorResponse(): MockResponse {
         return MockResponse()
                 .setResponseCode(500)
                 .setBody("error")
     }
 
-    private fun getResponsePath(forFile: String) = WikiSourceTest::class.java.classLoader.getResource(forFile).path
+    private fun getResponsePath(forFile: String) = WikiSourceTest::class.java.classLoader.getResource(forFile)?.path
+            ?: ""
 }

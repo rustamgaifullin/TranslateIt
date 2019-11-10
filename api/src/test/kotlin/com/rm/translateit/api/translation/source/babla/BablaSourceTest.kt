@@ -111,29 +111,23 @@ class BablaSourceTest {
 
     private fun expectedTranslationItemList() = words("witaj", "witam")
 
-    private fun successfulResponseWithTranslation(): MockResponse? {
+    private fun successfulResponseWithTranslation(): MockResponse {
         return MockResponse()
                 .setResponseCode(200)
                 .setBody("")
     }
 
-    private fun successfulResponseWithoutTranslation(): MockResponse? {
+    private fun successfulResponseWithoutTranslation(): MockResponse {
         return MockResponse()
                 .setResponseCode(200)
                 .setBody("")
     }
 
-    private fun errorResponse(): MockResponse? {
+    private fun errorResponse(): MockResponse {
         val body = "ERROR"
 
         return MockResponse()
                 .setResponseCode(500)
                 .setBody(body)
-    }
-
-    @Test
-    @Ignore
-    fun suggestions() {
-
     }
 }
