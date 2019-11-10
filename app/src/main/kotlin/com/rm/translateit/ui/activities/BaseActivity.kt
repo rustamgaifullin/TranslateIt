@@ -6,45 +6,45 @@ import androidx.appcompat.app.AppCompatActivity
 import rx.subscriptions.CompositeSubscription
 
 abstract class BaseActivity : AppCompatActivity() {
-    protected lateinit var subscriptions: CompositeSubscription
+  protected lateinit var subscriptions: CompositeSubscription
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(getLayoutId())
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(getLayoutId())
 
-        prepareDI()
-        prepareUI()
-    }
+    prepareDI()
+    prepareUI()
+  }
 
-    override fun onStart() {
-        super.onStart()
+  override fun onStart() {
+    super.onStart()
 
-        subscriptions = CompositeSubscription()
-    }
+    subscriptions = CompositeSubscription()
+  }
 
-    override fun onResume() {
-        d("BaseActivity", "onResume called")
-        super.onResume()
-        createBindings()
-    }
+  override fun onResume() {
+    d("BaseActivity", "onResume called")
+    super.onResume()
+    createBindings()
+  }
 
-    override fun onPause() {
-        d("BaseActivity", "onPause called")
-        super.onPause()
-        subscriptions.clear()
-    }
+  override fun onPause() {
+    d("BaseActivity", "onPause called")
+    super.onPause()
+    subscriptions.clear()
+  }
 
-    override fun onStop() {
-        super.onStop()
+  override fun onStop() {
+    super.onStop()
 
-        subscriptions.unsubscribe()
-    }
+    subscriptions.unsubscribe()
+  }
 
-    abstract fun getLayoutId(): Int
+  abstract fun getLayoutId(): Int
 
-    abstract fun prepareDI()
+  abstract fun prepareDI()
 
-    abstract fun prepareUI()
+  abstract fun prepareUI()
 
-    abstract fun createBindings()
+  abstract fun createBindings()
 }

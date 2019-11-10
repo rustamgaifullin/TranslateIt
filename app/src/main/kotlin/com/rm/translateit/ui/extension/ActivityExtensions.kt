@@ -6,22 +6,22 @@ import android.os.Build
 import android.view.inputmethod.InputMethodManager
 import com.rm.translateit.TranslateApplication
 import com.rm.translateit.api.MainComponent
-import java.util.*
+import java.util.Locale
 
 fun Activity.hideKeyboard(condition: () -> Boolean) {
-    if (this.currentFocus != null && condition.invoke()) {
-        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
-    }
+  if (this.currentFocus != null && condition.invoke()) {
+    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
+  }
 }
 
 fun Activity.translationComponent(): MainComponent =
-        (application as TranslateApplication).translationComponent()
+  (application as TranslateApplication).translationComponent()
 
 fun Context.currentLocale(): Locale {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
-        resources.configuration.locales[0]
-    } else {
-        resources.configuration.locale
-    }
+  return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+    resources.configuration.locales[0]
+  } else {
+    resources.configuration.locale
+  }
 }

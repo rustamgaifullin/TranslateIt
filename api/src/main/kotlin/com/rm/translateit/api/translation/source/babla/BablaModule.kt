@@ -14,37 +14,39 @@ import javax.inject.Singleton
 @Module
 internal class BablaModule {
 
-    @Provides
-    @Singleton
-    fun url() = BablaUrl()
+  @Provides
+  @Singleton
+  fun url() = BablaUrl()
 
+  @Provides
+  @Singleton
+  fun parser(): HtmlParser = BablaHtmlParser()
 
-    @Provides
-    @Singleton
-    fun parser(): HtmlParser = BablaHtmlParser()
+  @Provides @IntoSet
+  @Singleton
+  fun service(
+    restService: BablaRestService,
+    url: BablaUrl,
+    htmlParser: HtmlParser
+  ): Source = BablaSource(restService, url, htmlParser)
 
-    @Provides @IntoSet
-    @Singleton
-    fun service(restService: BablaRestService, url: BablaUrl, htmlParser: HtmlParser): Source
-            = BablaSource(restService, url, htmlParser)
+  @Provides
+  @Singleton
+  fun restService(okHttpClient: OkHttpClient) = Retrofit.Builder()
+      .client(okHttpClient)
+      .baseUrl("http://bab.la")
+      .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+      .build()
+      .create(BablaRestService::class.java)
 
-    @Provides
-    @Singleton
-    fun restService(okHttpClient: OkHttpClient) = Retrofit.Builder()
-                .client(okHttpClient)
-                .baseUrl("http://bab.la")
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .build()
-                .create(BablaRestService::class.java)
+  @Provides
+  @Singleton
+  fun okHttpClient(interceptor: Interceptor) = OkHttpClient.Builder()
+      .followRedirects(false)
+      .addInterceptor(interceptor)
+      .build()
 
-    @Provides
-    @Singleton
-    fun okHttpClient(interceptor: Interceptor) = OkHttpClient.Builder()
-                .followRedirects(false)
-                .addInterceptor(interceptor)
-                .build()
-
-    @Provides
-    @Singleton
-    fun interceptor(): Interceptor = BablaInterceptor()
+  @Provides
+  @Singleton
+  fun interceptor(): Interceptor = BablaInterceptor()
 }

@@ -7,5 +7,5 @@ import javax.inject.Singleton
 @Singleton
 @Component(modules = arrayOf(MainModule::class))
 interface MainComponent {
-    fun inject(mainActivity: MainActivity)
+  fun inject(mainActivity: MainActivity)
 }

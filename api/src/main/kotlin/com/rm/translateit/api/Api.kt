@@ -8,13 +8,13 @@ import com.rm.translateit.api.translation.Sources
 
 class Api(private val logger: Logger = EmptyLogger()) {
 
-    val sources: Sources
+  val sources: Sources
 
-    init {
-        val sourceSet = DaggerSourcesComponent
-                .create()
-                .sources()
+  init {
+    val sourceSet = DaggerSourcesComponent
+        .create()
+        .sources()
 
-        sources = AllSources(sourceSet, logger)
-    }
+    sources = AllSources(sourceSet, logger)
+  }
 }

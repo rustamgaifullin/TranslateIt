@@ -1,3 +1,6 @@
 package com.rm.translateit.api.translation.source.wiki.response
 
-internal data class LanguageResponse(var code: String, var title: String)
+internal data class LanguageResponse(
+  var code: String,
+  var title: String
+)

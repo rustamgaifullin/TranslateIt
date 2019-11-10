@@ -11,31 +11,45 @@ import rx.Observable
 import rx.schedulers.Schedulers
 import javax.inject.Inject
 
+internal class BablaSource @Inject constructor(
+  private val bablaService: BablaRestService,
+  private val bablaUrl: Url,
+  private val bablaHtmlParser: HtmlParser
+) : Source {
+  override fun name() = SourceName("babla")
 
-internal class BablaSource @Inject constructor(private val bablaService: BablaRestService, private val bablaUrl: Url, private val bablaHtmlParser: HtmlParser) : Source {
-    override fun name() = SourceName("babla")
+  override fun translate(
+    word: String,
+    from: LanguageModel,
+    to: LanguageModel
+  ): Observable<Translation> {
+    val url = bablaUrl.construct(word, from, to)
 
-    override fun translate(word: String, from: LanguageModel, to: LanguageModel): Observable<Translation> {
-        val url = bablaUrl.construct(word, from, to)
-
-        return bablaService.translate(url)
-                .subscribeOn(Schedulers.io())
-                .map(toTranslation())
-                .filter { it.words.toOneLineString().isNotEmpty() }
-    }
-
-    private fun toTranslation(): (ResponseBody) -> Translation {
-        return { responseBody ->
-            val htmlString = responseBody.string()
-
-            val translateItems = bablaHtmlParser.getTranslateItemsFrom(htmlString)
-            val details = bablaHtmlParser.getDetailsFrom(htmlString)
-
-            Translation(translateItems, details)
+    return bablaService.translate(url)
+        .subscribeOn(Schedulers.io())
+        .map(toTranslation())
+        .filter {
+          it.words.toOneLineString()
+              .isNotEmpty()
         }
-    }
+  }
 
-    override fun suggestions(title: String, from: String, offset: Int): Observable<List<String>> {
-        return Observable.empty()
+  private fun toTranslation(): (ResponseBody) -> Translation {
+    return { responseBody ->
+      val htmlString = responseBody.string()
+
+      val translateItems = bablaHtmlParser.getTranslateItemsFrom(htmlString)
+      val details = bablaHtmlParser.getDetailsFrom(htmlString)
+
+      Translation(translateItems, details)
     }
+  }
+
+  override fun suggestions(
+    title: String,
+    from: String,
+    offset: Int
+  ): Observable<List<String>> {
+    return Observable.empty()
+  }
 }

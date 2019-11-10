@@ -9,11 +9,11 @@ import javax.inject.Singleton
 
 @Module
 class MainModule {
-    @Provides
-    @Singleton
-    fun languages(): Languages = DBLanguages()
+  @Provides
+  @Singleton
+  fun languages(): Languages = DBLanguages()
 
-    @Provides
-    @Singleton
-    fun allSources(): Sources = Api().sources
+  @Provides
+  @Singleton
+  fun allSources(): Sources = Api().sources
 }

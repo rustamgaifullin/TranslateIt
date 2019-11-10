@@ -11,23 +11,27 @@ import javax.inject.Singleton
 @Module
 internal class WikiModule {
 
-    @Provides
-    @Singleton
-    fun url() = WikiUrl()
+  @Provides
+  @Singleton
+  fun url() = WikiUrl()
 
-    @Provides
-    @Singleton
-    fun detailsUrl() = WikiDetailsUrl()
+  @Provides
+  @Singleton
+  fun detailsUrl() = WikiDetailsUrl()
 
-    @Provides @IntoSet
-    @Singleton
-    fun service(url: WikiUrl, detailsUrl: WikiDetailsUrl, restService: WikiRestService): Source = WikiSource(url, detailsUrl, restService)
+  @Provides @IntoSet
+  @Singleton
+  fun service(
+    url: WikiUrl,
+    detailsUrl: WikiDetailsUrl,
+    restService: WikiRestService
+  ): Source = WikiSource(url, detailsUrl, restService)
 
-    @Provides
-    @Singleton
-    fun restService(): WikiRestService = Retrofit.Builder()
-            .baseUrl("http://wikipedia.org")
-            .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-            .build()
-            .create(WikiRestService::class.java)
+  @Provides
+  @Singleton
+  fun restService(): WikiRestService = Retrofit.Builder()
+      .baseUrl("http://wikipedia.org")
+      .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+      .build()
+      .create(WikiRestService::class.java)
 }

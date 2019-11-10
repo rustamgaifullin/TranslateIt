@@ -8,30 +8,39 @@ import com.rm.translateit.api.translation.source.Url
  * For example: english - english-polish, polish - polski-angelski, russin - русский-английский
  * It will be possible if language name will be stored for every supported languages.
  */
-internal class BablaUrl: Url {
-    companion object {
-        private const val RUSSIAN_CODE = "ru"
+internal class BablaUrl : Url {
+  companion object {
+    private const val RUSSIAN_CODE = "ru"
+  }
+
+  private val fullUrl = "https://%s.bab.la/%s/%s/%s"
+  private val russianUrl = "https://www.babla.ru/%s/%s"
+
+  override fun construct(
+    word: String,
+    from: LanguageModel,
+    to: LanguageModel
+  ): String {
+    val fromTo = createFromTo(from, to)
+    val wordWithoutSpaces = word.replace(" ", "-")
+
+    if (from.code.toLowerCase() == RUSSIAN_CODE) {
+      return russianUrl.format(fromTo, wordWithoutSpaces)
     }
 
-    private val fullUrl = "https://%s.bab.la/%s/%s/%s"
-    private val russianUrl = "https://www.babla.ru/%s/%s"
+    return fullUrl.format(from.code.toLowerCase(), from.dictionary, fromTo, wordWithoutSpaces)
+  }
 
-    override fun construct(word: String, from: LanguageModel, to: LanguageModel): String {
-        val fromTo = createFromTo(from, to)
-        val wordWithoutSpaces = word.replace(" ", "-")
+  private fun createFromTo(
+    from: LanguageModel,
+    to: LanguageModel
+  ): String {
+    val names = from.names
+    val fromName = names.first { nameModel -> nameModel.code.equals(from.code, true) }
+        .name.toLowerCase()
+    val toName = names.first { nameModel -> nameModel.code.equals(to.code, true) }
+        .name.toLowerCase()
 
-        if (from.code.toLowerCase() == RUSSIAN_CODE) {
-            return russianUrl.format(fromTo, wordWithoutSpaces)
-        }
-
-        return fullUrl.format(from.code.toLowerCase(), from.dictionary, fromTo, wordWithoutSpaces)
-    }
-
-    private fun createFromTo(from: LanguageModel, to: LanguageModel): String {
-        val names = from.names
-        val fromName = names.first { nameModel -> nameModel.code.equals(from.code, true)}.name.toLowerCase()
-        val toName = names.first { nameModel -> nameModel.code.equals(to.code, true) }.name.toLowerCase()
-
-        return "$fromName-$toName"
-    }
+    return "$fromName-$toName"
+  }
 }

@@ -1,7 +1,7 @@
 package com.rm.translateit.ui
 
-import androidx.test.filters.SmallTest
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.filters.SmallTest
 import com.rm.translateit.ui.util.fromHtml
 import junit.framework.Assert
 import org.junit.Test
@@ -11,15 +11,15 @@ import org.junit.runner.RunWith
 @SmallTest
 open class ExtensionsTest {
 
-    @Test
-    fun shouldReturnHtmlString() {
-        //given
-        val string:CharSequence = "<br>Example</br>"
+  @Test
+  fun shouldReturnHtmlString() {
+    //given
+    val string: CharSequence = "<br>Example</br>"
 
-        //when
-        val result = fromHtml(string)
+    //when
+    val result = fromHtml(string)
 
-        //then
-        Assert.assertTrue("String should not be empty", result.isNotEmpty())
-    }
+    //then
+    Assert.assertTrue("String should not be empty", result.isNotEmpty())
+  }
 }

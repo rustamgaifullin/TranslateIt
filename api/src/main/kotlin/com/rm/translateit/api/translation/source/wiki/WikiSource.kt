@@ -17,100 +17,109 @@ import rx.schedulers.Schedulers
 import javax.inject.Inject
 
 internal class WikiSource @Inject constructor(
-        private val wikiUrl: Url,
-        private val detailsWikiUrl: Url,
-        private val service: WikiRestService) : Source {
-    override fun name() = SourceName("wikipedia")
+  private val wikiUrl: Url,
+  private val detailsWikiUrl: Url,
+  private val service: WikiRestService
+) : Source {
+  override fun name() = SourceName("wikipedia")
 
-    override fun translate(word: String, from: LanguageModel, to: LanguageModel): Observable<Translation> {
-        val url = wikiUrl.construct(word, from, to)
+  override fun translate(
+    word: String,
+    from: LanguageModel,
+    to: LanguageModel
+  ): Observable<Translation> {
+    val url = wikiUrl.construct(word, from, to)
 
-        return service.search(url)
-                .subscribeOn(Schedulers.io())
-                .map { t: ResponseBody? -> t?.string() ?: "" }
-                .filter { it.isNotEmpty() }
-                .map { JsonPath.read<Map<*, *>>(it, "$") }
-                .map {
-                    it.getOrNull("query")
-                            ?.getOrNull("pages")
-                            ?.getFirst("-1")
-                            ?.getJsonArray("langlinks")
-                            ?.getFirstObject()
-                }
-                .filter { it != null}
-                .map { it!! }
-                .flatMap { responseMap ->
-                    val title = responseMap["*"].toString()
-                    val code = responseMap["lang"].toString()
-                    val languageResponse = LanguageResponse(code, title)
-
-                    val detailsUrl = detailsWikiUrl.construct(title, from, to)
-
-                    service.details(detailsUrl)
-                            .map { t: ResponseBody? -> t?.string() ?: "" }
-                            .filter { it.isNotEmpty() }
-                            .map(toTranslation(languageResponse))
-                }
-    }
-
-    private fun toTranslation(languageResult: LanguageResponse): (String) -> Translation {
-        return { response ->
-            val translationItems = words(languageResult.title)
-            val details = createDetails(response)
-
-            Translation(translationItems, details)
+    return service.search(url)
+        .subscribeOn(Schedulers.io())
+        .map { t: ResponseBody? -> t?.string() ?: "" }
+        .filter { it.isNotEmpty() }
+        .map { JsonPath.read<Map<*, *>>(it, "$") }
+        .map {
+          it.getOrNull("query")
+              ?.getOrNull("pages")
+              ?.getFirst("-1")
+              ?.getJsonArray("langlinks")
+              ?.getFirstObject()
         }
-    }
+        .filter { it != null }
+        .map { it!! }
+        .flatMap { responseMap ->
+          val title = responseMap["*"].toString()
+          val code = responseMap["lang"].toString()
+          val languageResponse = LanguageResponse(code, title)
 
-    private fun createDetails(json: String): Details {
-        val map = JsonPath.read<Map<*, *>>(json, "$")
-        val result = map.getOrNull("query")
-                ?.getOrNull("pages")
-                ?.getFirst("-1")
+          val detailsUrl = detailsWikiUrl.construct(title, from, to)
 
-        val description = result?.get("extract") as String? ?: ""
-        val url = result?.get("fullurl") as String? ?: ""
-
-        return Details(description, url)
-    }
-
-    override fun suggestions(title: String, from: String, offset: Int): Observable<List<String>> {
-        return service.suggestions(title, offset)
-                .subscribeOn(Schedulers.io())
-                .map { result ->
-                    result.searchList.map(SearchResponse::title)
-                }
-    }
-
-    private fun Map<*, *>.getOrNull(key: String): Map<*, *>? {
-        if (containsKey(key)) {
-            return get(key) as Map<*, *>
+          service.details(detailsUrl)
+              .map { t: ResponseBody? -> t?.string() ?: "" }
+              .filter { it.isNotEmpty() }
+              .map(toTranslation(languageResponse))
         }
+  }
 
-        return null
+  private fun toTranslation(languageResult: LanguageResponse): (String) -> Translation {
+    return { response ->
+      val translationItems = words(languageResult.title)
+      val details = createDetails(response)
+
+      Translation(translationItems, details)
     }
+  }
 
-    private fun Map<*, *>.getFirst(excludedKey: String): Map<*, *>? {
-        val key = keys.first()
+  private fun createDetails(json: String): Details {
+    val map = JsonPath.read<Map<*, *>>(json, "$")
+    val result = map.getOrNull("query")
+        ?.getOrNull("pages")
+        ?.getFirst("-1")
 
-        if (key == excludedKey) return null
+    val description = result?.get("extract") as String? ?: ""
+    val url = result?.get("fullurl") as String? ?: ""
 
-        return get(key) as Map<*, *>
-    }
+    return Details(description, url)
+  }
 
-    private fun Map<*, *>.getJsonArray(key: String): JSONArray? {
-        if (containsKey(key)) {
-            return get(key) as JSONArray?
+  override fun suggestions(
+    title: String,
+    from: String,
+    offset: Int
+  ): Observable<List<String>> {
+    return service.suggestions(title, offset)
+        .subscribeOn(Schedulers.io())
+        .map { result ->
+          result.searchList.map(SearchResponse::title)
         }
+  }
 
-        return null
+  private fun Map<*, *>.getOrNull(key: String): Map<*, *>? {
+    if (containsKey(key)) {
+      return get(key) as Map<*, *>
     }
 
-    private fun JSONArray.getFirstObject(): Map<*, *>? {
-        if (size > 0) {
-            return get(0) as Map<*, *>
-        }
+    return null
+  }
 
-        return null
+  private fun Map<*, *>.getFirst(excludedKey: String): Map<*, *>? {
+    val key = keys.first()
+
+    if (key == excludedKey) return null
+
+    return get(key) as Map<*, *>
+  }
+
+  private fun Map<*, *>.getJsonArray(key: String): JSONArray? {
+    if (containsKey(key)) {
+      return get(key) as JSONArray?
     }
+
+    return null
+  }
+
+  private fun JSONArray.getFirstObject(): Map<*, *>? {
+    if (size > 0) {
+      return get(0) as Map<*, *>
+    }
+
+    return null
+  }
 }

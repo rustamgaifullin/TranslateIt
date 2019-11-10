@@ -8,44 +8,46 @@ import java.io.File
 
 class BablaHtmlParserTest {
 
-    @Test
-    fun should_return_items_from_html_string() {
-        //given
-        val sut = BablaHtmlParser()
+  @Test
+  fun should_return_items_from_html_string() {
+    //given
+    val sut = BablaHtmlParser()
 
-        //when
-        val result = sut.getTranslateItemsFrom(successfulResponseWithTranslation())
+    //when
+    val result = sut.getTranslateItemsFrom(successfulResponseWithTranslation())
 
-        //then
-        assertTrue("Result list should not be empty", result.toOneLineString().isNotEmpty())
-        assertEquals("Result list list should be the same as expected", expectedResult(), result)
-    }
+    //then
+    assertTrue("Result list should not be empty", result.toOneLineString().isNotEmpty())
+    assertEquals("Result list list should be the same as expected", expectedResult(), result)
+  }
 
-    @Test
-    fun should_return_empty_list_from_result_without_translation() {
-        //given
-        val sut = BablaHtmlParser()
+  @Test
+  fun should_return_empty_list_from_result_without_translation() {
+    //given
+    val sut = BablaHtmlParser()
 
-        //when
-        val result = sut.getTranslateItemsFrom(successfulResponseWithoutTranslation())
+    //when
+    val result = sut.getTranslateItemsFrom(successfulResponseWithoutTranslation())
 
-        //then
-        assertTrue("Result list should be empty", result.toOneLineString().isEmpty())
-    }
+    //then
+    assertTrue("Result list should be empty", result.toOneLineString().isEmpty())
+  }
 
-    private fun expectedResult() = words("pozdrowienie", "pozdrowienia", "witam", "dzień dobry", "cześć")
+  private fun expectedResult() =
+    words("pozdrowienie", "pozdrowienia", "witam", "dzień dobry", "cześć")
 
-    private fun successfulResponseWithTranslation(): String {
-        val responsePath = getResponsePath(forFile = "babla_response_with_translation.html")
+  private fun successfulResponseWithTranslation(): String {
+    val responsePath = getResponsePath(forFile = "babla_response_with_translation.html")
 
-        return File(responsePath).readText()
-    }
+    return File(responsePath).readText()
+  }
 
-    private fun successfulResponseWithoutTranslation(): String {
-        val responsePath = getResponsePath(forFile = "babla_response_without_translation.html")
+  private fun successfulResponseWithoutTranslation(): String {
+    val responsePath = getResponsePath(forFile = "babla_response_without_translation.html")
 
-        return File(responsePath).readText()
-    }
+    return File(responsePath).readText()
+  }
 
-    private fun getResponsePath(forFile: String) = BablaHtmlParserTest::class.java.classLoader.getResource(forFile).path
+  private fun getResponsePath(forFile: String) =
+    BablaHtmlParserTest::class.java.classLoader.getResource(forFile).path
 }

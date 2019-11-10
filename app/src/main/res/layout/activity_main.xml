@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -14,12 +13,14 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       app:layout_constraintBottom_toTopOf="@+id/resultRecyclerView"
-      app:layout_constraintTop_toTopOf="parent">
+      app:layout_constraintTop_toTopOf="parent"
+      >
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/activity_main"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
 
       <EditText
           android:id="@+id/wordEditText"
@@ -38,7 +39,8 @@
           android:inputType="text"
           app:layout_constraintLeft_toLeftOf="parent"
           app:layout_constraintRight_toRightOf="parent"
-          app:layout_constraintTop_toBottomOf="@+id/origin_spinner" />
+          app:layout_constraintTop_toBottomOf="@+id/origin_spinner"
+          />
 
       <ProgressBar
           android:id="@+id/progressBar"
@@ -49,7 +51,8 @@
           android:visibility="gone"
           app:layout_constraintBottom_toBottomOf="parent"
           app:layout_constraintLeft_toLeftOf="parent"
-          app:layout_constraintRight_toRightOf="parent" />
+          app:layout_constraintRight_toRightOf="parent"
+          />
 
       <Spinner
           android:id="@+id/origin_spinner"
@@ -61,7 +64,8 @@
           android:layout_marginEnd="@dimen/margin_small"
           app:layout_constraintLeft_toLeftOf="parent"
           app:layout_constraintRight_toLeftOf="@+id/changeLanguage_button"
-          app:layout_constraintTop_toTopOf="parent" />
+          app:layout_constraintTop_toTopOf="parent"
+          />
 
       <Button
           android:id="@+id/changeLanguage_button"
@@ -74,7 +78,8 @@
           android:minHeight="0dp"
           app:layout_constraintLeft_toLeftOf="parent"
           app:layout_constraintRight_toRightOf="parent"
-          app:layout_constraintTop_toTopOf="parent" />
+          app:layout_constraintTop_toTopOf="parent"
+          />
 
       <Spinner
           android:id="@+id/destination_spinner"
@@ -87,7 +92,8 @@
           android:layout_marginEnd="@dimen/margin_medium"
           app:layout_constraintLeft_toRightOf="@+id/changeLanguage_button"
           app:layout_constraintRight_toRightOf="parent"
-          app:layout_constraintTop_toTopOf="parent" />
+          app:layout_constraintTop_toTopOf="parent"
+          />
 
       <androidx.constraintlayout.widget.Guideline
           android:id="@+id/center_guideline"
@@ -96,7 +102,8 @@
           android:orientation="vertical"
           app:layout_constraintGuide_percent="0.5"
           tools:layout_editor_absoluteX="180dp"
-          tools:layout_editor_absoluteY="0dp" />
+          tools:layout_editor_absoluteY="0dp"
+          />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

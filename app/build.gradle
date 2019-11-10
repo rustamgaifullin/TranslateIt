@@ -4,102 +4,101 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 
 buildscript {
-    ext {
-        dbflow_version = '4.2.4'
-        constraintlayout_version = '1.1.3'
-        rxandroid_version = '1.2.1'
-        android_espresso_version = '3.0.2'
-        android_support_test_version = '1.0.2'
-        uiautomator_version = '2.1.3'
-    }
+  ext {
+    dbflow_version = '4.2.4'
+    constraintlayout_version = '1.1.3'
+    rxandroid_version = '1.2.1'
+    android_espresso_version = '3.0.2'
+    android_support_test_version = '1.0.2'
+    uiautomator_version = '2.1.3'
+  }
 
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "org.junit.platform:junit-platform-gradle-plugin:1.0.0"
-        classpath "org.junit.platform:junit-platform-runner:1.0.0"
-    }
+  repositories {
+    jcenter()
+  }
+  dependencies {
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    classpath "org.junit.platform:junit-platform-gradle-plugin:1.0.0"
+    classpath "org.junit.platform:junit-platform-runner:1.0.0"
+  }
 }
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion '29.0.2'
-    defaultConfig {
-        applicationId "com.rm.translateit"
-        minSdkVersion 18
-        targetSdkVersion 29
-        versionCode 2
-        versionName "1.0"
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+  compileSdkVersion 29
+  buildToolsVersion '29.0.2'
+  defaultConfig {
+    applicationId "com.rm.translateit"
+    minSdkVersion 18
+    targetSdkVersion 29
+    versionCode 2
+    versionName "1.0"
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+  }
+  buildTypes {
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
-        test.java.srcDirs += 'src/test/kotlin'
-    }
-    testOptions {
-        unitTests.returnDefaultValues = true
-    }
-    lintOptions {
-        warning 'InvalidPackage'
-    }
+  }
+  sourceSets {
+    main.java.srcDirs += 'src/main/kotlin'
+    test.java.srcDirs += 'src/test/kotlin'
+  }
+  testOptions {
+    unitTests.returnDefaultValues = true
+  }
+  lintOptions {
+    warning 'InvalidPackage'
+  }
 
-    //Conflict with dependency 'com.google.code.findbugs:jsr305'. Resolved versions for app (3.0.1) and test app (2.0.1) differ
-    //That's why
-    configurations.all {
-        resolutionStrategy.force 'com.google.code.findbugs:jsr305:3.0.1'
-    }
+  //Conflict with dependency 'com.google.code.findbugs:jsr305'. Resolved versions for app (3.0.1) and test app (2.0.1) differ
+  //That's why
+  configurations.all {
+    resolutionStrategy.force 'com.google.code.findbugs:jsr305:3.0.1'
+  }
 }
 
-
 dependencies {
-    api project(':api')
+  api project(':api')
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.recyclerview:recyclerview:1.0.0'
-    implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'com.google.android.material:material:1.0.0'
-    implementation 'androidx.annotation:annotation:1.1.0'
+  implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+  implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+  implementation 'androidx.appcompat:appcompat:1.1.0'
+  implementation 'androidx.recyclerview:recyclerview:1.0.0'
+  implementation 'androidx.cardview:cardview:1.0.0'
+  implementation 'com.google.android.material:material:1.0.0'
+  implementation 'androidx.annotation:annotation:1.1.0'
 
-    implementation "io.reactivex:rxjava:$rxjava_version"
-    implementation "io.reactivex:rxkotlin:$rxkotlin_version"
-    implementation "io.reactivex:rxandroid:$rxandroid_version"
+  implementation "io.reactivex:rxjava:$rxjava_version"
+  implementation "io.reactivex:rxkotlin:$rxkotlin_version"
+  implementation "io.reactivex:rxandroid:$rxandroid_version"
 
-    implementation "com.google.dagger:dagger:$dagger_version"
+  implementation "com.google.dagger:dagger:$dagger_version"
 
-    kapt "com.google.dagger:dagger-compiler:$dagger_version"
-    kapt "com.github.Raizlabs.DBFlow:dbflow-processor:$dbflow_version"
+  kapt "com.google.dagger:dagger-compiler:$dagger_version"
+  kapt "com.github.Raizlabs.DBFlow:dbflow-processor:$dbflow_version"
 
-    implementation "com.github.Raizlabs.DBFlow:dbflow-core:$dbflow_version"
-    implementation "com.github.Raizlabs.DBFlow:dbflow:$dbflow_version"
-    implementation "com.github.Raizlabs.DBFlow:dbflow-kotlinextensions:$dbflow_version"
+  implementation "com.github.Raizlabs.DBFlow:dbflow-core:$dbflow_version"
+  implementation "com.github.Raizlabs.DBFlow:dbflow:$dbflow_version"
+  implementation "com.github.Raizlabs.DBFlow:dbflow-kotlinextensions:$dbflow_version"
 
-    implementation 'androidx.browser:browser:1.0.0'
+  implementation 'androidx.browser:browser:1.0.0'
 
-    androidTestImplementation 'androidx.annotation:annotation:1.1.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test:rules:1.2.0'
-    androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
+  androidTestImplementation 'androidx.annotation:annotation:1.1.0'
+  androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+  androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+  androidTestImplementation 'androidx.test:rules:1.2.0'
+  androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
 
-    testImplementation "junit:junit:$junit_version"
-    testImplementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
-    testImplementation "org.junit.platform:junit-platform-runner:$junit_platform_runner_version"
-    testImplementation "org.mockito:mockito-core:$mockito_version"
-    testImplementation "org.mockito:mockito-inline:$mockito_version"
+  testImplementation "junit:junit:$junit_version"
+  testImplementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+  testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+  testImplementation "org.junit.platform:junit-platform-runner:$junit_platform_runner_version"
+  testImplementation "org.mockito:mockito-core:$mockito_version"
+  testImplementation "org.mockito:mockito-inline:$mockito_version"
 }
 
 repositories {
-    mavenCentral()
-    maven { url "https://www.jitpack.io" }
+  mavenCentral()
+  maven { url "https://www.jitpack.io" }
 }
