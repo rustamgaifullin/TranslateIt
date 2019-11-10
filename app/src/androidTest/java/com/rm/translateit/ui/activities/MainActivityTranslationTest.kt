@@ -1,9 +1,9 @@
 package com.rm.translateit.ui.activities
 
-import android.support.test.espresso.Espresso.closeSoftKeyboard
-import android.support.test.filters.LargeTest
-import android.support.test.rule.ActivityTestRule
-import android.support.test.runner.AndroidJUnit4
+import androidx.test.espresso.Espresso.closeSoftKeyboard
+import androidx.test.filters.LargeTest
+import androidx.test.rule.ActivityTestRule
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.rm.translateit.utils.checkResult
 import com.rm.translateit.utils.selectLanguages
 import com.rm.translateit.utils.typeTextAndPressEnter

@@ -1,7 +1,7 @@
 package com.rm.translateit.ui
 
-import android.support.test.filters.SmallTest
-import android.support.test.runner.AndroidJUnit4
+import androidx.test.filters.SmallTest
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.rm.translateit.ui.util.fromHtml
 import junit.framework.Assert
 import org.junit.Test

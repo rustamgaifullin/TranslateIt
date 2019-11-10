@@ -1,8 +1,8 @@
 package com.rm.translateit.ui.activities
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.util.Log.d
+import androidx.appcompat.app.AppCompatActivity
 import rx.subscriptions.CompositeSubscription
 
 abstract class BaseActivity : AppCompatActivity() {
