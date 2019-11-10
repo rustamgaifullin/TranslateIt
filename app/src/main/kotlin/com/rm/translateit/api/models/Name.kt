@@ -8,6 +8,7 @@ import com.rm.translateit.db.AppDatabase
 
 @Table(database = AppDatabase::class)
 data class Name(
-        @PrimaryKey var id: Long = 0,
-        @Column var code: String = "",
-        @Column var name: String = "") : BaseModel()
+  @PrimaryKey var id: Long = 0,
+  @Column var code: String = "",
+  @Column var name: String = ""
+) : BaseModel()

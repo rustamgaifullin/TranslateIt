@@ -7,6 +7,6 @@ import rx.Observable
 
 internal interface BablaRestService {
 
-    @GET
-    fun translate(@Url url: String): Observable<ResponseBody>
+  @GET
+  fun translate(@Url url: String): Observable<ResponseBody>
 }

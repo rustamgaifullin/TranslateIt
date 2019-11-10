@@ -7,15 +7,17 @@ import com.rm.translateit.api.DaggerMainComponent
 import com.rm.translateit.api.MainComponent
 
 class TranslateApplication : Application() {
-    private lateinit var translationComponent: MainComponent
+  private lateinit var translationComponent: MainComponent
 
-    override fun onCreate() {
-        super.onCreate()
-        FlowManager.init(FlowConfig.Builder(this)
-                .build())
+  override fun onCreate() {
+    super.onCreate()
+    FlowManager.init(
+        FlowConfig.Builder(this)
+            .build()
+    )
 
-        translationComponent = DaggerMainComponent.create()
-    }
+    translationComponent = DaggerMainComponent.create()
+  }
 
-    fun translationComponent(): MainComponent = translationComponent
+  fun translationComponent(): MainComponent = translationComponent
 }
