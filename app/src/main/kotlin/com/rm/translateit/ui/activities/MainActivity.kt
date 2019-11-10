@@ -1,15 +1,15 @@
 package com.rm.translateit.ui.activities
 
 import android.net.Uri
-import android.support.customtabs.CustomTabsIntent
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.LinearLayoutManager
+import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.content.ContextCompat
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo.*
 import android.widget.Adapter
 import android.widget.AdapterView
 import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.rm.translateit.R
 import com.rm.translateit.api.languages.Languages
 import com.rm.translateit.api.models.translation.TranslationResult

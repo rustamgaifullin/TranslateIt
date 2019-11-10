@@ -1,6 +1,6 @@
 package com.rm.translateit.api.languages
 
-import android.support.test.InstrumentationRegistry
+import androidx.test.platform.app.InstrumentationRegistry
 import com.raizlabs.android.dbflow.config.FlowConfig
 import com.raizlabs.android.dbflow.config.FlowManager
 import com.rm.translateit.api.models.Language

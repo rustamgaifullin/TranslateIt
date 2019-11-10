@@ -1,12 +1,11 @@
 package com.rm.translateit.ui.adapters
 
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.RecyclerView.Adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import com.rm.translateit.R
 import com.rm.translateit.api.models.translation.TranslationResult
 import com.rm.translateit.ui.decarators.SimpleTranslationResultDecorator
@@ -15,14 +14,14 @@ import com.rm.translateit.ui.util.fromHtml
 
 class ResultRecyclerViewAdapter(
         private val items: MutableList<TranslationResult>,
-        private val buttonCallback: (String) -> Unit) : Adapter<ResultRecyclerViewAdapter.ViewHolder>() {
+        private val buttonCallback: (String) -> Unit) : RecyclerView.Adapter<ResultRecyclerViewAdapter.ViewHolder>() {
     private val decorator: TranslationResultDecorator = SimpleTranslationResultDecorator()
 
     override fun getItemCount(): Int {
         return items.count()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ResultRecyclerViewAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.result_view, parent, false)
         return ViewHolder(v)
     }
